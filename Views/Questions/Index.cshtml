@@ -1,0 +1,31 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
+@model System.Collections.Generic.List<PeerReview.MvcHotel.Models.QuestionDto>
+@{ ViewData["Title"]=L["Questions_Title"]; }
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <h3 class="m-0">@L["Questions_Title"]</h3>
+  <a class="btn btn-gold" href="/Questions/Create">@L["Questions_Add"]</a>
+</div>
+<table class="table table-hover bg-white card-hotel">
+  <thead><tr>
+    <th>@L["Questions_Col_Id"]</th>
+    <th>@L["Questions_Col_Title"]</th>
+    <th>@L["Questions_Col_Description"]</th>
+    <th>@L["Questions_Col_Items"]</th>
+    <th>Actions</th>
+  </tr></thead>
+  <tbody>
+  @foreach (var q in Model){
+    <tr>
+      <td>@q.id</td><td>@q.title</td><td>@q.description</td><td>@(q.items?.Count ?? 0)</td>
+      <td>
+        <a class="btn btn-sm btn-outline-primary" href="/Questions/Edit/@q.id">@L["Questions_Action_Edit"]</a> <a class="btn btn-sm btn-outline-secondary ms-1" href="/Answers/Screen/@q.id">Fill</a>
+        <form method="post" action="/Questions/Delete/@q.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
+          <button class="btn btn-sm btn-outline-danger">@L["Questions_Action_Delete"]</button>
+        </form>
+      </td>
+    </tr>
+  }
+  </tbody>
+</table>

@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "PeerReview.MvcHotel": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT": "false"
+      },
+      "applicationUrl": "https://localhost:50299;http://localhost:50300"
+    }
+  }
+}

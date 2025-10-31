@@ -1,0 +1,67 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
+@model System.Collections.Generic.List<PeerReview.MvcHotel.Models.AssignmentDto>
+@{ ViewData["Title"]=L["Assignments_Title"]; var users = ViewBag.Users as System.Collections.Generic.List<PeerReview.MvcHotel.Models.User> ?? new(); var qs = ViewBag.Questions as System.Collections.Generic.List<PeerReview.MvcHotel.Models.QuestionDto> ?? new(); }
+<h3>@L["Assignments_Title"]</h3>
+<form class="card card-hotel p-3 mb-3" method="get">
+  <div class="row g-2 align-items-end">
+    <div class="col-md-4"><label class="form-label">@L["Assignments_Filter_ByUser"]</label>
+      <select name="userId" class="form-select"><option value="">—</option>
+        @foreach (var u in users){ <option value="@u.id">@u.fullName (@u.userName)</option> }
+      </select>
+    </div>
+    <div class="col-md-4"><label class="form-label">@L["Assignments_Filter_ByQuestion"]</label>
+      <select name="questionId" class="form-select"><option value="">—</option>
+        @foreach (var q in qs){ <option value="@q.id">@q.title</option> }
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-gold w-100">@L["Assignments_Show"]</button></div>
+  </div>
+</form>
+
+<form method="post" action="/Assignments/Bulk" class="card card-hotel p-3 mb-3">
+  <h5 class="mb-2">@L["Assignments_Bulk_Title"]</h5>
+  <div class="row g-2">
+    <div class="col-md-6"><label class="form-label">@L["Assignments_Bulk_QuestionIds"]</label><input name="questionIds" class="form-control" placeholder="1,2,3" /></div>
+    <div class="col-md-6"><label class="form-label">@L["Assignments_Bulk_UserIds"]</label><input name="userIds" class="form-control" placeholder="5,7,9" /></div>
+  </div>
+  <button class="btn btn-gold mt-2">@L["Assignments_Bulk_Execute"]</button>
+</form>
+
+<table class="table table-hover bg-white card-hotel">
+  <thead><tr>
+    <th>@L["Assignments_Col_Id"]</th>
+    <th>@L["Assignments_Col_Question"]</th>
+    <th>@L["Assignments_Col_User"]</th>
+    <th>@L["Assignments_Col_Active"]</th>
+    <th>Actions</th>
+  </tr></thead>
+  <tbody>
+  @foreach (var a in Model){
+    <tr>
+      <td>@a.id</td><td>@a.questionId</td><td>@a.userId</td><td>@(a.isActive?L["Status_Active"].Value:L["Status_Inactive"].Value)</td>
+      <td class="text-nowrap">
+        <form method="post" action="/Assignments/Activate/@a.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Activate"]');"><button class="btn btn-sm btn-outline-success">@L["Assignments_Action_Activate"]</button></form>
+        <form method="post" action="/Assignments/Deactivate/@a.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Deactivate"]');"><button class="btn btn-sm btn-outline-warning">@L["Assignments_Action_Deactivate"]</button></form>
+      </td>
+    </tr>
+  }
+  </tbody>
+</table>
+
+@section Scripts{
+<script>
+document.querySelector('form[action="/Assignments/Bulk"]').addEventListener('submit', function(e){
+  const qs = this.querySelector('input[name="questionIds"]');
+  const us = this.querySelector('input[name="userIds"]');
+  const body = {
+    questionIds: (qs.value||'').split(',').map(s=>s.trim()).filter(Boolean).map(Number),
+    userIds: (us.value||'').split(',').map(s=>s.trim()).filter(Boolean).map(Number)
+  };
+  e.preventDefault();
+  fetch('/Assignments/Bulk', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) })
+    .then(()=> location.reload());
+});
+</script>
+}

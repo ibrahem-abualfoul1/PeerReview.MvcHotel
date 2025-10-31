@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppTitle" xml:space="preserve"><value>نظام تقييم الزملاء</value></data>
+  <data name="Menu_Dashboard" xml:space="preserve"><value>اللوحة</value></data>
+  <data name="Menu_Users" xml:space="preserve"><value>المستخدمون</value></data>
+  <data name="Menu_Questions" xml:space="preserve"><value>الأسئلة</value></data>
+  <data name="Menu_Assignments" xml:space="preserve"><value>التكليفات</value></data>
+  <data name="Menu_MyAnswers" xml:space="preserve"><value>إجاباتـي</value></data>
+  <data name="Menu_Login" xml:space="preserve"><value>دخول</value></data>
+  <data name="Menu_Logout" xml:space="preserve"><value>خروج</value></data>
+
+  <data name="Login_Title" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="Login_UserName" xml:space="preserve"><value>اسم المستخدم</value></data>
+  <data name="Login_Password" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="Login_Submit" xml:space="preserve"><value>دخول</value></data>
+  <data name="Login_Failed" xml:space="preserve"><value>فشل تسجيل الدخول</value></data>
+
+  <data name="Users_Title" xml:space="preserve"><value>المستخدمون</value></data>
+  <data name="Users_Add" xml:space="preserve"><value>+ مستخدم</value></data>
+  <data name="Users_Col_Id" xml:space="preserve"><value>المعرف</value></data>
+  <data name="Users_Col_FullName" xml:space="preserve"><value>الاسم الكامل</value></data>
+  <data name="Users_Col_UserName" xml:space="preserve"><value>اسم المستخدم</value></data>
+  <data name="Users_Col_Status" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Users_Col_Role" xml:space="preserve"><value>الدور</value></data>
+  <data name="Users_Action_Edit" xml:space="preserve"><value>تعديل</value></data>
+  <data name="Users_Action_Delete" xml:space="preserve"><value>حذف</value></data>
+  <data name="Users_Action_Activate" xml:space="preserve"><value>تفعيل</value></data>
+  <data name="Users_Action_Deactivate" xml:space="preserve"><value>تعطيل</value></data>
+  <data name="Status_Active" xml:space="preserve"><value>نشط</value></data>
+  <data name="Status_Inactive" xml:space="preserve"><value>موقّف</value></data>
+
+  <data name="Dashboard_Users" xml:space="preserve"><value>المستخدمون</value></data>
+  <data name="Dashboard_Questions" xml:space="preserve"><value>الأسئلة</value></data>
+
+  <data name="Questions_Title" xml:space="preserve"><value>الأسئلة</value></data>
+  <data name="Questions_Add" xml:space="preserve"><value>+ سؤال</value></data>
+  <data name="Questions_Col_Id" xml:space="preserve"><value>المعرف</value></data>
+  <data name="Questions_Col_Title" xml:space="preserve"><value>العنوان</value></data>
+  <data name="Questions_Col_Description" xml:space="preserve"><value>الوصف</value></data>
+  <data name="Questions_Col_Items" xml:space="preserve"><value>العناصر</value></data>
+  <data name="Questions_Action_Edit" xml:space="preserve"><value>تعديل</value></data>
+  <data name="Questions_Action_Delete" xml:space="preserve"><value>حذف</value></data>
+  <data name="Questions_Create_Title" xml:space="preserve"><value>سؤال جديد</value></data>
+  <data name="Questions_Edit_Title" xml:space="preserve"><value>تعديل سؤال</value></data>
+  <data name="Field_Title" xml:space="preserve"><value>العنوان</value></data>
+  <data name="Field_Description" xml:space="preserve"><value>الوصف</value></data>
+  <data name="Field_Category" xml:space="preserve"><value>التصنيف</value></data>
+
+  <data name="Assignments_Title" xml:space="preserve"><value>التكليفات</value></data>
+  <data name="Assignments_Filter_ByUser" xml:space="preserve"><value>حسب المستخدم</value></data>
+  <data name="Assignments_Filter_ByQuestion" xml:space="preserve"><value>حسب السؤال</value></data>
+  <data name="Assignments_Show" xml:space="preserve"><value>عرض</value></data>
+  <data name="Assignments_Bulk_Title" xml:space="preserve"><value>تكليف جماعي</value></data>
+  <data name="Assignments_Bulk_QuestionIds" xml:space="preserve"><value>معرّفات الأسئلة (مفصولة بفواصل)</value></data>
+  <data name="Assignments_Bulk_UserIds" xml:space="preserve"><value>معرّفات المستخدمين (مفصولة بفواصل)</value></data>
+  <data name="Assignments_Bulk_Execute" xml:space="preserve"><value>تنفيذ</value></data>
+  <data name="Assignments_Col_Id" xml:space="preserve"><value>المعرف</value></data>
+  <data name="Assignments_Col_Question" xml:space="preserve"><value>السؤال</value></data>
+  <data name="Assignments_Col_User" xml:space="preserve"><value>المستخدم</value></data>
+  <data name="Assignments_Col_Active" xml:space="preserve"><value>نشط</value></data>
+  <data name="Assignments_Action_Activate" xml:space="preserve"><value>تفعيل</value></data>
+  <data name="Assignments_Action_Deactivate" xml:space="preserve"><value>تعطيل</value></data>
+
+  <data name="Answers_Title" xml:space="preserve"><value>إجاباتي</value></data>
+  <data name="Answers_Add" xml:space="preserve"><value>+ إجابة</value></data>
+  <data name="Answers_Col_Id" xml:space="preserve"><value>المعرف</value></data>
+  <data name="Answers_Col_Question" xml:space="preserve"><value>السؤال</value></data>
+  <data name="Answers_Col_Item" xml:space="preserve"><value>العنصر</value></data>
+  <data name="Answers_Col_Value" xml:space="preserve"><value>القيمة</value></data>
+  <data name="Answers_Col_Date" xml:space="preserve"><value>التاريخ</value></data>
+  <data name="Answers_Action_Edit" xml:space="preserve"><value>تعديل</value></data>
+  <data name="Answers_Action_Delete" xml:space="preserve"><value>حذف</value></data>
+  <data name="Answers_Create_Title" xml:space="preserve"><value>إجابة جديدة</value></data>
+  <data name="Answers_Edit_Title" xml:space="preserve"><value>تعديل إجابة</value></data>
+  <data name="Field_QuestionId" xml:space="preserve"><value>معرّف السؤال</value></data>
+  <data name="Field_QuestionItemId" xml:space="preserve"><value>معرّف عنصر السؤال</value></data>
+  <data name="Field_Value" xml:space="preserve"><value>القيمة</value></data>
+  <data name="Upload_File_Title" xml:space="preserve"><value>رفع ملف</value></data>
+  <data name="Upload_File_File" xml:space="preserve"><value>الملف</value></data>
+  <data name="Upload_File_Submit" xml:space="preserve"><value>رفع</value></data>
+
+  <data name="Btn_Save" xml:space="preserve"><value>حفظ</value></data>
+  <data name="Btn_Back" xml:space="preserve"><value>رجوع</value></data>
+
+  <data name="Msg_Added" xml:space="preserve"><value>تم الحفظ بنجاح.</value></data>
+  <data name="Msg_Updated" xml:space="preserve"><value>تم التعديل بنجاح.</value></data>
+  <data name="Msg_Deleted" xml:space="preserve"><value>تم الحذف بنجاح.</value></data>
+  <data name="Msg_Activated" xml:space="preserve"><value>تم التفعيل بنجاح.</value></data>
+  <data name="Msg_Deactivated" xml:space="preserve"><value>تم التعطيل بنجاح.</value></data>
+  <data name="Msg_Uploaded" xml:space="preserve"><value>تم الرفع بنجاح.</value></data>
+  <data name="Msg_Welcome" xml:space="preserve"><value>أهلًا</value></data>
+
+  <data name="Confirm_Delete" xml:space="preserve"><value>حذف؟</value></data>
+  <data name="Confirm_Activate" xml:space="preserve"><value>تفعيل؟</value></data>
+  <data name="Confirm_Deactivate" xml:space="preserve"><value>تعطيل؟</value></data>
+
+  <data name="Lang_Arabic" xml:space="preserve"><value>العربية</value></data>
+  <data name="Lang_English" xml:space="preserve"><value>الإنجليزية</value></data>
+</root>

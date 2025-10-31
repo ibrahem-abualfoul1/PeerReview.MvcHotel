@@ -1,0 +1,10 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
+@model PeerReview.MvcHotel.Models.AnswerUpdateDto
+@{ ViewData["Title"]=L["Answers_Edit_Title"]; }
+<h3>@L["Answers_Edit_Title"]</h3>
+<form method="post" class="card card-hotel p-3">
+  <div class="mb-2"><label class="form-label">@L["Field_Value"]</label><input asp-for="value" class="form-control" /></div>
+  <button class="btn btn-gold mt-2">@L["Btn_Save"]</button> <a class="btn btn-secondary mt-2" href="/Answers/Mine">@L["Btn_Back"]</a>
+</form>

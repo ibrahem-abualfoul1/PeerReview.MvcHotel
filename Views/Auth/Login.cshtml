@@ -1,0 +1,24 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
+@model PeerReview.MvcHotel.Models.LoginRequest
+@{ ViewData["Title"] = L["Login_Title"]; }
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card card-hotel p-3">
+      <h3 class="mb-3">@L["Login_Title"]</h3>
+      <form method="post">
+        <div class="mb-2">
+          <label class="form-label">@L["Login_UserName"]</label>
+          <input asp-for="userName" class="form-control" placeholder="Admin" />
+        </div>
+        <div class="mb-2">
+          <label class="form-label">@L["Login_Password"]</label>
+          <input asp-for="password" class="form-control" type="password" />
+        </div>
+        <button class="btn btn-gold mt-2">@L["Login_Submit"]</button>
+      </form>
+      @if (!ViewData.ModelState.IsValid) { <div class="text-danger mt-2">@L["Login_Failed"]</div> }
+    </div>
+  </div>
+</div>

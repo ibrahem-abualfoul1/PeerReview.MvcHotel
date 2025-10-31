@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppTitle" xml:space="preserve"><value>PeerReview Hotel</value></data>
+  <data name="Menu_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Menu_Users" xml:space="preserve"><value>Users</value></data>
+  <data name="Menu_Questions" xml:space="preserve"><value>Questions</value></data>
+  <data name="Menu_Assignments" xml:space="preserve"><value>Assignments</value></data>
+  <data name="Menu_MyAnswers" xml:space="preserve"><value>My Answers</value></data>
+  <data name="Menu_Login" xml:space="preserve"><value>Login</value></data>
+  <data name="Menu_Logout" xml:space="preserve"><value>Logout</value></data>
+
+  <data name="Login_Title" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Login_UserName" xml:space="preserve"><value>User name</value></data>
+  <data name="Login_Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Login_Submit" xml:space="preserve"><value>Login</value></data>
+  <data name="Login_Failed" xml:space="preserve"><value>Login failed</value></data>
+
+  <data name="Users_Title" xml:space="preserve"><value>Users</value></data>
+  <data name="Users_Add" xml:space="preserve"><value>+ User</value></data>
+  <data name="Users_Col_Id" xml:space="preserve"><value>ID</value></data>
+  <data name="Users_Col_FullName" xml:space="preserve"><value>Full name</value></data>
+  <data name="Users_Col_UserName" xml:space="preserve"><value>Username</value></data>
+  <data name="Users_Col_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Users_Col_Role" xml:space="preserve"><value>Role</value></data>
+  <data name="Users_Action_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Users_Action_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Users_Action_Activate" xml:space="preserve"><value>Activate</value></data>
+  <data name="Users_Action_Deactivate" xml:space="preserve"><value>Deactivate</value></data>
+  <data name="Status_Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Status_Inactive" xml:space="preserve"><value>Inactive</value></data>
+
+  <data name="Dashboard_Users" xml:space="preserve"><value>Users</value></data>
+  <data name="Dashboard_Questions" xml:space="preserve"><value>Questions</value></data>
+
+  <data name="Questions_Title" xml:space="preserve"><value>Questions</value></data>
+  <data name="Questions_Add" xml:space="preserve"><value>+ Question</value></data>
+  <data name="Questions_Col_Id" xml:space="preserve"><value>ID</value></data>
+  <data name="Questions_Col_Title" xml:space="preserve"><value>Title</value></data>
+  <data name="Questions_Col_Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Questions_Col_Items" xml:space="preserve"><value>Items</value></data>
+  <data name="Questions_Action_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Questions_Action_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Questions_Create_Title" xml:space="preserve"><value>New Question</value></data>
+  <data name="Questions_Edit_Title" xml:space="preserve"><value>Edit Question</value></data>
+  <data name="Field_Title" xml:space="preserve"><value>Title</value></data>
+  <data name="Field_Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Field_Category" xml:space="preserve"><value>Category</value></data>
+
+  <data name="Assignments_Title" xml:space="preserve"><value>Assignments</value></data>
+  <data name="Assignments_Filter_ByUser" xml:space="preserve"><value>By user</value></data>
+  <data name="Assignments_Filter_ByQuestion" xml:space="preserve"><value>By question</value></data>
+  <data name="Assignments_Show" xml:space="preserve"><value>Show</value></data>
+  <data name="Assignments_Bulk_Title" xml:space="preserve"><value>Bulk Assign</value></data>
+  <data name="Assignments_Bulk_QuestionIds" xml:space="preserve"><value>Question IDs (comma separated)</value></data>
+  <data name="Assignments_Bulk_UserIds" xml:space="preserve"><value>User IDs (comma separated)</value></data>
+  <data name="Assignments_Bulk_Execute" xml:space="preserve"><value>Execute</value></data>
+  <data name="Assignments_Col_Id" xml:space="preserve"><value>ID</value></data>
+  <data name="Assignments_Col_Question" xml:space="preserve"><value>Question</value></data>
+  <data name="Assignments_Col_User" xml:space="preserve"><value>User</value></data>
+  <data name="Assignments_Col_Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Assignments_Action_Activate" xml:space="preserve"><value>Activate</value></data>
+  <data name="Assignments_Action_Deactivate" xml:space="preserve"><value>Deactivate</value></data>
+
+  <data name="Answers_Title" xml:space="preserve"><value>My Answers</value></data>
+  <data name="Answers_Add" xml:space="preserve"><value>+ Answer</value></data>
+  <data name="Answers_Col_Id" xml:space="preserve"><value>ID</value></data>
+  <data name="Answers_Col_Question" xml:space="preserve"><value>Question</value></data>
+  <data name="Answers_Col_Item" xml:space="preserve"><value>Item</value></data>
+  <data name="Answers_Col_Value" xml:space="preserve"><value>Value</value></data>
+  <data name="Answers_Col_Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Answers_Action_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Answers_Action_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Answers_Create_Title" xml:space="preserve"><value>New Answer</value></data>
+  <data name="Answers_Edit_Title" xml:space="preserve"><value>Edit Answer</value></data>
+  <data name="Field_QuestionId" xml:space="preserve"><value>QuestionId</value></data>
+  <data name="Field_QuestionItemId" xml:space="preserve"><value>QuestionItemId</value></data>
+  <data name="Field_Value" xml:space="preserve"><value>Value</value></data>
+  <data name="Upload_File_Title" xml:space="preserve"><value>Upload a file</value></data>
+  <data name="Upload_File_File" xml:space="preserve"><value>File</value></data>
+  <data name="Upload_File_Submit" xml:space="preserve"><value>Upload</value></data>
+
+  <data name="Btn_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Btn_Back" xml:space="preserve"><value>Back</value></data>
+
+  <data name="Msg_Added" xml:space="preserve"><value>Saved successfully.</value></data>
+  <data name="Msg_Updated" xml:space="preserve"><value>Updated successfully.</value></data>
+  <data name="Msg_Deleted" xml:space="preserve"><value>Deleted successfully.</value></data>
+  <data name="Msg_Activated" xml:space="preserve"><value>Activated successfully.</value></data>
+  <data name="Msg_Deactivated" xml:space="preserve"><value>Deactivated successfully.</value></data>
+  <data name="Msg_Uploaded" xml:space="preserve"><value>Uploaded successfully.</value></data>
+  <data name="Msg_Welcome" xml:space="preserve"><value>Welcome</value></data>
+
+  <data name="Confirm_Delete" xml:space="preserve"><value>Delete?</value></data>
+  <data name="Confirm_Activate" xml:space="preserve"><value>Activate?</value></data>
+  <data name="Confirm_Deactivate" xml:space="preserve"><value>Deactivate?</value></data>
+
+  <data name="Lang_Arabic" xml:space="preserve"><value>العربية</value></data>
+  <data name="Lang_English" xml:space="preserve"><value>English</value></data>
+</root>

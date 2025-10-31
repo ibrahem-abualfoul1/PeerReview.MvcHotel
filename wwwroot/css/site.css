@@ -1,0 +1,9 @@
+
+:root{ --navy:#0b2447; --gold:#c9a227; --cream:#f7f3ea; }
+body{ background:var(--cream); }
+.topbar{ background: linear-gradient(90deg, var(--navy), #091a34); border-bottom:3px solid var(--gold); }
+.text-gold{ color:var(--gold)!important; }
+.btn-gold{ background:var(--gold); border:none; }
+.card-hotel{ border:1px solid #e7e7e7; border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,.05); }
+.table>tbody>tr>td, .table>thead>tr>th{ vertical-align:middle; }
+.badge-hotel{ background:#fff9e6; color:#5c4b00; border:1px solid #ffe39a; }
