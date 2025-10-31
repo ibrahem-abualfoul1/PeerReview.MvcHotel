@@ -1,0 +1,82 @@
+﻿[
+  {
+    "id": 1,
+    "title": "معلومات الفندق الأساسية",
+    "description": "نود معرفة بعض المعلومات الأساسية عن فندقك",
+    "categoryId": 1,
+    "items": [
+      {
+        "id": 1,
+        "text": "ما هو اسم الفندق؟",
+        "type": 1,
+        "isRequired": true,
+        "optionsCsv": null
+      },
+      {
+        "id": 2,
+        "text": "هل الفندق مفتوح حالياً؟",
+        "type": 2,
+        "isRequired": true,
+        "optionsCsv": "نعم,لا"
+      },
+      {
+        "id": 3,
+        "text": "ما هو تصنيف الفندق؟",
+        "type": 3,
+        "isRequired": true,
+        "optionsCsv": "5 نجوم,4 نجوم,3 نجوم,نجمتين,نجمة واحدة"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "الخدمات والمرافق",
+    "description": "أخبرنا عن الخدمات والمرافق المتوفرة في الفندق",
+    "categoryId": 1,
+    "items": [
+      {
+        "id": 4,
+        "text": "ما هي المرافق المتوفرة؟ (يمكن اختيار أكثر من واحد)",
+        "type": 4,
+        "isRequired": true,
+        "optionsCsv": "مسبح,صالة رياضية,مطعم,موقف سيارات,واي فاي مجاني,سبا"
+      },
+      {
+        "id": 5,
+        "text": "كم عدد الغرف في الفندق؟",
+        "type": 5,
+        "isRequired": true,
+        "optionsCsv": null
+      },
+      {
+        "id": 6,
+        "text": "ملاحظات إضافية عن المرافق",
+        "type": 1,
+        "isRequired": false,
+        "optionsCsv": null
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "معلومات إضافية",
+    "description": "بعض المعلومات الإضافية لإكمال الاستطلاع",
+    "categoryId": 1,
+    "items": [
+      {
+        "id": 7,
+        "text": "تاريخ افتتاح الفندق",
+        "type": 6,
+        "isRequired": false,
+        "optionsCsv": null
+      },
+      {
+        "id": 8,
+        "text": "يرجى رفع شعار الفندق",
+        "type": 7,
+        "isRequired": false,
+        "optionsCsv": null
+      }
+    ]
+  }
+]

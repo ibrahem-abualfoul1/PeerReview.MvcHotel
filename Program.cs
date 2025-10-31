@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PeerReview.MvcHotel.Services;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,7 @@ builder.Services.AddScoped<PeerReview.MvcHotel.Services.QuestionsService>();
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.AssignmentsService>();
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.AnswersService>();
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.LookupsService>();
+builder.Services.AddScoped<IQuestionsService, FileQuestionsService>();
 
 var app = builder.Build();
 
