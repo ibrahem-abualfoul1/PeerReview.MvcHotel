@@ -21,5 +21,13 @@ namespace PeerReview.MvcHotel.Controllers
             } catch { ViewBag.UsersCount = 0; ViewBag.QuestionsCount = 0; }
             return View();
         }
+        public IActionResult GetData()
+        {
+            List<string> myStringList = new List<string>();
+            myStringList.Add("First string");
+            myStringList.Add("Second string");
+            myStringList.Add("Third string");
+            return Ok(myStringList);
+        }
     }
 }

@@ -1,18 +1,46 @@
-
+﻿
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer L
 @{ ViewData["Title"] = L["Menu_Dashboard"]; var users = (int)(ViewBag.UsersCount ?? 0); var questions = (int)(ViewBag.QuestionsCount ?? 0); }
-<div class="row g-3">
-  <div class="col-md-3">
-    <div class="card card-hotel p-3">
-      <div class="text-muted">@L["Dashboard_Users"]</div>
-      <div class="h3 fw-bold">@users</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card text-white text-bg-primary">
+            <div class="card-body p-4">
+                <span>
+                    <i class="ti ti-layout-grid fs-8"></i>
+                </span>
+                <h4 class="card-title mt-3 mb-0 text-white">450</h4>
+                <p class="card-text text-white opacity-75 fs-3 fw-normal">
+                    @L["Dashboard_Users"] - @users
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card text-white text-bg-warning">
+            <div class="card-body p-4">
+                <span>
+                    <i class="ti ti-users fs-8"></i>
+                </span>
+                <h4 class="card-title mt-3 mb-0 text-white">80</h4>
+                <p class="card-text text-white opacity-75 fs-3 fw-normal">
+                    @L["Dashboard_Questions"] - @questions
+                </p>
+            </div>
+        </div>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="card card-hotel p-3">
-      <div class="text-muted">@L["Dashboard_Questions"]</div>
-      <div class="h3 fw-bold">@questions</div>
-    </div>
-  </div>
-</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+          $.ajax({
+            url: '@Url.Action("GetData", "Home")', 
+            method: 'GET',
+            success: function (data) { console.log(data); },
+            error: function (xhr) { console.error(xhr.responseText); }
+          });
+        });
+    </script>
+}
+

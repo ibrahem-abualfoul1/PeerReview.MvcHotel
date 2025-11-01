@@ -33,4 +33,9 @@ namespace PeerReview.MvcHotel.Models
     public class SubLookupUpdateDto { public int lookupId { get; set; } public string? name { get; set; } }
 
     public class DashboardDto { public Dictionary<string, object>? metrics { get; set; } }
+    public class QuestionTypeDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
 }
