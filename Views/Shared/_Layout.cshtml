@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
-@using Microsoft.AspNetCore.Localization
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+
 @{
     var userName = Context.Session.GetString("userName") ?? "";
     var culture = System.Threading.CancellationToken.None; // ignore

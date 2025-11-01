@@ -3,15 +3,16 @@ using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Mvc;
 using PeerReview.MvcHotel.Models;
 using PeerReview.MvcHotel.Services;
+using PeerReview.MvcHotel.Resources;
 
 namespace PeerReview.MvcHotel.Controllers
 {
     public class AuthController : Controller
     {
         private readonly AuthService _auth;
-        private readonly IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> _L;
+        private readonly IStringLocalizer<SharedResource> _L;
 
-        public AuthController(AuthService auth, IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> L){
+        public AuthController(AuthService auth, IStringLocalizer<SharedResource> L){
             _L = L; _auth = auth; }
 
         [HttpGet] public IActionResult Login() => View();
@@ -21,7 +22,7 @@ namespace PeerReview.MvcHotel.Controllers
         {
             try{
                 var res = await _auth.Login(model);
-                TempData["msg"] = _L["Msg_Welcome"] + " " + (res?.userName ?? "");
+                TempData["msg"] = SharedResource.Msg_Welcome + " " + (res?.userName ?? "");
                 if (!string.IsNullOrEmpty(returnUrl)) return Redirect(returnUrl);
                 return RedirectToAction("Index","Home");
             }catch(Exception ex){

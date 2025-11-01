@@ -1,19 +1,20 @@
 
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @model System.Collections.Generic.List<PeerReview.MvcHotel.Models.Answer>
-@{ ViewData["Title"] = L["Answers_Title"]; }
+@{
+    ViewData["Title"] = @SharedResource.Answers_Title; 
+}
 <div class="d-flex justify-content-between align-items-center mb-2">
-  <h3 class="m-0">@L["Answers_Title"]</h3>
-  <a class="btn btn-gold" href="/Answers/Create">@L["Answers_Add"]</a>
+    <h3 class="m-0">@SharedResource.Answers_Title</h3>
+    <a class="btn btn-gold" href="/Answers/Create">@SharedResource.Answers_Add</a>
 </div>
 <table class="table table-hover bg-white card-hotel">
   <thead><tr>
-    <th>@L["Answers_Col_Id"]</th>
-    <th>@L["Answers_Col_Question"]</th>
-    <th>@L["Answers_Col_Item"]</th>
-    <th>@L["Answers_Col_Value"]</th>
-    <th>@L["Answers_Col_Date"]</th>
+            <th>@SharedResource.Answers_Col_Id</th>
+            <th>@SharedResource.Answers_Col_Question</th>
+            <th>@SharedResource.Answers_Col_Item</th>
+            <th>@SharedResource.Answers_Col_Value</th>
+            <th>@SharedResource.Answers_Col_Date</th>
     <th>Actions</th>
   </tr></thead>
   <tbody>
@@ -21,9 +22,9 @@
     <tr>
       <td>@a.id</td><td>@a.questionId</td><td>@a.questionItemId</td><td>@a.value</td><td>@a.submittedAt</td>
       <td class="text-nowrap">
-        <a class="btn btn-sm btn-outline-primary" href="/Answers/Edit/@a.id">@L["Answers_Action_Edit"]</a>
-        <form method="post" action="/Answers/Delete/@a.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
-          <button class="btn btn-sm btn-outline-danger">@L["Answers_Action_Delete"]</button>
+                    <a class="btn btn-sm btn-outline-primary" href="/Answers/Edit/@a.id">@SharedResource.Answers_Action_Edit</a>
+                    <form method="post" action="/Answers/Delete/@a.id" style="display:inline" onsubmit="return confirm('@SharedResource.Confirm_Delete');">
+                        <button class="btn btn-sm btn-outline-danger">@SharedResource.Answers_Action_Delete</button>
         </form>
       </td>
     </tr>
@@ -32,13 +33,13 @@
 </table>
 
 <div class="card card-hotel p-3 mt-3">
-  <h5>@L["Upload_File_Title"]</h5>
+    <h5>@SharedResource.Upload_File_Title</h5>
   <form method="post" enctype="multipart/form-data" action="/Answers/Upload">
     <div class="row g-2">
-      <div class="col-md-3"><label class="form-label">@L["Field_QuestionId"]</label><input name="questionId" type="number" class="form-control" required /></div>
-      <div class="col-md-3"><label class="form-label">@L["Field_QuestionItemId"]</label><input name="questionItemId" type="number" class="form-control" required /></div>
-      <div class="col-md-6"><label class="form-label">@L["Upload_File_File"]</label><input name="file" type="file" class="form-control" required /></div>
+            <div class="col-md-3"><label class="form-label">@SharedResource.Field_QuestionId</label><input name="questionId" type="number" class="form-control" required /></div>
+            <div class="col-md-3"><label class="form-label">@SharedResource.Field_QuestionItemId</label><input name="questionItemId" type="number" class="form-control" required /></div>
+            <div class="col-md-6"><label class="form-label">@SharedResource.Upload_File_File</label><input name="file" type="file" class="form-control" required /></div>
     </div>
-    <button class="btn btn-gold mt-2">@L["Upload_File_Submit"]</button>
+        <button class="btn btn-gold mt-2">@SharedResource.Upload_File_Submit</button>
   </form>
 </div>

@@ -101,4 +101,7 @@
 
   <data name="Lang_Arabic" xml:space="preserve"><value>العربية</value></data>
   <data name="Lang_English" xml:space="preserve"><value>English</value></data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome to Hotel Review</value>
+  </data>
 </root>
