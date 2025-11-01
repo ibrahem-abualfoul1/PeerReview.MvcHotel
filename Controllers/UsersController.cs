@@ -27,9 +27,20 @@ namespace PeerReview.MvcHotel.Controllers
             return View(new UserUpdateDto{ fullName=u.fullName, email=u.email, isActive=u.isActive, roleId=u.roleId });
         }
 
-        [HttpPost] public async Task<IActionResult> Edit(int id, UserUpdateDto model){ await _svc.Update(id, model); TempData["msg"]=_L["Msg_Added"]; return RedirectToAction(nameof(Index)); }
-        [HttpPost] public async Task<IActionResult> Delete(int id){ await _svc.Delete(id); TempData["msg"]=_L["Msg_Added"]; return RedirectToAction(nameof(Index)); }
-        [HttpPost] public async Task<IActionResult> Activate(int id){ await _svc.Activate(id); return RedirectToAction(nameof(Index)); }
-        [HttpPost] public async Task<IActionResult> Deactivate(int id){ await _svc.Deactivate(id); return RedirectToAction(nameof(Index)); }
+        [HttpPost] public async Task<IActionResult> Edit(int id, UserUpdateDto model){ 
+            await _svc.Update(id, model);
+            TempData["msg"]= SharedResource.Msg_Added;
+            return RedirectToAction(nameof(Index)); }
+        [HttpPost] public async Task<IActionResult> Delete(int id){
+            await _svc.Delete(id); 
+            TempData["msg"]=SharedResource.Msg_Added;
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost] public async Task<IActionResult> Activate(int id){
+            await _svc.Activate(id);
+            return RedirectToAction(nameof(Index)); }
+        [HttpPost] public async Task<IActionResult> Deactivate(int id){
+            await _svc.Deactivate(id);
+            return RedirectToAction(nameof(Index)); }
     }
 }

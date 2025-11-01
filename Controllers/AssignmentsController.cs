@@ -29,7 +29,13 @@ namespace PeerReview.MvcHotel.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Bulk([FromBody] AssignRequest req){ await _svc.BulkAssign(req); return Ok(); }
-        [HttpPost] public async Task<IActionResult> Activate(int id){ await _svc.Activate(id); TempData["msg"]=_L["Msg_Activated"]; return RedirectToAction(nameof(Index)); }
-        [HttpPost] public async Task<IActionResult> Deactivate(int id){ await _svc.Deactivate(id); TempData["msg"]=_L["Msg_Deactivated"]; return RedirectToAction(nameof(Index)); }
+        [HttpPost] public async Task<IActionResult> Activate(int id){ 
+            await _svc.Activate(id);
+            TempData["msg"]= SharedResource.Msg_Activated; 
+            return RedirectToAction(nameof(Index)); }
+        [HttpPost] public async Task<IActionResult> Deactivate(int id){
+            await _svc.Deactivate(id);
+            TempData["msg"]= SharedResource.Msg_Deactivated; 
+            return RedirectToAction(nameof(Index)); }
     }
 }

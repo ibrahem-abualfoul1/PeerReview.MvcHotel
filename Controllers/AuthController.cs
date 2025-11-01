@@ -22,7 +22,7 @@ namespace PeerReview.MvcHotel.Controllers
         {
             try{
                 var res = await _auth.Login(model);
-                TempData["msg"] = _L["Msg_Welcome"] + " " + (res?.userName ?? "");
+                TempData["msg"] = SharedResource.Msg_Welcome + " " + (res?.userName ?? "");
                 if (!string.IsNullOrEmpty(returnUrl)) return Redirect(returnUrl);
                 return RedirectToAction("Index","Home");
             }catch(Exception ex){

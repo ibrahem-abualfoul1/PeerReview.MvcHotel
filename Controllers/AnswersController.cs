@@ -23,18 +23,18 @@ namespace PeerReview.MvcHotel.Controllers
         [HttpPost] public async Task<IActionResult> Create(AnswerCreateDto dto)
         {
             await _svc.Create(dto);
-            TempData["msg"] = _L["Msg_Added"]; 
+            TempData["msg"] = SharedResource.Msg_Added; 
             return RedirectToAction(nameof(Mine));
         }
         public IActionResult Edit(int id) => View(new AnswerUpdateDto());
         [HttpPost] public async Task<IActionResult> Edit(int id, AnswerUpdateDto dto) {
             await _svc.Update(id, dto);
-            TempData["msg"] = _L["Msg_Updated"];
+            TempData["msg"] = SharedResource.Msg_Updated;
             return RedirectToAction(nameof(Mine));
         }
         [HttpPost] public async Task<IActionResult> Delete(int id) {
             await _svc.Delete(id);
-            TempData["msg"] = _L["Msg_Deleted"];
+            TempData["msg"] = SharedResource.Msg_Deleted;
             return RedirectToAction(nameof(Mine));
         }
 
@@ -44,7 +44,7 @@ namespace PeerReview.MvcHotel.Controllers
             using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
             await _svc.Upload(questionId, questionItemId, file.FileName, ms.ToArray(), file.ContentType);
-            TempData["msg"] = _L["Msg_Uploaded"]; return RedirectToAction(nameof(Mine));
+            TempData["msg"] = SharedResource.Msg_Uploaded; return RedirectToAction(nameof(Mine));
         }
 
 
@@ -61,7 +61,7 @@ namespace PeerReview.MvcHotel.Controllers
         {
             if (body == null || body.Values == null) return BadRequest();
             await _svc.BulkCreate(body.QuestionId, body.Values, ct);
-            TempData["msg"] = _L["Msg_Added"];
+            TempData["msg"] = SharedResource.Msg_Added;
             return Ok();
         }
     }
