@@ -3,15 +3,16 @@ using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Mvc;
 using PeerReview.MvcHotel.Models;
 using PeerReview.MvcHotel.Services;
+using PeerReview.MvcHotel.Resources;
 
 namespace PeerReview.MvcHotel.Controllers
 {
     public class AuthController : Controller
     {
         private readonly AuthService _auth;
-        private readonly IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> _L;
+        private readonly IStringLocalizer<SharedResource> _L;
 
-        public AuthController(AuthService auth, IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> L){
+        public AuthController(AuthService auth, IStringLocalizer<SharedResource> L){
             _L = L; _auth = auth; }
 
         [HttpGet] public IActionResult Login() => View();

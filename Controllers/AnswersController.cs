@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using PeerReview.MvcHotel.Models;
+using PeerReview.MvcHotel.Resources;
 using PeerReview.MvcHotel.Services;
 
 namespace PeerReview.MvcHotel.Controllers
@@ -9,9 +10,9 @@ namespace PeerReview.MvcHotel.Controllers
     {
         private readonly AnswersService _svc;
         private readonly QuestionsService _questions;
-        private readonly IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> _L;
+        private readonly IStringLocalizer<SharedResource> _L;
 
-        public AnswersController(AnswersService svc, IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> L, QuestionsService questions)
+        public AnswersController(AnswersService svc, IStringLocalizer<SharedResource> L, QuestionsService questions)
         {
             _L = L;
             _svc = svc; _questions = questions;
@@ -19,10 +20,23 @@ namespace PeerReview.MvcHotel.Controllers
 
         public async Task<IActionResult> Mine() { var list = await _svc.Mine() ?? new(); return View(list); }
         public IActionResult Create() => View(new AnswerCreateDto());
-        [HttpPost] public async Task<IActionResult> Create(AnswerCreateDto dto) { await _svc.Create(dto); TempData["msg"] = _L["Msg_Added"]; return RedirectToAction(nameof(Mine)); }
+        [HttpPost] public async Task<IActionResult> Create(AnswerCreateDto dto)
+        {
+            await _svc.Create(dto);
+            TempData["msg"] = _L["Msg_Added"]; 
+            return RedirectToAction(nameof(Mine));
+        }
         public IActionResult Edit(int id) => View(new AnswerUpdateDto());
-        [HttpPost] public async Task<IActionResult> Edit(int id, AnswerUpdateDto dto) { await _svc.Update(id, dto); TempData["msg"] = _L["Msg_Updated"]; return RedirectToAction(nameof(Mine)); }
-        [HttpPost] public async Task<IActionResult> Delete(int id) { await _svc.Delete(id); TempData["msg"] = _L["Msg_Deleted"]; return RedirectToAction(nameof(Mine)); }
+        [HttpPost] public async Task<IActionResult> Edit(int id, AnswerUpdateDto dto) {
+            await _svc.Update(id, dto);
+            TempData["msg"] = _L["Msg_Updated"];
+            return RedirectToAction(nameof(Mine));
+        }
+        [HttpPost] public async Task<IActionResult> Delete(int id) {
+            await _svc.Delete(id);
+            TempData["msg"] = _L["Msg_Deleted"];
+            return RedirectToAction(nameof(Mine));
+        }
 
         [HttpPost]
         public async Task<IActionResult> Upload(int questionId, int questionItemId, IFormFile file)

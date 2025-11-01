@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Mvc;
 using PeerReview.MvcHotel.Models;
 using PeerReview.MvcHotel.Services;
+using PeerReview.MvcHotel.Resources;
 
 namespace PeerReview.MvcHotel.Controllers
 {
@@ -11,9 +12,9 @@ namespace PeerReview.MvcHotel.Controllers
         private readonly AssignmentsService _svc;
         private readonly UsersService _users;
         private readonly QuestionsService _questions;
-        private readonly IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> _L;
+        private readonly IStringLocalizer<SharedResource> _L;
 
-        public AssignmentsController(AssignmentsService svc, UsersService users, QuestionsService questions, IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> L){
+        public AssignmentsController(AssignmentsService svc, UsersService users, QuestionsService questions, IStringLocalizer<SharedResource> L){
             _L = L; _svc=svc; _users=users; _questions=questions; }
 
         public async Task<IActionResult> Index(int? userId, int? questionId)

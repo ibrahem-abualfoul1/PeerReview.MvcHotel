@@ -3,15 +3,16 @@ using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Mvc;
 using PeerReview.MvcHotel.Models;
 using PeerReview.MvcHotel.Services;
+using PeerReview.MvcHotel.Resources;
 
 namespace PeerReview.MvcHotel.Controllers
 {
     public class UsersController : Controller
     {
         private readonly UsersService _svc;
-        private readonly IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> _L;
+        private readonly IStringLocalizer<SharedResource> _L;
 
-        public UsersController(UsersService svc, IStringLocalizer<PeerReview.MvcHotel.Models.SharedResource> L){
+        public UsersController(UsersService svc, IStringLocalizer<SharedResource> L){
             _L = L; _svc = svc; }
 
         public async Task<IActionResult> Index(){ var list = await _svc.List() ?? new(); return View(list); }

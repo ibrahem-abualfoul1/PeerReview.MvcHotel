@@ -12,7 +12,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>@ViewData["Title"] - @L["AppTitle"]</title>
+  <title>@ViewData["Title"] - @SharedResource.AppTitle</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap@(isRtl ? ".rtl" : "").min.css" rel="stylesheet" />
   <link href="~/css/site.css" rel="stylesheet" />
   <style> body{ direction:@(isRtl?"rtl":"ltr"); text-align:@(isRtl?"right":"left"); } </style>
@@ -20,27 +20,27 @@
 <body>
   <header class="topbar navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-gold" href="/">@L["AppTitle"]</a>
+      <a class="navbar-brand fw-bold text-gold" href="/">@SharedResource.AppTitle</a>
       <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">☰</button>
       <div class="collapse navbar-collapse" id="nav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="/">@L["Menu_Dashboard"]</a></li>
-          <li class="nav-item"><a class="nav-link" href="/Users">@L["Menu_Users"]</a></li>
-          <li class="nav-item"><a class="nav-link" href="/Questions">@L["Menu_Questions"]</a></li>
-          <li class="nav-item"><a class="nav-link" href="/Assignments">@L["Menu_Assignments"]</a></li>
-          <li class="nav-item"><a class="nav-link" href="/Answers/Mine">@L["Menu_MyAnswers"]</a></li>
+          <li class="nav-item"><a class="nav-link" href="/">@SharedResource.Menu_Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="/Users">@SharedResource.Menu_Users</a></li>
+          <li class="nav-item"><a class="nav-link" href="/Questions">@SharedResource.Menu_Questions</a></li>
+          <li class="nav-item"><a class="nav-link" href="/Assignments">@SharedResource.Menu_Assignments</a></li>
+          <li class="nav-item"><a class="nav-link" href="/Answers/Mine">@SharedResource.Menu_MyAnswers</a></li>
           @if (string.IsNullOrEmpty(userName)){
-            <li class="nav-item"><a class="btn btn-outline-light ms-2" href="/Auth/Login">@L["Menu_Login"]</a></li>
+            <li class="nav-item"><a class="btn btn-outline-light ms-2" href="/Auth/Login">@SharedResource.Menu_Login</a></li>
           } else {
             <li class="nav-item"><span class="navbar-text me-2">@userName</span></li>
-            <li class="nav-item"><a class="btn btn-gold ms-2" href="/Auth/Logout">@L["Menu_Logout"]</a></li>
+            <li class="nav-item"><a class="btn btn-gold ms-2" href="/Auth/Logout">@SharedResource.Menu_Logout</a></li>
           }
           <li class="nav-item ms-2">
             <form method="post" action="/Language/Set">
               <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
               <select name="culture" class="form-select form-select-sm" onchange="this.form.submit()">
-                <option value="ar" selected="@(isRtl ? "selected" : null)">@L["Lang_Arabic"]</option>
-                <option value="en" selected="@(!isRtl ? "selected" : null)">@L["Lang_English"]</option>
+                <option value="ar" selected="@(isRtl ? "selected" : null)">@SharedResource.Lang_Arabic</option>
+                <option value="en" selected="@(!isRtl ? "selected" : null)">@SharedResource.Lang_English</option>
               </select>
             </form>
           </li>
@@ -57,7 +57,7 @@
   </main>
 
   <footer class="text-center py-3 border-top">
-    <small>© @DateTime.Now.Year @L["AppTitle"]</small>
+    <small>© @DateTime.Now.Year @SharedResource.AppTitle</small>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   @RenderSection("Scripts", required: false)
