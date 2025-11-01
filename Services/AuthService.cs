@@ -20,6 +20,7 @@ namespace PeerReview.MvcHotel.Services
             if (dto?.token != null) _ctx.HttpContext?.Session.SetString("jwt", dto.token);
             _ctx.HttpContext?.Session.SetString("userName", dto?.userName ?? "");
             _ctx.HttpContext?.Session.SetString("role", dto?.role ?? "");
+            _ctx.HttpContext?.Session.SetInt32("userId", dto?.UserId?? 0);
             return dto;
         }
 

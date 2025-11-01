@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PeerReview.MvcHotel.Models
 {
     public class LoginRequest { public string? userName { get; set; } public string? password { get; set; } }
-    public class LoginResponse { public string? token { get; set; } public string? userName { get; set; } public string? role { get; set; } }
+    public class LoginResponse { public string? token { get; set; } public string? userName { get; set; } public string? role { get; set; } public int? UserId { get; set; } }
 
     public class User { public int id { get; set; } public string? userName { get; set; } public string? fullName { get; set; } public string? email { get; set; } public bool isActive { get; set; } public int roleId { get; set; } }
     public class UserCreateDto { [Required] public string? userName { get; set; } public string? fullName { get; set; } public string? email { get; set; } public string? password { get; set; } public int roleId { get; set; } }
