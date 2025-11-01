@@ -1,5 +1,5 @@
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @model PeerReview.MvcHotel.Models.QuestionDto
 @{
     ViewData["Title"] = Model?.title ?? "Form";

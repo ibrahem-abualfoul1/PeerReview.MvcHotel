@@ -1,6 +1,5 @@
 
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @model PeerReview.MvcHotel.Models.QuestionCreateDto
 @{ ViewData["Title"]=L["Questions_Create_Title"]; }
 <h3>@L["Questions_Create_Title"]</h3>

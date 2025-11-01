@@ -1,7 +1,7 @@
 
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
 @model PeerReview.MvcHotel.Models.AnswerCreateDto
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+
 @{ ViewData["Title"]=L["Answers_Create_Title"]; }
 <h3>@L["Answers_Create_Title"]</h3>
 <form method="post" class="card card-hotel p-3">

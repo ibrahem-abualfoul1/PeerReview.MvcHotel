@@ -1,6 +1,5 @@
 
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @model PeerReview.MvcHotel.Models.QuestionUpdateDto
 @{ ViewData["Title"]=L["Questions_Edit_Title"]; var id = ViewBag.QuestionId as int? ?? 0; }
 <h3>@L["Questions_Edit_Title"] #@id</h3>

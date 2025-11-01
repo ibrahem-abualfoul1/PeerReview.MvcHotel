@@ -1,6 +1,6 @@
 
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+
 @model System.Collections.Generic.List<PeerReview.MvcHotel.Models.AssignmentDto>
 @{ ViewData["Title"]=L["Assignments_Title"]; var users = ViewBag.Users as System.Collections.Generic.List<PeerReview.MvcHotel.Models.User> ?? new(); var qs = ViewBag.Questions as System.Collections.Generic.List<PeerReview.MvcHotel.Models.QuestionDto> ?? new(); }
 <h3>@L["Assignments_Title"]</h3>

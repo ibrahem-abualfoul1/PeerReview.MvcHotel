@@ -1,6 +1,9 @@
 
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@System.Globalization.CultureInfo.CurrentUICulture
+
+@L["Login_Password"]
+
 @model PeerReview.MvcHotel.Models.LoginRequest
 @{ ViewData["Title"] = L["Login_Title"]; }
 <div class="row justify-content-center">

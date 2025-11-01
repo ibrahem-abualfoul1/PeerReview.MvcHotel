@@ -1,7 +1,8 @@
 
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer L
-@{ ViewData["Title"] = L["Menu_Dashboard"]; var users = (int)(ViewBag.UsersCount ?? 0); var questions = (int)(ViewBag.QuestionsCount ?? 0); }
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@{
+    ViewData["Title"] = L["Menu_Dashboard"]; var users = (int)(ViewBag.UsersCount ?? 0); var questions = (int)(ViewBag.QuestionsCount ?? 0);
+}
 <div class="row g-3">
   <div class="col-md-3">
     <div class="card card-hotel p-3">
