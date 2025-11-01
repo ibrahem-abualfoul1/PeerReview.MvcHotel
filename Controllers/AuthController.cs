@@ -12,25 +12,35 @@ namespace PeerReview.MvcHotel.Controllers
         private readonly AuthService _auth;
         private readonly IStringLocalizer<SharedResource> _L;
 
-        public AuthController(AuthService auth, IStringLocalizer<SharedResource> L){
-            _L = L; _auth = auth; }
+        public AuthController(AuthService auth, IStringLocalizer<SharedResource> L)
+        {
+            _L = L; _auth = auth;
+        }
 
         [HttpGet] public IActionResult Login() => View();
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model, string? returnUrl = null)
         {
-            try{
+            try
+            {
                 var res = await _auth.Login(model);
                 TempData["msg"] = SharedResource.Msg_Welcome + " " + (res?.userName ?? "");
                 if (!string.IsNullOrEmpty(returnUrl)) return Redirect(returnUrl);
-                return RedirectToAction("Index","Home");
-            }catch(Exception ex){
+
+                if (res?.role == "Admin") return RedirectToAction("Index", "Home");
+
+                if (res?.role == "Customer") return LocalRedirect($"/user-questions/survey/{res.UserId}");
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(model);
             }
         }
 
-        public IActionResult Logout(){ _auth.Logout(); return RedirectToAction(nameof(Login)); }
+        public IActionResult Logout() { _auth.Logout(); return RedirectToAction(nameof(Login)); }
     }
 }
