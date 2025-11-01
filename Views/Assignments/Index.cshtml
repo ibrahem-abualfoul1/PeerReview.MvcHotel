@@ -40,7 +40,10 @@
   <tbody>
   @foreach (var a in Model){
     <tr>
-      <td>@a.id</td><td>@a.questionId</td><td>@a.userId</td><td>@(a.isActive?L["Status_Active"].Value:L["Status_Inactive"].Value)</td>
+                <td>@a.id</td>
+                <td>@a.questionId</td>
+                <td>@a.userId</td>
+                <td>@(a.isActive? SharedResource.Status_Active :SharedResource.Status_Inactive)</td>
       <td class="text-nowrap">
         <form method="post" action="/Assignments/Activate/@a.id" style="display:inline" onsubmit="return confirm('@SharedResource.Confirm_Activate');"><button class="btn btn-sm btn-outline-success">@SharedResource.Assignments_Action_Activate</button></form>
         <form method="post" action="/Assignments/Deactivate/@a.id" style="display:inline" onsubmit="return confirm('@SharedResource.Confirm_Deactivate');"><button class="btn btn-sm btn-outline-warning">@SharedResource.Assignments_Action_Deactivate</button></form>

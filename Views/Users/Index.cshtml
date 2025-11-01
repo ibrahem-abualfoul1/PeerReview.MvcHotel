@@ -21,7 +21,7 @@
       <td>@u.id</td>
       <td>@u.fullName</td>
       <td>@u.userName</td>
-      <td>@(u.isActive ? L["Status_Active"].Value : L["Status_Inactive"].Value)</td>
+                <td>@(u.isActive ? SharedResource.Status_Active : SharedResource.Status_Inactive)</td>
       <td>@u.roleId</td>
       <td class="text-nowrap">
         <a class="btn btn-sm btn-outline-primary" href="/Users/Edit/@u.id">@SharedResource.Users_Action_Edit</a>

@@ -18,7 +18,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Index(){ var list = await _svc.List() ?? new(); return View(list); }
         public IActionResult Create() => View(new UserCreateDto());
 
-        [HttpPost] public async Task<IActionResult> Create(UserCreateDto model){ if(!ModelState.IsValid) return View(model); await _svc.Create(model); TempData["msg"]=_L["Msg_Added"]; return RedirectToAction(nameof(Index)); }
+        [HttpPost] public async Task<IActionResult> Create(UserCreateDto model){ if(!ModelState.IsValid) return View(model); await _svc.Create(model); TempData["msg"]=SharedResource.Msg_Added; return RedirectToAction(nameof(Index)); }
 
         public async Task<IActionResult> Edit(int id){
             var u = await _svc.Get(id);
