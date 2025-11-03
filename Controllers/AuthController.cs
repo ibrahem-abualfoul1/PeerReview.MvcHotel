@@ -16,8 +16,10 @@ namespace PeerReview.MvcHotel.Controllers
         private readonly AuthService _auth;
         private readonly IStringLocalizer<SharedResource> _L;
 
-        public AuthController(AuthService auth, IStringLocalizer<SharedResource> L){
-            _L = L; _auth = auth; }
+        public AuthController(AuthService auth, IStringLocalizer<SharedResource> L)
+        {
+            _L = L; _auth = auth;
+        }
 
         [AllowAnonymous]
         [HttpGet] 
@@ -78,6 +80,6 @@ namespace PeerReview.MvcHotel.Controllers
             }
         }
 
-        public IActionResult Logout(){ _auth.Logout(); return RedirectToAction(nameof(Login)); }
+        public IActionResult Logout() { _auth.Logout(); return RedirectToAction(nameof(Login)); }
     }
 }
