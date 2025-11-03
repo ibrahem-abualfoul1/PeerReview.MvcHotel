@@ -1,70 +1,251 @@
-
+@using System.Collections.Generic
+@using PeerReview.MvcHotel.Models
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@model List<AssignmentDto>
 
-@model System.Collections.Generic.List<PeerReview.MvcHotel.Models.AssignmentDto>
-@{ ViewData["Title"]=@SharedResource.Assignments_Title; var users = ViewBag.Users as System.Collections.Generic.List<PeerReview.MvcHotel.Models.User> ?? new(); var qs = ViewBag.Questions as System.Collections.Generic.List<PeerReview.MvcHotel.Models.QuestionDto> ?? new(); }
-<h3>@SharedResource.Assignments_Title</h3>
-<form class="card card-hotel p-3 mb-3" method="get">
-  <div class="row g-2 align-items-end">
-    <div class="col-md-4"><label class="form-label">@SharedResource.Assignments_Filter_ByUser</label>
-      <select name="userId" class="form-select"><option value="">—</option>
-        @foreach (var u in users){ <option value="@u.id">@u.fullName (@u.userName)</option> }
-      </select>
+@{
+    ViewData["Title"] = SharedResource.Assignments_Title;
+    var users = ViewBag.Users as List<User> ?? new();
+    var qs = ViewBag.Questions as List<QuestionDto> ?? new();
+}
+
+<style>
+    :root {
+        --hotel-gold: #C7A462;
+        --muted: #6c757d;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, rgba(199,164,98,.15), rgba(0,0,0,.03));
+        border: 1px solid rgba(199,164,98,.25);
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 14px;
+    }
+
+        .page-header h3 {
+            margin: 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+    .btn-gold {
+        background: linear-gradient(180deg,#d6bb7e,var(--hotel-gold));
+        color: #1b1b1b;
+        border: none;
+        font-weight: 700;
+        border-radius: 12px;
+    }
+
+    .card-hotel {
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,.06);
+        box-shadow: 0 6px 24px rgba(0,0,0,.06);
+    }
+
+    .section-title {
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .row-inactive {
+        opacity: .65;
+    }
+
+    .badge-active {
+        background: #eaf6ed;
+        color: #137333;
+        border: 1px solid #cfe9d6;
+        padding: .35rem .6rem;
+        border-radius: 12px;
+    }
+
+    .badge-inactive {
+        background: #fff4e5;
+        color: #8a5a00;
+        border: 1px solid #ffe3bf;
+        padding: .35rem .6rem;
+        border-radius: 12px;
+    }
+</style>
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h3>@SharedResource.Assignments_Title <small class="text-muted">— إدارة الإسنادات</small></h3>
+    <div class="d-flex gap-2">
+        <button class="btn btn-gold" id="btnAdd"><i class="bi bi-plus-lg"></i> Assignments_Add</button>
+        <button class="btn btn-outline-primary" id="btnBulk"><i class="bi bi-arrow-down-up"></i> @SharedResource.Assignments_Bulk_Title</button>
     </div>
-    <div class="col-md-4"><label class="form-label">@SharedResource.Assignments_Filter_ByQuestion</label>
-      <select name="questionId" class="form-select"><option value="">—</option>
-        @foreach (var q in qs){ <option value="@q.id">@q.title</option> }
-      </select>
-    </div>
-    <div class="col-md-2"><button class="btn btn-gold w-100">@SharedResource.Assignments_Show</button></div>
-  </div>
-</form>
+</div>
 
-<form method="post" action="/Assignments/Bulk" class="card card-hotel p-3 mb-3">
-  <h5 class="mb-2">@SharedResource.Assignments_Bulk_Title</h5>
-  <div class="row g-2">
-    <div class="col-md-6"><label class="form-label">@SharedResource.Assignments_Bulk_QuestionIds</label><input name="questionIds" class="form-control" placeholder="1,2,3" /></div>
-    <div class="col-md-6"><label class="form-label">@SharedResource.Assignments_Bulk_UserIds</label><input name="userIds" class="form-control" placeholder="5,7,9" /></div>
-  </div>
-  <button class="btn btn-gold mt-2">@SharedResource.Assignments_Bulk_Execute</button>
-</form>
+<!-- فلترة -->
+<div class="card card-hotel p-3 mb-3">
+    <div class="section-title">Filter</div>
+    <form id="filterForm" class="mt-1">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">@SharedResource.Assignments_Filter_ByUser</label>
+                <select name="userId" class="form-select">
+                    <option value="">—</option>
+                    @foreach (var u in users)
+                    {
+                        <option value="@u.id">@u.fullName (@u.userName)</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">@SharedResource.Assignments_Filter_ByQuestion</label>
+                <select name="questionId" class="form-select">
+                    <option value="">—</option>
+                    @foreach (var q in qs)
+                    {
+                        <option value="@q.id">@q.title</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-gold w-100" type="submit"><i class="bi bi-search"></i> @SharedResource.Assignments_Show</button>
+            </div>
+        </div>
+    </form>
+</div>
 
-<table class="table table-hover bg-white card-hotel">
-  <thead><tr>
-    <th>@SharedResource.Assignments_Col_Id</th>
-    <th>@SharedResource.Assignments_Col_Question</th>
-    <th>@SharedResource.Assignments_Col_User</th>
-    <th>@SharedResource.Assignments_Col_Active</th>
-    <th>Actions</th>
-  </tr></thead>
-  <tbody>
-  @foreach (var a in Model){
-    <tr>
-                <td>@a.id</td>
-                <td>@a.questionId</td>
-                <td>@a.userId</td>
-                <td>@(a.isActive? SharedResource.Status_Active :SharedResource.Status_Inactive)</td>
-      <td class="text-nowrap">
-        <form method="post" action="/Assignments/Activate/@a.id" style="display:inline" onsubmit="return confirm('@SharedResource.Confirm_Activate');"><button class="btn btn-sm btn-outline-success">@SharedResource.Assignments_Action_Activate</button></form>
-        <form method="post" action="/Assignments/Deactivate/@a.id" style="display:inline" onsubmit="return confirm('@SharedResource.Confirm_Deactivate');"><button class="btn btn-sm btn-outline-warning">@SharedResource.Assignments_Action_Deactivate</button></form>
-      </td>
-    </tr>
-  }
-  </tbody>
-</table>
+<!-- Bulk -->
+<div class="card card-hotel p-3 mb-3">
+    <div class="section-title"><i class="bi bi-lightning-charge"></i> @SharedResource.Assignments_Bulk_Title</div>
+    <div class="text-muted mb-2">أدخل مُعرّفات مفصولة بفواصل، مثال: 1,2,3</div>
+    <form id="bulkForm" class="mt-1">
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label class="form-label">@SharedResource.Assignments_Bulk_QuestionIds</label>
+                <input name="questionIds" class="form-control" placeholder="1,2,3" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">@SharedResource.Assignments_Bulk_UserIds</label>
+                <input name="userIds" class="form-control" placeholder="5,7,9" />
+            </div>
+        </div>
+        <div class="mt-2 d-flex gap-2">
+            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-check2-circle"></i> @SharedResource.Assignments_Bulk_Execute</button>
+            <button type="reset" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i> Reset</button>
+        </div>
+    </form>
+</div>
 
-@section Scripts{
-<script>
-document.querySelector('form[action="/Assignments/Bulk"]').addEventListener('submit', function(e){
-  const qs = this.querySelector('input[name="questionIds"]');
-  const us = this.querySelector('input[name="userIds"]');
-  const body = {
-    questionIds: (qs.value||'').split(',').map(s=>s.trim()).filter(Boolean).map(Number),
-    userIds: (us.value||'').split(',').map(s=>s.trim()).filter(Boolean).map(Number)
-  };
-  e.preventDefault();
-  fetch('/Assignments/Bulk', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) })
-    .then(()=> location.reload());
-});
-</script>
+<!-- الجدول (سيتم تحميله/إعادة تحميله بالبارشال عبر AJAX) -->
+<div id="assignTableWrap" class="card card-hotel p-3">
+    @await Html.PartialAsync("_AssignmentsTable", Model)
+</div>
+
+<!-- حاوية المودال -->
+<div id="assignUpsertHost"></div>
+
+<!-- توكن مضاد للتزوير للاستعمال في الطلبات AJAX -->
+<form id="afTokenForm" class="d-none">@Html.AntiForgeryToken()</form>
+
+@section Scripts {
+    <!-- Icons + jQuery + DataTables -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+    <script>
+        const getAfToken = ()=> document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]').value;
+
+        function initDataTable(){
+          const $tbl = $('#assignTable');
+          if ($.fn.dataTable.isDataTable($tbl)) $tbl.DataTable().destroy();
+          $tbl.DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+              { extend: 'copyHtml5', text: '<i class="bi bi-clipboard"></i> Copy' },
+              { extend: 'excelHtml5', text: '<i class="bi bi-filetype-xlsx"></i> Excel' },
+              { extend: 'pdfHtml5',   text: '<i class="bi bi-filetype-pdf"></i> PDF', orientation:'landscape', pageSize:'A4' }
+            ],
+            pageLength: 10
+          });
+        }
+
+        function reloadAssignmentsTable(query){
+          const qs = new URLSearchParams(query || Object.fromEntries(new FormData(document.getElementById('filterForm')))).toString();
+          const url = '/Assignments/Table' + (qs ? ('?' + qs) : '');
+          $('#assignTableWrap').load(url, function(){
+            initDataTable();
+          });
+        }
+
+        // أول تحميل: DataTable
+        $(function(){ initDataTable(); });
+
+        // فلترة بدون ريفريش
+        $('#filterForm').on('submit', function(e){
+          e.preventDefault();
+          reloadAssignmentsTable();
+        });
+
+        // فتح مودال إضافة
+        $('#btnAdd').on('click', function(){ openUpsert(); });
+
+        // فتح مودال تعديل
+        $(document).on('click', '.js-edit', function () {
+          const id = $(this).data('id');
+          const userId = $(this).data('userid');
+          openUpsert(id, userId);
+        });
+
+        function openUpsert(id, userId){
+          const params = new URLSearchParams();
+          if (id) params.set('id', id);
+          if (userId) params.set('userId', userId);
+          const url = '/Assignments/Upsert' + (params.toString() ? ('?' + params.toString()) : '');
+
+          $('#assignUpsertHost').load(url, function(){
+            const el = document.getElementById('assignmentUpsertModal');
+            const modal = new bootstrap.Modal(el);
+            modal.show();
+          });
+        }
+
+        // Bulk عبر AJAX + Anti-forgery
+        $('#bulkForm').on('submit', function(e){
+          e.preventDefault();
+          const qs = this.querySelector('input[name="questionIds"]').value;
+          const us = this.querySelector('input[name="userIds"]').value;
+          const body = {
+            questionIds: (qs||'').split(',').map(s=>s.trim()).filter(Boolean).map(Number),
+            userIds: (us||'').split(',').map(s=>s.trim()).filter(Boolean).map(Number)
+          };
+          fetch('/Assignments/Bulk', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getAfToken() },
+            body: JSON.stringify(body)
+          }).then(r => r.json())
+            .then(j => { if(j.ok){ reloadAssignmentsTable(); } else { alert('فشل التنفيذ'); }})
+            .catch(()=> alert('خطأ في تنفيذ العملية'));
+        });
+
+        // تفعيل/تعطيل عبر AJAX بدون ريفريش
+        $(document).on('click', '.js-activate, .js-deactivate', function(e){
+          e.preventDefault();
+          const id = $(this).data('id');
+          const isAct = $(this).hasClass('js-activate');
+          const url = isAct ? '/Assignments/Activate/' + id : '/Assignments/Deactivate/' + id;
+
+          fetch(url, {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': getAfToken() }
+          }).then(r => r.json())
+            .then(j => { if(j.ok){ reloadAssignmentsTable(); } else { alert('فشل العملية'); }})
+            .catch(()=> alert('خطأ أثناء التنفيذ'));
+        });
+    </script>
 }

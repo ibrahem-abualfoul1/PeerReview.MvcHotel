@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using PeerReview.MvcHotel.Models;
 
@@ -11,6 +12,7 @@ namespace PeerReview.MvcHotel.Services
 
         public AuthService(ApiClient api, IHttpContextAccessor ctx){ _api = api; _ctx = ctx; }
 
+       
         public async Task<LoginResponse?> Login(LoginRequest req)
         {
             var res = await _api.Post("/api/Auth/login", req);

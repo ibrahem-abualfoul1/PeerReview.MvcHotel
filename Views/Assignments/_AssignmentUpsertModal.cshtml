@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    var usersSelect = ViewBag.UsersSelect as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
+    var qsSelect = ViewBag.QuestionsSelect as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
+}
+
+<div class="modal fade" id="assignmentUpsertModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form id="assignmentUpsertForm">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <h5 class="modal-title">إسناد جماعي (أسئلة ← مستخدمين)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="x"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">الأسئلة (متعدد)</label>
+                            <select class="form-select" id="questionIds" multiple size="8">
+                                @foreach (var q in qsSelect)
+                                {
+                                    <option value="@q.Value">@q.Text</option>
+                                }
+                            </select>
+                            <div class="form-text">اختر سؤالًا واحدًا أو أكثر.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">المستخدمون (متعدد)</label>
+                            <select class="form-select" id="userIds" multiple size="8">
+                                @foreach (var u in usersSelect)
+                                {
+                                    <option value="@u.Value">@u.Text</option>
+                                }
+                            </select>
+                            <div class="form-text">اختر مستخدمًا واحدًا أو أكثر.</div>
+                        </div>
+                    </div>
+
+                    <div id="upsertAlert" class="alert alert-danger mt-3 d-none"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function(){
+          $(document).off('submit', '#assignmentUpsertForm').on('submit', '#assignmentUpsertForm', function(e){
+            e.preventDefault();
+
+            const qSel = Array.from(document.querySelectorAll('#questionIds option:checked')).map(o => Number(o.value));
+            const uSel = Array.from(document.querySelectorAll('#userIds option:checked')).map(o => Number(o.value));
+
+            const alertBox = document.getElementById('upsertAlert');
+            const showErr = (msg)=>{ alertBox.textContent = msg; alertBox.classList.remove('d-none'); };
+
+            if (!qSel.length){ return showErr('الرجاء اختيار سؤال/أسئلة.'); }
+            if (!uSel.length){ return showErr('الرجاء اختيار مستخدم/مستخدمين.'); }
+            alertBox.classList.add('d-none');
+
+            const af = document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]')?.value
+                    || document.querySelector('#assignmentUpsertForm input[name="__RequestVerificationToken"]')?.value;
+
+            fetch('/Assignments/Upsert', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': af
+              },
+              body: JSON.stringify({ questionIds: qSel, userIds: uSel })
+            })
+            .then(r => r.json())
+            .then(j => {
+              if (j && j.ok){
+                bootstrap.Modal.getInstance(document.getElementById('assignmentUpsertModal')).hide();
+                if (window.reloadAssignmentsTable) window.reloadAssignmentsTable(); // إعادة تحميل الجدول فقط
+              } else {
+                showErr(j?.message || 'تعذّر الحفظ.');
+              }
+            })
+            .catch(() => showErr('حدث خطأ أثناء الحفظ.'));
+          });
+        })();
+    </script>
+}

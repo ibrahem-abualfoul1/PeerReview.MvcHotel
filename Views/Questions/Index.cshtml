@@ -1,7 +1,8 @@
-﻿
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @model System.Collections.Generic.List<PeerReview.MvcHotel.Models.QuestionDto>
-@{ ViewData["Title"]=L["Questions_Title"]; }
+@{
+    ViewData["Title"] = L["Questions_Title"];
+}
 @* <div class="d-flex justify-content-between align-items-center mb-2">
     <h3 class="m-0">@L["Questions_Title"]</h3>
     <a class="btn btn-gold" href="/Questions/Create">@L["Questions_Add"]</a>
@@ -35,33 +36,44 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 
-<div class="table-responsive-sm">
-<table id="qustions" class="table table-striped nowrap">
-    <thead>
-        <tr>
-            <th>العنوان</th>
-            <th>الوصف</th>
-            <th>عناصر السؤال</th>
-            <th>#</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var q in Model)
-        {
-            <tr>
-                <td>@q.title</td>
-                <td>@q.description</td>
-                <td>@(q.items?.Count ?? 0)</td>
-                <td>
-                    <a class="btn btn-sm btn-outline-primary" href="/Questions/Edit/@q.id">تعديل</a> <a class="btn btn-sm btn-outline-secondary ms-1" href="/Answers/Screen/@q.id">Fill</a>
-                    <form method="post" action="/Questions/Delete/@q.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
-                        <button class="btn btn-sm btn-outline-danger">حذف</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="m-0">الأسئلة</h3>
+            <button class="btn btn-primary" id="btnAddQuestion">إضافة سؤال</button>
+        </div>
+
+        <div id="modalHost"></div>
+
+        <div class="table-responsive-sm">
+            <table id="qustions" class="table table-striped nowrap">
+                <thead>
+                    <tr>
+                        <th>العنوان</th>
+                        <th>الوصف</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var q in Model)
+                    {
+                        <tr>
+                            <td>@q.title</td>
+                            <td>@q.description</td>
+                            @* <td>@(q.items?.Count ?? 0)</td> *@
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" type="button" onclick="openQuestionModal(@q.id)">تعديل</button>
+                                @* <a class="btn btn-sm btn-outline-secondary ms-1" href="/Answers/Screen/@q.id">Fill</a> *@
+                                <form method="post" action="/Questions/Delete/@q.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
+                                    <button class="btn btn-sm btn-outline-danger">حذف</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -96,6 +108,33 @@
             dom: 'Bftip', // أو 'Bfrtip'
             buttons: ['copy', 'excel', 'pdf']
           });
+        });
+
+               // فتح المودال (إنشاء)
+        function openQuestionModal(id) {
+          var url = '@Url.Action("UpsertPartial", "Questions")' + (id ? ('?id=' + id) : '');
+          $('#modalHost').load(url, function () {
+            var modalEl = document.getElementById('questionUpsertModal');
+            var modal = new bootstrap.Modal(modalEl, { backdrop: 'static' });
+            modal.show();
+          });
+        }
+
+        $('#btnAddQuestion').on('click', function () {
+            openQuestionModal(null);
+        });
+
+        // مثال: ربط زر تحرير في جدولك
+        // $(document).on('click','.btn-edit-question', function(){
+        //     var id = $(this).data('id');
+        //     openQuestionModal(id);
+        // });
+
+        // بعد الحفظ: أعد تحميل الداتا/الجدول (DataTable مثلاً)
+        $(document).on('question:upserted', function (e, res) {
+            // مثال: إعادة تحميل DataTable
+            // $('#myTable').DataTable().ajax.reload(null, false);
+            // أو تحديث يدوي حسب بنية صفحتك
         });
     </script>
 }

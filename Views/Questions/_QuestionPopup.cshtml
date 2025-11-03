@@ -1,0 +1,136 @@
+﻿@model QuestionCreateDto
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    var id = ViewBag.Id as int?; // من الكنترولر: ViewBag.Id = int?;
+
+    var types = ViewBag.QuestionTypes as SelectList
+                ?? new SelectList(Enumerable.Empty<SelectListItem>());
+
+    // لو عندي id > 0 = تعديل، غير هيك = إضافة
+    var isEdit = id.HasValue && id.Value > 0;
+
+    // لمّا يكون تعديل: POST إلى /Questions/Edit/{id}
+    // لمّا يكون إضافة: POST إلى /Questions/Create
+    string url = isEdit
+        ? Url.Action("Edit", "Questions", new { id = id!.Value })!
+        : Url.Action("Create", "Questions")!;
+}
+
+
+<div class="modal fade" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">@(isEdit ? "تعديل سؤال" : "إضافة سؤال")</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+         
+            <form id="questionUpsertForm" method="post" action="@url" onsubmit="return checkIfNotNull(event)">
+                @Html.AntiForgeryToken()
+
+                @* id مرة واحدة فقط *@
+                @if (isEdit)
+                {
+                    <input type="hidden" name="id" value="@id" />
+                }
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="title">العنوان</label>
+                        <input class="form-control" name="title" id="title" value="@Model?.title" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="description">الوصف</label>
+                        <textarea class="form-control" name="description" id="description" rows="3" required>@Model?.description</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="categoryId">التصنيف (واحد)</label>
+                        <select class="form-select" name="categoryId" id="categoryId" required>
+                            @foreach (var opt in types)
+                            {
+                                var sel = Model?.categoryId != null
+                                && int.TryParse(opt.Value, out var v)
+                                && Model.categoryId == v;
+
+                                <option value="@opt.Value" selected="@(sel ? "selected" : null)">@opt.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+              (function() {
+          $(document).off('submit', '#questionUpsertForm').on('submit', '#questionUpsertForm', function (e) {
+            e.preventDefault();
+
+            var $form = $(this);
+            var url = $form.attr('action');
+            var formData = new FormData(this);
+
+            $.ajax({
+              url: url,
+              type: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false
+            })
+            .done(function (res, status, xhr) {
+              var ct = (xhr.getResponseHeader('content-type') || '').toLowerCase();
+
+              if (ct.includes('application/json')) {
+                if (res && res.ok) {
+                  // اغلاق المودال
+                  var modalEl = document.getElementById('questionUpsertModal');
+                  var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                  modal.hide();
+
+                  $(document).trigger('question:upserted', res);
+                  return;
+                }
+                alert(res && res.message ? res.message : 'لم يتم الحفظ.');
+              } else {
+                // رجع View (أخطاء ModelState) => استبدل محتوى المودال
+                $('#questionUpsertModal .modal-content').html($(res).find('.modal-content').length
+                  ? $(res).find('.modal-content')
+                  : res);
+              }
+            })
+            .fail(function (xhr) {
+              alert('حدث خطأ في الحفظ: ' + (xhr.responseText || xhr.statusText));
+            });
+          });
+        })();
+
+              function checkIfNotNull(e) {
+          const title = (document.getElementById('title')?.value || '').trim();
+          const desc  = (document.getElementById('description')?.value || '').trim();
+          const cat   = document.getElementById('categoryId')?.value;
+
+          const errors = [];
+          if (!title) errors.push('الرجاء إدخال العنوان.');
+          if (!desc)  errors.push('الرجاء إدخال الوصف.');
+          if (!cat)   errors.push('الرجاء اختيار التصنيف.');
+
+          if (errors.length) {
+            alert(errors.join('\n'));
+            return false; // يمنع الإرسال
+          }
+          return true; // يسمح بالإرسال
+        }
+    </script>
+}

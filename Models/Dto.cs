@@ -1,4 +1,4 @@
-
+﻿
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 namespace PeerReview.MvcHotel.Models
@@ -37,5 +37,17 @@ namespace PeerReview.MvcHotel.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+    }
+    public class AssignmentUpsertDto
+    {
+        public int? id { get; set; } // عند الإضافة = null
+
+        [Required(ErrorMessage = "اختر المستخدم")]
+        public int? userId { get; set; }
+
+        [Required(ErrorMessage = "اختر السؤال")]
+        public int? questionId { get; set; }
+
+        public bool isActive { get; set; } = true;
     }
 }

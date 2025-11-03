@@ -1,25 +1,254 @@
-
+﻿@using System.Globalization
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
-
-
 @model PeerReview.MvcHotel.Models.LoginRequest
-@{ ViewData["Title"] = SharedResource.Login_Title; }
-<div class="row justify-content-center">
-  <div class="col-md-5">
-    <div class="card card-hotel p-3">
-      <h3 class="mb-3">@SharedResource.Login_Title</h3>
-      <form method="post">
-        <div class="mb-2">
-          <label class="form-label">@SharedResource.Login_UserName</label>
-          <input asp-for="userName" class="form-control" placeholder="Admin" />
+@{
+    ViewData["Title"] = SharedResource.Login_Title;
+    Layout = null;
+    var isRtl = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@(isRtl ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - PeerReview</title>
+
+    <!-- ستايلات المشروع -->
+    <link rel="stylesheet" href="~/assets/css/styles.min.css" />
+
+    <!-- خط أنيق (اختياري) -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --hotel-gold: #C7A462;
+            --hotel-deep: #1b1f2a;
+            --hotel-ink: #0f1320;
+            --glass-bg: rgba(255,255,255,0.06);
+            --glass-brd: rgba(255,255,255,0.18);
+            --text-light: #f7f7f7;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: "Tajawal", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Segoe UI Emoji", "Apple Color Emoji";
+            background: linear-gradient(120deg, rgba(18,19,31,.85), rgba(20,22,34,.65)), url('~/assets/images/hotel/bg.png') center/cover no-repeat fixed;
+            color: var(--text-light);
+        }
+
+        .hotel-wrapper {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 32px 16px;
+        }
+
+        .hotel-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            justify-content: center;
+        }
+
+        .brand-logo {
+            width: 64px;
+            height: 48px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff6, #0000), var(--glass-bg);
+            border: 1px solid var(--glass-brd);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            color: var(--hotel-gold);
+        }
+
+        .brand-name {
+            font-weight: 700;
+            letter-spacing: .5px;
+            color: var(--text-light);
+        }
+
+        .login-card {
+            width: min(520px, 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-brd);
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.35);
+        }
+
+            .login-card .header {
+                padding: 22px 24px 0 24px;
+                text-align: center;
+            }
+
+            .login-card h3 {
+                margin: 6px 0 4px;
+                color: var(--text-light);
+            }
+
+            .login-card .subtitle {
+                color: #d8d8d8;
+                font-size: .95rem;
+            }
+
+            .login-card .body {
+                padding: 18px 24px 8px;
+            }
+
+            .login-card .footer {
+                padding: 0 24px 22px;
+            }
+
+        .form-label {
+            color: #eee;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.2);
+            color: #fff;
+        }
+
+            .form-control::placeholder {
+                color: #cfcfcf;
+            }
+
+            .form-control:focus {
+                border-color: var(--hotel-gold);
+                box-shadow: 0 0 0 .2rem rgba(199,164,98,.25);
+                background: rgba(255,255,255,.12);
+                color: #fff;
+            }
+
+        .btn-gold {
+            background: linear-gradient(180deg, #d6bb7e, var(--hotel-gold));
+            color: #1b1b1b;
+            border: none;
+            font-weight: 700;
+            padding: 10px 16px;
+            border-radius: 12px;
+            transition: transform .06s ease, box-shadow .2s ease;
+            width: 100%;
+        }
+
+            .btn-gold:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 8px 20px rgba(199,164,98,.35);
+            }
+
+            .btn-gold:active {
+                transform: translateY(0);
+            }
+
+        .muted {
+            color: #cfcfcf;
+            font-size: .9rem;
+        }
+
+        .text-danger {
+            color: #ff9f9f !important;
+        }
+
+        .validation-summary {
+            background: rgba(255,65,65,.08);
+            border: 1px solid rgba(255,65,65,.25);
+            color: #ffdede;
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+
+        .input-row {
+            margin-bottom: 14px;
+        }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+
+        /* RTL تحسينات بسيطة */
+        [dir="rtl"] .remember-row {
+            flex-direction: row-reverse;
+        }
+
+        [dir="rtl"] .form-check {
+            padding-right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="hotel-wrapper">
+        <div class="login-card card-hotel">
+            <div class="header">
+                <div class="hotel-brand">
+                    <!-- ضع شعارك هنا إن توفر -->
+                    <div class="brand-logo">H</div>
+                    <div class="brand-name">Hotel PeerReview</div>
+                </div>
+                <h3>@SharedResource.Login_Title</h3>
+                <div class="subtitle">@L["WelcomeBack", ""]</div>
+            </div>
+
+            <div class="body">
+                @* ملخص أخطاء التحقق *@
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary mb-3">
+                        @SharedResource.Login_Failed
+                    </div>
+                }
+
+                <form asp-action="Login" asp-controller="Auth" method="post" class="needs-validation" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div class="input-row">
+                        <label class="form-label" for="userName">@SharedResource.Login_UserName</label>
+                        <input asp-for="userName" class="form-control" id="userName" name="userName" autocomplete="username" placeholder="" />
+                        <span asp-validation-for="userName" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-row">
+                        <label class="form-label" for="password">@SharedResource.Login_Password</label>
+                        <input asp-for="password" class="form-control" id="password" name="password" type="password" autocomplete="current-password" />
+                        <span asp-validation-for="password" class="text-danger"></span>
+                    </div>
+
+                   @*  <div class="remember-row">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rememberMe" name="RememberMe" />
+                            <label class="form-check-label muted" for="rememberMe">@L["RememberMe"]</label>
+                        </div>
+                        <a class="muted" href="~/Auth/ForgotPassword">@L["ForgotPassword"]</a>
+                    </div> *@
+
+                    <button class="btn btn-gold mt-2" type="submit">
+                        @SharedResource.Login_Submit
+                    </button>
+                </form>
+            </div>
+
+            <div class="footer d-flex justify-content-between align-items-center">
+                <small class="muted">© @DateTime.UtcNow.Year PeerReview</small>
+                <div class="d-flex gap-2">
+                    <!-- مبدّل لغة بسيط -->
+                    <a class="muted" href="?culture=ar&ui-culture=ar">AR</a>
+                    <span class="muted">•</span>
+                    <a class="muted" href="?culture=en&ui-culture=en">EN</a>
+                </div>
+            </div>
         </div>
-        <div class="mb-2">
-          <label class="form-label">@SharedResource.Login_Password</label>
-          <input asp-for="password" class="form-control" type="password" />
-        </div>
-        <button class="btn btn-gold mt-2">@SharedResource.Login_Submit</button>
-      </form>
-      @if (!ViewData.ModelState.IsValid) { <div class="text-danger mt-2">@SharedResource.Login_Failed</div> }
     </div>
-  </div>
-</div>
+</body>
+</html>
