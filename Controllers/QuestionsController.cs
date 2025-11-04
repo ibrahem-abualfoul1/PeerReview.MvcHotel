@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Localization;
-
-using Microsoft.AspNetCore.Mvc;
-using PeerReview.MvcHotel.Models;
-using PeerReview.MvcHotel.Services;
-using PeerReview.MvcHotel.Resources;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
+using PeerReview.MvcHotel.Models;
+using PeerReview.MvcHotel.Resources;
+using PeerReview.MvcHotel.Services;
 
 namespace PeerReview.MvcHotel.Controllers
 {
@@ -18,8 +17,12 @@ namespace PeerReview.MvcHotel.Controllers
             _L = L; _svc = svc;
         }
 
-        public async Task<IActionResult> Index() { var list = await _svc.List() ?? new(); return View(list); }
-        public IActionResult Create() => View(new QuestionCreateDto());
+        public async Task<IActionResult> Index()
+        {
+            var list = await _svc.List() ?? new();
+            return View(list);
+        }
+        //public IActionResult Create() => View(new QuestionCreateDto());
 
         [HttpPost]
         public async Task<IActionResult> Create(QuestionCreateDto model)
@@ -29,27 +32,27 @@ namespace PeerReview.MvcHotel.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            var q = await _svc.Get(id); if (q == null) return NotFound();
-            ViewBag.QuestionId = id;
-            return View(new QuestionUpdateDto { title = q.title, description = q.description, categoryId = q.categoryId });
-        }
+        //public async Task<IActionResult> Edit(int id)
+        //{
+        //    var q = await _svc.Get(id); if (q == null) return NotFound();
+        //    ViewBag.QuestionId = id;
+        //    return View(new QuestionUpdateDto { title = q.TitleEn, description = q.description, categoryId = q.categoryId });
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, QuestionUpdateDto model)
-        {
-            await _svc.Update(id, model);
-            TempData["msg"] = SharedResource.Msg_Updated;
-            return RedirectToAction(nameof(Index));
-        }
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
-        {
-            await _svc.Delete(id);
-            TempData["msg"] = SharedResource.Msg_Deleted;
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> Edit(int id, QuestionUpdateDto model)
+        //{
+        //    await _svc.Update(id, model);
+        //    TempData["msg"] = SharedResource.Msg_Updated;
+        //    return RedirectToAction(nameof(Index));
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    await _svc.Delete(id);
+        //    TempData["msg"] = SharedResource.Msg_Deleted;
+        //    return RedirectToAction(nameof(Index));
+        //}
         [HttpGet]
         public async Task<IActionResult> UpsertPartial(int? id)
         {
@@ -66,9 +69,9 @@ namespace PeerReview.MvcHotel.Controllers
                 var existing = await _svc.Get(id.Value);
                 if (existing == null) return NotFound();
 
-                model.title = existing.title;
-                model.description = existing.description;
-                model.categoryId = existing.categoryId;
+                model.TitleEn = existing.TitleEn;
+                model.DescriptionEn = existing.DescriptionEn;
+                model.CategoryId = existing.CategoryId;
                 // items: ما منرجّعها هون (بس نهيئها للتحديث لاحقاً)
                 ViewBag.Id = id.Value;
             }

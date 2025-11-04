@@ -32,17 +32,17 @@ namespace PeerReview.MvcHotel.Controllers
             {
                 surveyVm.Groups.Add(new QuestionGroup
                 {
-                    Id = item.question.id,
-                    Title = item.question.title ?? "",
-                    Description = item.question.description ?? "",
-                    CategoryId = item.question.categoryId ?? 0,
-                    Items = item.question.items?.Select(qi => new QuestionItem
+                    Id = item.question.Id,
+                    Title = item.question.TitleEn ?? "",
+                    Description = item.question.DescriptionEn ?? "",
+                    CategoryId = item.question.CategoryId ?? 0,
+                    Items = item.question.Items?.Select(qi => new QuestionItem
                     {
-                        Id = qi.id,
-                        Text = qi.text ?? "",
-                        Type = qi.type,
-                        IsRequired = qi.isRequired,
-                        OptionsCsv = qi.optionsCsv
+                        Id = qi.Id,
+                        Text = qi.TextEn ?? "",
+                        Type = qi.Type,
+                        IsRequired = qi.IsRequired,
+                        OptionsCsv = qi.OptionsCsvEn
                     }).ToList() ?? new List<QuestionItem>()
                 });
             }

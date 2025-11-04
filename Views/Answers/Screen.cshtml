@@ -2,55 +2,55 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @model PeerReview.MvcHotel.Models.QuestionDto
 @{
-    ViewData["Title"] = Model?.title ?? "Form";
+    ViewData["Title"] = Model?.TitleEn ?? "Form";
     var qid = (int)(ViewBag.QuestionId ?? 0);
 }
-<h3 class="mb-3">@Model?.title</h3>
-@if (!string.IsNullOrWhiteSpace(Model?.description)){ <p class="text-muted">@Model.description</p> }
+<h3 class="mb-3">@Model?.TitleEn</h3>
+@if (!string.IsNullOrWhiteSpace(Model?.DescriptionEn)){ <p class="text-muted">@Model.DescriptionEn</p> }
 
 <form id="dynForm" class="card card-hotel p-3">
   <input type="hidden" id="questionId" value="@qid" />
   <div class="row g-3">
     
 
-@foreach (var it in Model?.items ?? new List<PeerReview.MvcHotel.Models.QuestionItemDto>())
+@foreach (var it in Model?.Items ?? new List<PeerReview.MvcHotel.Models.QuestionItemDto>())
 {
-    var required = it.isRequired ? "required" : "";
-    var parentAttr = it.parentItemId.HasValue ? $"data-parent='{it.parentItemId.Value}' data-show='{it.showWhenValue}'" : "";
-    <div class="col-12 item" id="item-@it.id" @Html.Raw(parentAttr)>
-      <label class="form-label fw-semibold">@it.text @if(it.isRequired){<span class="text-danger">*</span>}</label>
+    var required = it.IsRequired ? "required" : "";
+@*     var parentAttr = it.parentItemId.HasValue ? $"data-parent='{it.parentItemId.Value}' data-show='{it.showWhenValue}'" : "";
+ *@    <div class="col-12 item" id="item-@it.Id" @* @Html.Raw(parentAttr) *@>
+      <label class="form-label fw-semibold">@it.TextEn @if(it.IsRequired){<span class="text-danger">*</span>}</label>
 
       @* Enum mapping from PeerReview.Domain.Enums.QuestionType:
          1=Text, 2=YesNo, 3=SingleChoice, 4=MultiChoice, 5=Number, 6=Date, 7=File *@
-      @if (it.type == 7) {
-          <input class="form-control" type="file" name="file_@it.id" />
-      } else if (it.type == 6) {
-          <input class="form-control" type="date" name="i_@it.id" @required />
-      } else if (it.type == 5) {
-          <input class="form-control" type="number" step="any" name="i_@it.id" @required />
-      } else if (it.type == 4) {
-          <select class="form-select" multiple name="i_@it.id">
-            @foreach (var opt in (it.optionsCsv ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries)){
+      @if (it.Type == 7) {
+          <input class="form-control" type="file" name="file_@it.Id" />
+      } else if (it.Type == 6) {
+          <input class="form-control" type="date" name="i_@it.Id" @required />
+      } else if (it.Type == 5) {
+          <input class="form-control" type="number" step="any" name="i_@it.Id" @required />
+      } else if (it.Type == 4) {
+          <select class="form-select" multiple name="i_@it.Id">
+            @foreach (var opt in (it.OptionsCsvEn ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries)){
               var o = opt.Trim();
               <option value="@o">@o</option>
             }
           </select>
-      } else if (it.type == 3) {
-          <select class="form-select" name="i_@it.id" @required>
+      } else if (it.Type == 3) {
+          <select class="form-select" name="i_@it.Id" @required>
             <option value="">—</option>
-            @foreach (var opt in (it.optionsCsv ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries)){
+            @foreach (var opt in (it.OptionsCsvEn ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries)){
               var o = opt.Trim();
               <option value="@o">@o</option>
             }
           </select>
-      } else if (it.type == 2) {
-          <select class="form-select" name="i_@it.id" @required>
+      } else if (it.Type == 2) {
+          <select class="form-select" name="i_@it.Id" @required>
             <option value="">—</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
           </select>
       } else { @* default to Text (1) *@
-          <input class="form-control" type="text" name="i_@it.id" @required />
+          <input class="form-control" type="text" name="i_@it.Id" @required />
       }
     </div>
 }

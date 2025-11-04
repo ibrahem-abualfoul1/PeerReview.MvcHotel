@@ -58,13 +58,13 @@
                     @foreach (var q in Model)
                     {
                         <tr>
-                            <td>@q.title</td>
-                            <td>@q.description</td>
+                            <td>@q.TitleEn</td>
+                            <td>@q.DescriptionEn</td>
                             @* <td>@(q.items?.Count ?? 0)</td> *@
                             <td>
-                                <button class="btn btn-sm btn-outline-primary" type="button" onclick="openQuestionModal(@q.id)">تعديل</button>
+                                <button class="btn btn-sm btn-outline-primary" type="button" onclick="openQuestionModal(@q.Id)">تعديل</button>
                                 @* <a class="btn btn-sm btn-outline-secondary ms-1" href="/Answers/Screen/@q.id">Fill</a> *@
-                                <form method="post" action="/Questions/Delete/@q.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
+                                <form method="post" action="/Questions/Delete/@q.Id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
                                     <button class="btn btn-sm btn-outline-danger">حذف</button>
                                 </form>
                             </td>

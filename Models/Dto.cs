@@ -48,11 +48,52 @@ namespace PeerReview.MvcHotel.Models
 
     public class Role { public int id { get; set; } public string? name { get; set; } public bool canSeeAllUsers { get; set; } public bool canSeeSystemStats { get; set; } public bool canSeeAssignmentsAll { get; set; } public bool canSeeAnswersAll { get; set; } }
 
-    public class QuestionDto { public int id { get; set; } public string? title { get; set; } public string? description { get; set; } public int? categoryId { get; set; } public List<QuestionItemDto>? items { get; set; } }
-    public class QuestionCreateDto { public string? title { get; set; } public string? description { get; set; } public int? categoryId { get; set; } public List<QuestionItemCreateDto>? items { get; set; } }
+
+    public class QuestionDto
+    {
+        public int Id { get; set; }
+        public string? TitleAr { get; set; }
+        public string? DescriptionAr { get; set; }
+        public string? TitleEn { get; set; }
+        public string? DescriptionEn { get; set; }
+        public int? CategoryId { get; set; }
+        public string? CategoryName { get; set; }
+        public List<QuestionItemDto>? Items { get; set; }
+    }
+    public class QuestionCreateDto
+    {
+        public string? TitleAr { get; set; }
+        public string? DescriptionAr { get; set; }
+        public string? TitleEn { get; set; }
+        public string? DescriptionEn { get; set; }
+        public int? CategoryId { get; set; }
+        public List<QuestionItemCreateDto>? Items { get; set; }
+    }
+    public class QuestionItemCreateDto
+    {
+        public string? TextAr { get; set; }
+        public string? TextEn { get; set; }
+        public int Type { get; set; }
+        public bool IsRequired { get; set; }
+        public string? OptionsCsvAr { get; set; }
+        public string? OptionsCsvEn { get; set; }
+        public int? ParentItemId { get; set; }
+        public string? ShowWhenValue { get; set; }
+    }
+
     public class QuestionUpdateDto : QuestionCreateDto { }
-    public class QuestionItemDto { public int id { get; set; } public string? text { get; set; } public int type { get; set; } public bool isRequired { get; set; } public string? optionsCsv { get; set; } public int? parentItemId { get; set; } public string? showWhenValue { get; set; } }
-    public class QuestionItemCreateDto { public string? text { get; set; } public int type { get; set; } public bool isRequired { get; set; } public string? optionsCsv { get; set; } public int? parentItemId { get; set; } public string? showWhenValue { get; set; } }
+
+    public class QuestionItemDto
+    {
+        public int Id { get; set; }
+        public string? TextAr { get; set; }
+        public string? TextEn { get; set; }
+        public int Type { get; set; }
+        public bool IsRequired { get; set; }
+        public string? OptionsCsvAr { get; set; }
+        public string? OptionsCsvEn { get; set; }
+    }
+    //public class QuestionItemCreateDto { public string? text { get; set; } public int type { get; set; } public bool isRequired { get; set; } public string? optionsCsv { get; set; } public int? parentItemId { get; set; } public string? showWhenValue { get; set; } }
 
     public class AssignRequest { public List<int>? questionIds { get; set; } public List<int>? userIds { get; set; } }
     public class AssignmentDto { public int id { get; set; } public int questionId { get; set; } public int userId { get; set; } public DateTime? assignedAt { get; set; } public bool isActive { get; set; } public QuestionDto question { get; set; } }
