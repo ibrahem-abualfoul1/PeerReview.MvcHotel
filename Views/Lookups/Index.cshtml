@@ -1,0 +1,79 @@
+﻿@model List<PeerReview.MvcHotel.Models.Lookup>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
+
+@{
+    ViewData["Title"] = L["Lookups"];
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>@L["Lookups"]</h3>
+        <a asp-action="Create" class="btn btn-primary">@L["AddNew"]</a>
+    </div>
+
+    @if (TempData["msg"] != null)
+    {
+        <div class="alert alert-success">@TempData["msg"]</div>
+    }
+
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>@L["Id"]</th>
+                <th>@L["NameEn"]</th>
+                <th>@L["NameAR"]</th>
+                <th>@L["TypeAr"]</th>
+                <th>@L["TypeEn"]</th>
+                <th>@L["Code"]</th>
+                <th class="text-center">@L["Actions"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.NameEn</td>
+                        <td>@item.NameAr</td>
+
+                        <td>@item.TypeAr</td>
+                        <td>@item.TypeEn</td>
+
+
+                        <td>@item.Code</td>
+                       
+                        <td class="text-center">
+                            <a asp-controller="Lookups" asp-action="Edit" asp-route-code="@item.Code" class="btn btn-sm btn-outline-primary">
+                                @L["Edit"]
+                            </a>
+
+                            <form asp-controller="Lookups"
+                                  asp-action="Delete"
+                                  asp-route-code="@item.Code"
+                                  method="post"
+                                  class="d-inline"
+                                  onsubmit="return confirm('@L["ConfirmDelete"]');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    @L["Delete"]
+                                </button>
+                            </form>
+
+                            <a asp-controller="Lookups" asp-action="Sub" asp-route-Id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                @L["SubLookup"]
+                            </a>
+                           
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="5" class="text-center text-muted">@L["NoRecordsFound"]</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

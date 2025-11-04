@@ -1,0 +1,56 @@
+﻿@model PeerReview.MvcHotel.Models.LookupUpdateDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
+
+@{
+    ViewData["Title"] = L["EditLookup"];
+}
+
+<div class="container mt-4">
+    <h3>@L["EditLookup"]</h3>
+
+    <form asp-controller="Lookups" asp-action="Edit" asp-route-code="@Model.Code" method="post">
+        @Html.AntiForgeryToken()
+
+        <!-- يحفظ قيمة Code داخل جسم الطلب للـDTO -->
+        <input type="hidden" asp-for="Code" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Code" class="form-label">@L["Code"]</label>
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="NameEn" class="form-label">@L["NameEn"]</label>
+            <input asp-for="NameEn" class="form-control" />
+            <span asp-validation-for="NameEn" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="NameAr" class="form-label">@L["NameAr"]</label>
+            <input asp-for="NameAr" class="form-control" />
+            <span asp-validation-for="NameAr" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TypeAr" class="form-label">@L["TypeAr"]</label>
+            <input asp-for="TypeAr" class="form-control" />
+            <span asp-validation-for="TypeAr" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TypeEn" class="form-label">@L["TypeEn"]</label>
+            <input asp-for="TypeEn" class="form-control" />
+            <span asp-validation-for="TypeEn" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-start gap-2">
+            <button type="submit" class="btn btn-success">@L["Update"]</button>
+            <a asp-action="Index" class="btn btn-secondary">@L["Cancel"]</a>
+        </div>
+    </form>
+</div>
+

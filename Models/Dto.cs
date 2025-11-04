@@ -102,12 +102,87 @@ namespace PeerReview.MvcHotel.Models
     public class AnswerCreateDto { public int questionId { get; set; } public int? questionItemId { get; set; } public string? value { get; set; } }
     public class AnswerUpdateDto { public string? value { get; set; } }
 
-    public class Lookup { public int id { get; set; } public string? name { get; set; } public string? type { get; set; } public List<SubLookup>? subLookups { get; set; } }
-    public class SubLookup { public int id { get; set; } public int lookupId { get; set; } public string? name { get; set; } }
-    public class LookupCreateDto { public string? name { get; set; } public string? type { get; set; } }
-    public class LookupUpdateDto { public string? name { get; set; } public string? type { get; set; } }
-    public class SubLookupCreateDto { public int lookupId { get; set; } public string? name { get; set; } }
-    public class SubLookupUpdateDto { public int lookupId { get; set; } public string? name { get; set; } }
+    // يُنصح أن يحتوي الـ Lookup على "Code" لأن الـ API تستخدمه في /api/Lookups/{code}
+    public class Lookup
+    {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        // مفتاح المسار في الـ API
+        [JsonPropertyName("code")]
+        public string? Code { get; set; }
+
+        [JsonPropertyName("NameAR")]
+        public string? NameAr { get; set; }
+
+        [JsonPropertyName("NameEn")]
+        public string? NameEn { get; set; }
+
+        [JsonPropertyName("TypeAr")]
+        public string? TypeAr { get; set; }
+
+        [JsonPropertyName("TypeEn")]
+        public string? TypeEn { get; set; }
+
+        [JsonPropertyName("subLookups")]
+        public List<SubLookup>? SubLookups { get; set; }
+    }
+
+    public class SubLookup
+    {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        public string? NameAr { get; set; }
+        public string? NameEn { get; set; }
+    }
+
+    // ===================== LOOKUPS DTOs (Requests) =====================
+
+    // POST /api/Lookups
+    // الأفضل دعم "code" هنا لأنه المعرّف الذي ستستخدمه لاحقًا في GET/PUT/DELETE /{code}
+    public class LookupCreateDto
+    {
+        public string? Code { get; set; }
+
+        public string? NameEn { get; set; }
+        public string? NameAr { get; set; }
+
+        public string? TypeEn { get; set; }
+        public string? TypeAr { get; set; }
+    }
+
+    // PUT /api/Lookups/{code}  ← الـ code يُمرر في المسار، لذا لا نعيده في البودي
+    public class LookupUpdateDto
+    {
+        public string? Code { get; set; }
+
+        public string? NameEn { get; set; }
+        public string? NameAr { get; set; }
+
+        public string? TypeEn { get; set; }
+        public string? TypeAr { get; set; }
+    }
+
+    // ===================== SUB LOOKUPS DTOs (Requests) =====================
+
+    // POST /api/Lookups/{code}/sub
+    // بما أن "code" موجود في المسار، في العادة يكفي إرسال الاسم فقط.
+    // إن كان الـ API عندك يتطلب أيضًا lookupId، يمكنك إبقاء الخاصية Nullable.
+    public class SubLookupCreateDto
+    {
+        public string? NameAr { get; set; }
+        public string? NameEn { get; set; }
+
+    }
+
+    // PUT /api/Lookups/sub/{id}
+    // غالبًا يكفي التحديث بالاسم، ووجود lookupId اختياري (حسب منطقك).
+    public class SubLookupUpdateDto
+    {
+        public string? NameAr { get; set; }
+        public string? NameEn { get; set; }
+    }
 
     public class DashboardDto { public Dictionary<string, object>? metrics { get; set; } }
     public class QuestionTypeDto

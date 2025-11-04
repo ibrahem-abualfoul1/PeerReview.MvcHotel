@@ -1,0 +1,69 @@
+﻿@model List<PeerReview.MvcHotel.Models.SubLookup>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
+
+@{
+    ViewData["Title"] = L["SubLookup"];
+    var lookupId = (ViewBag.LookupId ?? 0); // نستعمل ViewBag لتخزين LookupId القادم من الـ Controller
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>@L["SubLookup"]</h3>
+        <a asp-action="AddSub" asp-route-Id="@lookupId" class="btn btn-primary">
+            @L["AddNew"]
+        </a>
+    </div>
+
+    @if (TempData["msg"] != null)
+    {
+        <div class="alert alert-success">@TempData["msg"]</div>
+    }
+
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>@L["Id"]</th>
+                <th>@L["NameAr"]</th>
+                <th>@L["NameEn"]</th>
+                <th class="text-center">@L["Actions"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.NameAr</td>
+                        <td>@item.NameEn</td>
+
+                        <td class="text-center">
+                            <a asp-action="EditSub" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                @L["Edit"]
+                            </a>
+
+                            <form asp-action="DeleteSub"
+                                  asp-route-id="@item.Id"
+                                  method="post"
+                                  class="d-inline"
+                                  onsubmit="return confirm('@L["ConfirmDelete"]');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    @L["Delete"]
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted">@L["NoRecordsFound"]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
