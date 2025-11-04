@@ -34,6 +34,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.ApiClient>();
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.AuthService>();
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.UsersService>();
+builder.Services.AddScoped<PeerReview.MvcHotel.Services.RolesService>();
+
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.QuestionsService>();
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.AssignmentsService>();
 builder.Services.AddScoped<PeerReview.MvcHotel.Services.AnswersService>();

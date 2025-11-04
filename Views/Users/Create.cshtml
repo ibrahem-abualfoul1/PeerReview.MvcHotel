@@ -8,7 +8,12 @@
     <div class="col-md-4"><label class="form-label">الاسم الكامل</label><input asp-for="fullName" class="form-control" /></div>
     <div class="col-md-4"><label class="form-label">البريد</label><input asp-for="email" class="form-control" /></div>
     <div class="col-md-4"><label class="form-label">كلمة المرور</label><input asp-for="password" type="password" class="form-control" /></div>
-    <div class="col-md-4"><label class="form-label">الدور (RoleId)</label><input asp-for="roleId" type="number" class="form-control" value="1" /></div>
-  </div>
+        <div class="col-md-4">
+            <label class="form-label">الدور</label>
+            <select asp-for="roleId" asp-items="@(new SelectList(ViewBag.Roles, "Value", "Text"))" class="form-select">
+                <option value="">-- اختر الدور --</option>
+            </select>
+        </div>
+    </div>
   <button class="btn btn-gold mt-2">حفظ</button> <a class="btn btn-secondary mt-2" href="/Users">رجوع</a>
 </form>

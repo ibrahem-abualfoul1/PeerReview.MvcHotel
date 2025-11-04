@@ -1,13 +1,49 @@
-﻿
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace PeerReview.MvcHotel.Models
 {
     public class LoginRequest { public string? userName { get; set; } public string? password { get; set; } }
     public class LoginResponse { public string? token { get; set; } public string? userName { get; set; } public string? role { get; set; } public int? UserId { get; set; } }
 
-    public class User { public int id { get; set; } public string? userName { get; set; } public string? fullName { get; set; } public string? email { get; set; } public bool isActive { get; set; } public int roleId { get; set; } }
+    public class User
+    {
+        public int id { get; set; }
+        public string? userName { get; set; }
+        public string? fullName { get; set; }
+        public string? email { get; set; }
+        public bool isActive { get; set; }
+        public int roleId { get; set; }
+
+        [Newtonsoft.Json.JsonIgnore]
+        public string RoleName { get; set; } = "";
+
+        [JsonProperty("role")]
+        private JToken? roleRaw // 👈 نقرأها ديناميكيًا من JSON
+        {
+            set
+            {
+                if (value == null) return;
+                if (value.Type == JTokenType.String)
+                {
+                    // الحالة: "role": "Admin"
+                    RoleName = value.ToString();
+                }
+                else if (value.Type == JTokenType.Object)
+                {
+                    // الحالة: "role": { "name": "Admin", ... }
+                    RoleName = value["name"]?.ToString() ?? "";
+                }
+            }
+        }
+    }
+
     public class UserCreateDto { [Required] public string? userName { get; set; } public string? fullName { get; set; } public string? email { get; set; } public string? password { get; set; } public int roleId { get; set; } }
+
     public class UserUpdateDto { public string? fullName { get; set; } public string? email { get; set; } public bool isActive { get; set; } public int roleId { get; set; } }
 
     public class Role { public int id { get; set; } public string? name { get; set; } public bool canSeeAllUsers { get; set; } public bool canSeeSystemStats { get; set; } public bool canSeeAssignmentsAll { get; set; } public bool canSeeAnswersAll { get; set; } }

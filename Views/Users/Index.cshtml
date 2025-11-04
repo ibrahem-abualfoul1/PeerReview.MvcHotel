@@ -22,7 +22,7 @@
       <td>@u.fullName</td>
       <td>@u.userName</td>
                 <td>@(u.isActive ? SharedResource.Status_Active : SharedResource.Status_Inactive)</td>
-      <td>@u.roleId</td>
+      <td>@u.RoleName</td>
       <td class="text-nowrap">
         <a class="btn btn-sm btn-outline-primary" href="/Users/Edit/@u.id">@SharedResource.Users_Action_Edit</a>
         <form method="post" action="/Users/Delete/@u.id" style="display:inline" onsubmit="return confirm('Delete?');">
