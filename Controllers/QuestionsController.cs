@@ -12,9 +12,12 @@ namespace PeerReview.MvcHotel.Controllers
         private readonly QuestionsService _svc;
         private readonly IStringLocalizer<SharedResource> _L;
 
-        public QuestionsController(QuestionsService svc, IStringLocalizer<SharedResource> L)
+        private readonly LookupsService _lookupsService;
+
+        public QuestionsController(QuestionsService svc, IStringLocalizer<SharedResource> L, LookupsService lookupsService)
         {
             _L = L; _svc = svc;
+            _lookupsService = lookupsService;
         }
 
         public async Task<IActionResult> Index()
@@ -59,6 +62,10 @@ namespace PeerReview.MvcHotel.Controllers
             // أنواع السؤال (Multi-Select)
             var types = await _svc.GetTypes(); // يرجع List<(int Id, string Name)>
             ViewBag.QuestionTypes = new SelectList((System.Collections.IEnumerable)types, "Id", "Name");
+
+            var Category = await _lookupsService.Sub(4);
+            var culture = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
+            ViewBag.Categorys = new SelectList(Category, "Id", culture == "ar" ? "NameAr" : "NameEn");
 
             // تحضير الموديل
             var model = new QuestionCreateDto();

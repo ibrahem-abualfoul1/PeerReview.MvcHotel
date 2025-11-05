@@ -77,8 +77,8 @@ namespace PeerReview.MvcHotel.Models
         public bool IsRequired { get; set; }
         public string? OptionsCsvAr { get; set; }
         public string? OptionsCsvEn { get; set; }
-        public int? ParentItemId { get; set; }
-        public string? ShowWhenValue { get; set; }
+            public int? ParentItemId { get; set; }
+            public string? ShowWhenValue { get; set; }
     }
 
     public class QuestionUpdateDto : QuestionCreateDto { }

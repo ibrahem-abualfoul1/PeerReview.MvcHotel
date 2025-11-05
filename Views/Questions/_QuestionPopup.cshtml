@@ -2,155 +2,252 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-    var id = ViewBag.Id as int?; // من الكنترولر: ViewBag.Id = int?;
+    var id = ViewBag.Id as int?;
+    var isEdit = id.HasValue && id.Value > 0;
 
     var types = ViewBag.QuestionTypes as SelectList
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
+    var categories = ViewBag.Categorys as SelectList
+                ?? new SelectList(Enumerable.Empty<SelectListItem>());
 
-    // لو عندي id > 0 = تعديل، غير هيك = إضافة
-    var isEdit = id.HasValue && id.Value > 0;
-
-    // لمّا يكون تعديل: POST إلى /Questions/Edit/{id}
-    // لمّا يكون إضافة: POST إلى /Questions/Create
     string url = isEdit
         ? Url.Action("Edit", "Questions", new { id = id!.Value })!
         : Url.Action("Create", "Questions")!;
+
+    // سنبني خيارات النوع كـ HTML ونستخدمها في الصفوف الجاهزة والقالب
+    var typeOptionsHtml = string.Join("",
+        (types ?? new SelectList(Enumerable.Empty<SelectListItem>()))
+        .Select(o => $"<option value=\"{o.Value}\">{o.Text}</option>"));
 }
 
-
 <div class="modal fade" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content shadow-lg" style="border-radius:1rem">
 
-            <div class="modal-header">
-                <h5 class="modal-title">@(isEdit ? "تعديل سؤال" : "إضافة سؤال")</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header bg-light border-0">
+        <h5 class="modal-title fw-bold">@(isEdit ? "تعديل سؤال" : "إضافة سؤال")</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form id="questionUpsertForm" method="post" action="@url">
+        @Html.AntiForgeryToken()
+        @if (isEdit) { <input type="hidden" name="id" value="@id" /> }
+
+        <div class="modal-body">
+          <!-- بطاقة: بيانات السؤال -->
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0">
+              <h6 class="m-0 fw-semibold">بيانات السؤال</h6>
             </div>
-         
-            <form id="questionUpsertForm" method="post" action="@url" onsubmit="return checkIfNotNull(event)">
-                @Html.AntiForgeryToken()
-
-                @* id مرة واحدة فقط *@
-                @if (isEdit)
-                {
-                    <input type="hidden" name="id" value="@id" />
-                }
-
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label" for="TitleEn">العنوان</label>
-                        <input class="form-control" name="TitleEn" id="TitleEn" value="@Model?.TitleEn" required />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="TitleAr">العنوان</label>
-                        <input class="form-control" name="TitleAr" id="TitleAr" value="@Model?.TitleAr" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="DescriptionEn">الوصف</label>
-                        <textarea class="form-control" name="DescriptionEn" id="DescriptionEn" rows="3" required>@Model?.DescriptionEn</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="DescriptionAr">الوصف</label>
-                        <textarea class="form-control" name="DescriptionAr" id="DescriptionAr" rows="3" required>@Model?.DescriptionAr</textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="CategoryId">التصنيف (واحد)</label>
-                        <select class="form-select" name="CategoryId" id="CategoryId" required>
-                            @foreach (var opt in types)
-                            {
-                                var sel = Model?.CategoryId != null
-                                && int.TryParse(opt.Value, out var v)
-                                && Model.CategoryId == v;
-
-                                <option value="@opt.Value" selected="@(sel ? "selected" : null)">@opt.Text</option>
-                            }
-                        </select>
-                    </div>
+            <div class="card-body pt-2">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input class="form-control" asp-for="TitleEn" id="TitleEn" placeholder="Title (EN)" required />
+                    <label for="TitleEn">العنوان (EN)</label>
+                  </div>
+                  <small class="text-danger d-block" asp-validation-for="TitleEn"></small>
                 </div>
-                @*         public List<QuestionItemCreateDto>? Items { get; set; } *@
-                @* public class QuestionItemCreateDto
-                {
-                public string? TextAr { get; set; }
-                public string? TextEn { get; set; }
-                public int Type { get; set; }
-                public bool IsRequired { get; set; }
-                public string? OptionsCsvAr { get; set; }
-                public string? OptionsCsvEn { get; set; }
-                public int? ParentItemId { get; set; }
-                public string? ShowWhenValue { get; set; }
-                } *@
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn btn-primary">حفظ</button>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input class="form-control" asp-for="TitleAr" id="TitleAr" placeholder="العنوان (AR)" required />
+                    <label for="TitleAr">العنوان (AR)</label>
+                  </div>
+                  <small class="text-danger d-block" asp-validation-for="TitleAr"></small>
                 </div>
-            </form>
 
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <textarea class="form-control" style="height:110px" asp-for="DescriptionEn" id="DescriptionEn" placeholder="Description (EN)" required></textarea>
+                    <label for="DescriptionEn">الوصف (EN)</label>
+                  </div>
+                  <small class="text-danger d-block" asp-validation-for="DescriptionEn"></small>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <textarea class="form-control" style="height:110px" asp-for="DescriptionAr" id="DescriptionAr" placeholder="الوصف (AR)" required></textarea>
+                    <label for="DescriptionAr">الوصف (AR)</label>
+                  </div>
+                  <small class="text-danger d-block" asp-validation-for="DescriptionAr"></small>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold" asp-for="CategoryId">التصنيف</label>
+                  <select class="form-select" asp-for="CategoryId" asp-items="categories" required>
+                    <option value="">— اختر التصنيف —</option>
+                  </select>
+                  <small class="text-muted">اختر تصنيفًا واحدًا لهذا السؤال.</small>
+                  <small class="text-danger d-block" asp-validation-for="CategoryId"></small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- بطاقة: عناصر السؤال -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+              <h6 class="m-0 fw-semibold">عناصر السؤال (Items)</h6>
+              <button type="button" class="btn btn-sm btn-primary rounded-pill px-3" id="addItemBtn">+ إضافة عنصر</button>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle m-0" id="itemsTable">
+                  <thead class="table-light">
+                    <tr class="small text-muted">
+                      <th style="min-width:160px">النص (AR)</th>
+                      <th style="min-width:160px">النص (EN)</th>
+                      <th style="width:160px">النوع</th>
+                      <th style="width:110px" class="text-center">إلزامي؟</th>
+                      <th>خيارات (AR)</th>
+                      <th>Options (EN)</th>
+                      <th style="width:130px">ParentItemId</th>
+                      <th style="min-width:160px">ShowWhenValue</th>
+                      <th style="width:80px" class="text-center">إجراء</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  @if (Model?.Items != null && Model.Items.Count > 0)
+                  {
+                      for (var i = 0; i < Model.Items.Count; i++)
+                      {
+                          <tr data-index="@i" class="item-row">
+                            <!-- مهم: Items.Index لكل صف -->
+                            <td colspan="9" class="p-0" style="display:none">
+                              <input type="hidden" name="Items.Index" value="@i" />
+                            </td>
+
+                            <td><input class="form-control form-control-sm" name="Items[@i].TextAr" value="@Model.Items[i].TextAr" /></td>
+                            <td><input class="form-control form-control-sm" name="Items[@i].TextEn" value="@Model.Items[i].TextEn" /></td>
+                            <td>
+                              <select class="form-select form-select-sm item-type" name="Items[@i].Type">
+                                @Html.Raw(typeOptionsHtml)
+                              </select>
+                              <script>document.currentScript.previousElementSibling.value = "@Model.Items[i].Type";</script>
+                            </td>
+                            <td class="text-center">
+                              <input type="hidden" name="Items[@i].IsRequired" value="false" />
+                              <div class="form-check d-inline-block">
+                                <input class="form-check-input" type="checkbox" name="Items[@i].IsRequired" value="true" @(Model.Items[i].IsRequired ? "checked" : null) />
+                              </div>
+                            </td>
+                            <td><input class="form-control form-control-sm item-options-ar" name="Items[@i].OptionsCsvAr" value="@Model.Items[i].OptionsCsvAr" placeholder="مثال: نعم,لا,غير ذلك" /></td>
+                            <td><input class="form-control form-control-sm item-options-en" name="Items[@i].OptionsCsvEn" value="@Model.Items[i].OptionsCsvEn" placeholder="e.g. Yes,No,N/A" /></td>
+                            <td><input class="form-control form-control-sm" type="number" name="Items[@i].ParentItemId" value="@Model.Items[i].ParentItemId" /></td>
+                            <td><input class="form-control form-control-sm" name="Items[@i].ShowWhenValue" value="@Model.Items[i].ShowWhenValue" /></td>
+                            <td class="text-center">
+                              <button type="button" class="btn btn-sm btn-outline-danger remove-item rounded-pill">حذف</button>
+                            </td>
+                          </tr>
+                      }
+                  }
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="px-3 py-2 border-top small text-muted">
+                ملاحظة: تظهر حقول الخيارات فقط عند الأنواع <strong>اختيار واحد</strong> أو <strong>اختيارات متعددة</strong>.
+              </div>
+            </div>
+          </div>
+
+          <!-- قالب صف جديد -->
+          <template id="itemRowTemplate">
+            <tr data-index="__key__" class="item-row">
+              <td colspan="9" class="p-0" style="display:none">
+                <input type="hidden" name="Items.Index" value="__key__" />
+              </td>
+              <td><input class="form-control form-control-sm" name="Items[__key__].TextAr" /></td>
+              <td><input class="form-control form-control-sm" name="Items[__key__].TextEn" /></td>
+              <td>
+                <select class="form-select form-select-sm item-type" name="Items[__key__].Type">
+                  @Html.Raw(typeOptionsHtml)
+                </select>
+              </td>
+              <td class="text-center">
+                <input type="hidden" name="Items[__key__].IsRequired" value="false" />
+                <div class="form-check d-inline-block">
+                  <input class="form-check-input" type="checkbox" name="Items[__key__].IsRequired" value="true" />
+                </div>
+              </td>
+              <td><input class="form-control form-control-sm item-options-ar" name="Items[__key__].OptionsCsvAr" placeholder="مثال: نعم,لا,غير ذلك" /></td>
+              <td><input class="form-control form-control-sm item-options-en" name="Items[__key__].OptionsCsvEn" placeholder="e.g. Yes,No,N/A" /></td>
+              <td><input class="form-control form-control-sm" type="number" name="Items[__key__].ParentItemId" /></td>
+              <td><input class="form-control form-control-sm" name="Items[__key__].ShowWhenValue" /></td>
+              <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger remove-item rounded-pill">حذف</button>
+              </td>
+            </tr>
+          </template>
         </div>
+
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">إلغاء</button>
+          <button type="submit" class="btn btn-primary rounded-pill px-4">حفظ</button>
+        </div>
+      </form>
+
     </div>
+  </div>
 </div>
 
 @section Scripts {
-    <script>
-              (function() {
-          $(document).off('submit', '#questionUpsertForm').on('submit', '#questionUpsertForm', function (e) {
-            e.preventDefault();
+<style>
+  .table thead th{ font-weight:600; }
+  #itemsTable tbody tr.item-row:hover{ background:rgba(0,0,0,.02); transition:background .15s; }
+</style>
 
-            var $form = $(this);
-            var url = $form.attr('action');
-            var formData = new FormData(this);
+<script>
+  // مفتاح فريد لكل صف جديد
+  function newKey(){ return 'k' + Date.now() + Math.floor(Math.random()*10000); }
 
-            $.ajax({
-              url: url,
-              type: 'POST',
-              data: formData,
-              processData: false,
-              contentType: false
-            })
-            .done(function (res, status, xhr) {
-              var ct = (xhr.getResponseHeader('content-type') || '').toLowerCase();
+  // إظهار/إخفاء خلايا الخيارات حسب النوع
+  function toggleOptionsVisibility(row) {
+    if (!row) return;
+    var sel = row.querySelector('.item-type');
+    var typeVal = parseInt((sel && sel.value) || '0');
+    var cells = row.querySelectorAll('.item-options-ar, .item-options-en');
+    if ([3,4].includes(typeVal)) {
+      cells.forEach(function(c){ c.closest('td').style.display = ''; });
+    } else {
+      cells.forEach(function(c){ c.closest('td').style.display = 'none'; c.value=''; });
+    }
+  }
 
-              if (ct.includes('application/json')) {
-                if (res && res.ok) {
-                  // اغلاق المودال
-                  var modalEl = document.getElementById('questionUpsertModal');
-                  var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                  modal.hide();
+  // إضافة صف جديد
+  function addRow() {
+    var tpl = document.getElementById('itemRowTemplate');
+    if (!tpl) return;
+    var key = newKey();
+    var html = tpl.innerHTML.replaceAll('__key__', key);
 
-                  $(document).trigger('question:upserted', res);
-                  return;
-                }
-                alert(res && res.message ? res.message : 'لم يتم الحفظ.');
-              } else {
-                // رجع View (أخطاء ModelState) => استبدل محتوى المودال
-                $('#questionUpsertModal .modal-content').html($(res).find('.modal-content').length
-                  ? $(res).find('.modal-content')
-                  : res);
-              }
-            })
-            .fail(function (xhr) {
-              alert('حدث خطأ في الحفظ: ' + (xhr.responseText || xhr.statusText));
-            });
-          });
-        })();
+    var modal = document.getElementById('questionUpsertModal');
+    var tbody = modal.querySelector('#itemsTable tbody');
+    tbody.insertAdjacentHTML('beforeend', html);
 
-              function checkIfNotNull(e) {
-          const title = (document.getElementById('TitleEn')?.value || '').trim();
-          const desc  = (document.getElementById('DescriptionEn')?.value || '').trim();
-          const cat   = document.getElementById('CategoryId')?.value;
+    var lastRow = tbody.querySelector('tr:last-child');
+    toggleOptionsVisibility(lastRow);
+  }
 
-          const errors = [];
-          if (!title) errors.push('الرجاء إدخال العنوان.');
-          if (!desc)  errors.push('الرجاء إدخال الوصف.');
-          if (!cat)   errors.push('الرجاء اختيار التصنيف.');
+  // تفويض النقر/التغيير—يبقى شغال حتى لو اتبدّل محتوى المودال
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#addItemBtn')) { e.preventDefault(); addRow(); }
+    if (e.target.closest('.remove-item')) {
+      e.preventDefault();
+      var tr = e.target.closest('tr');
+      if (tr) tr.remove();
+    }
+  });
 
-          if (errors.length) {
-            alert(errors.join('\n'));
-            return false; // يمنع الإرسال
-          }
-          return true; // يسمح بالإرسال
-        }
-    </script>
+  document.addEventListener('change', function (e) {
+    if (e.target.matches('.item-type')) {
+      toggleOptionsVisibility(e.target.closest('tr'));
+    }
+  });
+
+  // عند فتح المودال: طبّق المنطق على الصفوف الموجودة
+  document.addEventListener('shown.bs.modal', function (ev) {
+    if (ev.target.id !== 'questionUpsertModal') return;
+    ev.target.querySelectorAll('#itemsTable tbody tr').forEach(function(row){ toggleOptionsVisibility(row); });
+  });
+</script>
 }
