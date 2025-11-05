@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Localization;
-using Microsoft.AspNetCore.Mvc;
-using PeerReview.MvcHotel.Models;
-using PeerReview.MvcHotel.Services;
-using PeerReview.MvcHotel.Resources;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
+using PeerReview.MvcHotel.Models;
+using PeerReview.MvcHotel.Resources;
+using PeerReview.MvcHotel.Services;
+using System.Text.RegularExpressions;
 
 namespace PeerReview.MvcHotel.Controllers
 {
@@ -23,6 +24,34 @@ namespace PeerReview.MvcHotel.Controllers
             _L = L; _svc = svc; _users = users; _questions = questions;
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> Index2(int? userId, int? questionId)
+        //{
+        //    var list = new List<AssignmentDto>();
+        //    if (userId.HasValue) list = await _svc.ByUser(userId.Value) ?? new();
+        //    else if (questionId.HasValue) list = await _svc.ByQuestion(questionId.Value) ?? new();
+
+        //    //ViewBag.Users =  ?? new();
+        //    //ViewBag.Questions = await _questions.List() ?? new();
+
+        //    var users = await _users.List() ?? new();
+        //    var Questions = await _questions.List() ?? new();
+        //    var culture = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
+
+        //    ViewBag.Users = new SelectList((System.Collections.IEnumerable)users, "Id", "Name");
+        //    ViewBag.Questions = new SelectList(Questions, "Id", culture == "ar" ? "NameAr" : "NameEn");
+
+
+        //    //var types = await _svc.GetTypes(); // يرجع List<(int Id, string Name)>
+        //    //ViewBag.QuestionTypes = new SelectList((System.Collections.IEnumerable)types, "Id", "Name");
+
+        //    //var Category = await _lookupsService.Sub(4);
+        //    //var culture = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
+        //    //ViewBag.Categorys = new SelectList(Category, "Id", culture == "ar" ? "NameAr" : "NameEn");
+
+        //    return View(list);
+        //}
+
         [HttpGet]
         public async Task<IActionResult> Index(int? userId, int? questionId)
         {
@@ -30,11 +59,23 @@ namespace PeerReview.MvcHotel.Controllers
             if (userId.HasValue) list = await _svc.ByUser(userId.Value) ?? new();
             else if (questionId.HasValue) list = await _svc.ByQuestion(questionId.Value) ?? new();
 
-            ViewBag.Users = await _users.List() ?? new();
-            ViewBag.Questions = await _questions.List() ?? new();
+            // جلب البيانات الخام للفلاتر
+            var users = await _users.List() ?? new();
+            var qs = await _questions.List() ?? new();
+
+            var isAr = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ar";
+
+            // للفلاتر على الصفحة (قوائم عادية)
+            ViewBag.Users = users;
+            ViewBag.Questions = qs;
+
+            // للمودال (SelectList) بأسماء الخصائص الصحيحة
+            ViewBag.UsersSelect = new SelectList(users, "id", "fullName");
+            ViewBag.QuestionsSelect = new SelectList(qs, "id", isAr ? "titleAr" : "titleEn");
 
             return View(list);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Table(int? userId, int? questionId)
@@ -70,12 +111,15 @@ namespace PeerReview.MvcHotel.Controllers
         {
             var users = await _users.List() ?? new();
             var qs = await _questions.List() ?? new();
+            var isAr = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ar";
+
             ViewBag.UsersSelect = new SelectList(users, "id", "fullName");
-            ViewBag.QuestionsSelect = new SelectList(qs, "id", "title");
-            return PartialView("_AssignmentUpsertModal"); 
+            ViewBag.QuestionsSelect = new SelectList(qs, "id", isAr ? "titleAr" : "titleEn");
+            return PartialView("_AssignmentUpsertModal");
         }
 
-       
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert([FromBody] AssignRequest req)

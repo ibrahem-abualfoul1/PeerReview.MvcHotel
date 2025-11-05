@@ -1,8 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Rendering
 @{
-    var usersSelect = ViewBag.UsersSelect as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
-    var qsSelect = ViewBag.QuestionsSelect as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
+    var usersSelect = ViewBag.Users as SelectList ?? ViewBag.UsersSelect as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
+    var qsSelect = ViewBag.Questions as SelectList ?? ViewBag.QuestionsSelect as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
 }
+
 
 <div class="modal fade" id="assignmentUpsertModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">

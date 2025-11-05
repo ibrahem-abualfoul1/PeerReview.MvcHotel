@@ -7,6 +7,8 @@
     ViewData["Title"] = SharedResource.Assignments_Title;
     var users = ViewBag.Users as List<User> ?? new();
     var qs = ViewBag.Questions as List<QuestionDto> ?? new();
+    // var isAr = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ar";
+
 }
 
 <style>
@@ -74,6 +76,7 @@
     <h3>@SharedResource.Assignments_Title <small class="text-muted">— إدارة الإسنادات</small></h3>
     <div class="d-flex gap-2">
         <button class="btn btn-gold" id="btnAdd"><i class="bi bi-plus-lg"></i> Assignments_Add</button>
+
         <button class="btn btn-outline-primary" id="btnBulk"><i class="bi bi-arrow-down-up"></i> @SharedResource.Assignments_Bulk_Title</button>
     </div>
 </div>
@@ -115,15 +118,26 @@
     <div class="section-title"><i class="bi bi-lightning-charge"></i> @SharedResource.Assignments_Bulk_Title</div>
     <div class="text-muted mb-2">أدخل مُعرّفات مفصولة بفواصل، مثال: 1,2,3</div>
     <form id="bulkForm" class="mt-1">
-        <div class="row g-2">
-            <div class="col-md-6">
-                <label class="form-label">@SharedResource.Assignments_Bulk_QuestionIds</label>
-                <input name="questionIds" class="form-control" placeholder="1,2,3" />
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">@SharedResource.Assignments_Bulk_UserIds</label>
-                <input name="userIds" class="form-control" placeholder="5,7,9" />
-            </div>
+        <div class="col-md-6">
+            <label class="form-label">@SharedResource.Assignments_Bulk_QuestionIds</label>
+            <select name="questionIds" class="form-select" multiple size="8">
+                @foreach (var q in qs)
+                {
+                    <option value="@q.Id">@( q.TitleEn)</option>
+                }
+            </select>
+            <div class="form-text">اختر سؤالًا واحدًا أو أكثر.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">@SharedResource.Assignments_Bulk_UserIds</label>
+            <select name="userIds" class="form-select" multiple size="8">
+                @foreach (var u in users)
+                {
+                    <option value="@u.id">@u.fullName (@u.userName)</option>
+                }
+            </select>
+            <div class="form-text">اختر مستخدمًا واحدًا أو أكثر.</div>
         </div>
         <div class="mt-2 d-flex gap-2">
             <button type="submit" class="btn btn-outline-primary"><i class="bi bi-check2-circle"></i> @SharedResource.Assignments_Bulk_Execute</button>
@@ -134,8 +148,9 @@
 
 <!-- الجدول (سيتم تحميله/إعادة تحميله بالبارشال عبر AJAX) -->
 <div id="assignTableWrap" class="card card-hotel p-3">
-    @await Html.PartialAsync("_AssignmentsTable", Model)
+    @await Html.PartialAsync("_AssignmentUpsertModal", Model)
 </div>
+
 
 <!-- حاوية المودال -->
 <div id="assignUpsertHost"></div>
