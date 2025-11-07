@@ -175,7 +175,7 @@
 
     <script>
         const getAfToken = ()=> document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]').value;
-
+        debugger
         function initDataTable(){
           const $tbl = $('#assignTable');
           if ($.fn.dataTable.isDataTable($tbl)) $tbl.DataTable().destroy();
@@ -231,22 +231,27 @@
         }
 
         // Bulk عبر AJAX + Anti-forgery
-        $('#bulkForm').on('submit', function(e){
+         $('#bulkForm').on('submit', function (e) {
+             debugger
           e.preventDefault();
-          const qs = this.querySelector('input[name="questionIds"]').value;
-          const us = this.querySelector('input[name="userIds"]').value;
-          const body = {
-            questionIds: (qs||'').split(',').map(s=>s.trim()).filter(Boolean).map(Number),
-            userIds: (us||'').split(',').map(s=>s.trim()).filter(Boolean).map(Number)
-          };
+          const fd = new FormData(this);
+
+          const qs = (fd.getAll('questionIds') || []).map(Number);
+          const us = (fd.getAll('userIds') || []).map(Number);
+
           fetch('/Assignments/Bulk', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getAfToken() },
-            body: JSON.stringify(body)
-          }).then(r => r.json())
-            .then(j => { if(j.ok){ reloadAssignmentsTable(); } else { alert('فشل التنفيذ'); }})
-            .catch(()=> alert('خطأ في تنفيذ العملية'));
+            headers: {
+              'Content-Type': 'application/json',
+              'RequestVerificationToken': getAfToken()
+            },
+            body: JSON.stringify({ questionIds: qs, userIds: us })
+          })
+          .then(r => r.json())
+          .then(j => j.ok ? reloadAssignmentsTable() : alert('فشل التنفيذ'))
+          .catch(() => alert('خطأ في تنفيذ العملية'));
         });
+
 
         // تفعيل/تعطيل عبر AJAX بدون ريفريش
         $(document).on('click', '.js-activate, .js-deactivate', function(e){

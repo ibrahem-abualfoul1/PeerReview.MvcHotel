@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Rendering
 @{
-    var usersSelect = ViewBag.Users as SelectList ?? ViewBag.UsersSelect as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
-    var qsSelect = ViewBag.Questions as SelectList ?? ViewBag.QuestionsSelect as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
+    
+    var users = ViewBag.Users as List<User> ?? new();
+    var qs = ViewBag.Questions as List<QuestionDto> ?? new();
 }
 
 
@@ -20,10 +21,11 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">الأسئلة (متعدد)</label>
-                            <select class="form-select" id="questionIds" multiple size="8">
-                                @foreach (var q in qsSelect)
+                            
+                            <select name="questionIds" class="form-select" multiple size="8">
+                                @foreach (var q in qs)
                                 {
-                                    <option value="@q.Value">@q.Text</option>
+                                    <option value="@q.Id">@( q.TitleEn)</option>
                                 }
                             </select>
                             <div class="form-text">اختر سؤالًا واحدًا أو أكثر.</div>
@@ -31,10 +33,10 @@
 
                         <div class="col-md-6">
                             <label class="form-label">المستخدمون (متعدد)</label>
-                            <select class="form-select" id="userIds" multiple size="8">
-                                @foreach (var u in usersSelect)
+                            <select name="userIds" class="form-select" multiple size="8">
+                                @foreach (var u in users)
                                 {
-                                    <option value="@u.Value">@u.Text</option>
+                                    <option value="@u.id">@u.fullName (@u.userName)</option>
                                 }
                             </select>
                             <div class="form-text">اختر مستخدمًا واحدًا أو أكثر.</div>
@@ -55,6 +57,7 @@
 
 @section Scripts {
     <script>
+    debugger
         (function(){
           $(document).off('submit', '#assignmentUpsertForm').on('submit', '#assignmentUpsertForm', function(e){
             e.preventDefault();
@@ -71,7 +74,7 @@
 
             const af = document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]')?.value
                     || document.querySelector('#assignmentUpsertForm input[name="__RequestVerificationToken"]')?.value;
-
+            debugger
             fetch('/Assignments/Upsert', {
               method: 'POST',
               headers: {
