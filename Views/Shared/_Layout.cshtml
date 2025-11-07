@@ -3,6 +3,7 @@
 
 @{
     var userName = Context.Session.GetString("userName") ?? "";
+    var userId = Context.Session.GetInt32("userId") ?? 0;
     var culture = System.Threading.CancellationToken.None; // ignore
     var ci = System.Globalization.CultureInfo.CurrentUICulture;
     var isRtl = ci.TwoLetterISOLanguageName == "en";
@@ -116,6 +117,30 @@
                                         <i class="ti ti-shopping-cart"></i>
                                     </span>
                                     <span class="hide-menu">LookUps</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link justify-content-between" target="_self"
+                               href="/Answers/Mine" aria-expanded="false">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="d-flex">
+                                        <i class="ti ti-shopping-cart"></i>
+                                    </span>
+                                    <span class="hide-menu">Answers</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link justify-content-between" target="_self"
+                               href="/user-questions/survey/@userId" aria-expanded="false">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="d-flex">
+                                        <i class="ti ti-shopping-cart"></i>
+                                    </span>
+                                    <span class="hide-menu">UserQuestions</span>
                                 </div>
                             </a>
                         </li>

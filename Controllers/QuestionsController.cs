@@ -63,10 +63,9 @@ namespace PeerReview.MvcHotel.Controllers
             var types = await _svc.GetTypes(); // يرجع List<(int Id, string Name)>
             ViewBag.QuestionTypes = new SelectList((System.Collections.IEnumerable)types, "Id", "Name");
 
-            var Category = await _lookupsService.Sub(4);
+            var Category = await _lookupsService.List();
             var culture = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
             ViewBag.Categorys = new SelectList(Category, "Id", culture == "ar" ? "NameAr" : "NameEn");
-
             // تحضير الموديل
             var model = new QuestionCreateDto();
 

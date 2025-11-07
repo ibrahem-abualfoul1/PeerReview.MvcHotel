@@ -2,8 +2,6 @@
 using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace PeerReview.MvcHotel.Models
 {
@@ -57,7 +55,10 @@ namespace PeerReview.MvcHotel.Models
         public string? TitleEn { get; set; }
         public string? DescriptionEn { get; set; }
         public int? CategoryId { get; set; }
+        public int? SubCategoryId { get; set; }
+
         public string? CategoryName { get; set; }
+        public string? subCategoryName { get; set; }
         public List<QuestionItemDto>? Items { get; set; }
     }
     public class QuestionCreateDto
@@ -67,6 +68,7 @@ namespace PeerReview.MvcHotel.Models
         public string? TitleEn { get; set; }
         public string? DescriptionEn { get; set; }
         public int? CategoryId { get; set; }
+        public int? SubCategoryId { get; set; }
         public List<QuestionItemCreateDto>? Items { get; set; }
     }
     public class QuestionItemCreateDto
@@ -77,8 +79,8 @@ namespace PeerReview.MvcHotel.Models
         public bool IsRequired { get; set; }
         public string? OptionsCsvAr { get; set; }
         public string? OptionsCsvEn { get; set; }
-            public int? ParentItemId { get; set; }
-            public string? ShowWhenValue { get; set; }
+        public int? ParentItemId { get; set; }
+        public string? ShowWhenValue { get; set; }
     }
 
     public class QuestionUpdateDto : QuestionCreateDto { }
@@ -98,7 +100,33 @@ namespace PeerReview.MvcHotel.Models
     public class AssignRequest { public List<int>? questionIds { get; set; } public List<int>? userIds { get; set; } }
     public class AssignmentDto { public int id { get; set; } public int questionId { get; set; } public int userId { get; set; } public DateTime? assignedAt { get; set; } public bool isActive { get; set; } public QuestionDto question { get; set; } }
 
-    public class Answer { public int id { get; set; } public int questionId { get; set; } public int? questionItemId { get; set; } public int userId { get; set; } public string? value { get; set; } public int? fileId { get; set; } public DateTime? submittedAt { get; set; } }
+    public class Answer
+    {
+        public int id { get; set; }
+        public int questionId { get; set; }
+        public int? questionItemId { get; set; }
+        public int userId { get; set; }
+        public string? value { get; set; }
+        public int? fileId { get; set; }
+        public DateTime? submittedAt { get; set; }
+        public QuestionDto question { get; set; }
+        public QuestionItemDto questionItem { get; set; }
+        public User user { get; set; }
+        public int? FileId { get; set; }
+        [JsonPropertyName("file")]
+        public FileEntryDto? File { get; set; }
+
+    }
+    public class FileEntryDto
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? ContentType { get; set; }
+        public long? Size { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+    }
     public class AnswerCreateDto { public int questionId { get; set; } public int? questionItemId { get; set; } public string? value { get; set; } }
     public class AnswerUpdateDto { public string? value { get; set; } }
 
@@ -202,4 +230,6 @@ namespace PeerReview.MvcHotel.Models
 
         public bool isActive { get; set; } = true;
     }
+
+    
 }

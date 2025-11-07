@@ -79,6 +79,15 @@
                   <small class="text-muted">اختر تصنيفًا واحدًا لهذا السؤال.</small>
                   <small class="text-danger d-block" asp-validation-for="CategoryId"></small>
                 </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold" asp-for="CategoryId"> public async Task<IActionResult> Sub(int id) التصنيف تابع </label>
+                                    <select class="form-select" asp-for="SubCategoryId" asp-items="categories" required>
+                                        <option value="">— اختر التصنيف —</option>
+                                    </select>
+                                    <small class="text-muted">اختر تصنيفًا واحدًا لهذا السؤال.</small>
+                                    <small class="text-danger d-block" asp-validation-for="CategoryId"></small>
+                                </div>
               </div>
             </div>
           </div>

@@ -386,11 +386,15 @@
         }
 
         // العثور على عنصر السؤال بالـ id
+        debugger
         function findItemById(id) {
           for (const g of surveyData || []) {
-            for (const it of (g.Items || [])) if (it.Id === id) return it;
+            for (const it of (g.Items || [])) 
+            if (it.Id === id) 
+            return {...it, qId : g.Id};
           }
-          return { id, type: 1 };
+          debugger
+          return {id, type: 1 };
         }
 
         // setter موحّد: يخزّن بصيغة {questionId,type,value}
@@ -644,32 +648,33 @@
         }
 
         // ===== تكوين Payload وإرساله =====
-        // function toArrayPayload() {
-        //   const out = [];
-        //   for (const g of (surveyData || [])) {
-        //     for (const it of (g.Items || [])) {
-        //       const v = getStoredValue(it);
-        //       out.push({ questionId: it.Id, type: it.Type, value: v ?? null });
-        //     }
-        //   }
-        //   return out;
-        // }
-
-                // بدل toArrayPayload كلّها بهذا
-        function toDictionaryPayload() {
-          const dict = {};
+        function toArrayPayload() {
+          const out = [];
           for (const g of (surveyData || [])) {
             for (const it of (g.Items || [])) {
-              const v = getStoredValue(it);            // نفس قيمة التخزين (string/array/number/base64)
-              dict[it.Id] = (v ?? null);               // المفتاح: رقم السؤال، القيمة: الإجابة فقط
+              const v = getStoredValue(it);
+              out.push({ questionId: g.Id, questionItemId: it.Id, value: v ?? null });
             }
           }
-          return dict;
+          return out;
         }
+
+                // بدل toArrayPayload كلّها بهذا
+        // function toDictionaryPayload() {
+        //   const dict = {};
+        //   for (const g of (surveyData || [])) {
+        //     for (const it of (g.Items || [])) {
+        //       const v = getStoredValue(it);         
+        //       dict[it.Id] = (v ?? null);              
+        //     }
+        //   }
+        //   return dict;
+        // }
 
 
             async function submitSurvey() {
-          const payload = toDictionaryPayload();
+                debugger
+          const payload = toArrayPayload();
 
           try {
             const res = await fetch('@Url.Action("Submit", "UserQuestions")', {

@@ -52,7 +52,7 @@ namespace PeerReview.MvcHotel.Controllers
         }
 
         [HttpPost("submit")]
-        public async Task<IActionResult> Submit([FromBody] Dictionary<int, object?>? answers)
+        public async Task<IActionResult> Submit([FromBody] List<AnswerCreateDto> answers)
         {
             if (answers is null || answers.Count == 0)
                 return BadRequest("No answers received.");
@@ -60,7 +60,7 @@ namespace PeerReview.MvcHotel.Controllers
             var userId = _http.HttpContext!.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
                          ?? "anonymous";
 
-            //await _answersService.Create(answers);
+            await _answersService.Create(answers);
 
 
             return Ok(new { ok = true, saved = answers.Count });

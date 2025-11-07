@@ -18,9 +18,11 @@ namespace PeerReview.MvcHotel.Controllers
             _svc = svc; _questions = questions;
         }
 
-        public async Task<IActionResult> Mine() { var list = await _svc.Mine() ?? new(); return View(list); }
+        public async Task<IActionResult> Mine() { 
+            var list = await _svc.Mine() ?? new(); 
+            return View(list); }
         public IActionResult Create() => View(new AnswerCreateDto());
-        [HttpPost] public async Task<IActionResult> Create(AnswerCreateDto dto)
+        [HttpPost] public async Task<IActionResult> Create(List<AnswerCreateDto> dto)
         {
             await _svc.Create(dto);
             TempData["msg"] = SharedResource.Msg_Added; 
@@ -56,13 +58,13 @@ namespace PeerReview.MvcHotel.Controllers
         //    return View(q);
         //}
 
-        [HttpPost]
-        public async Task<IActionResult> SaveSet([FromBody] AnswerSetPost body, CancellationToken ct)
-        {
-            if (body == null || body.Values == null) return BadRequest();
-            await _svc.BulkCreate(body.QuestionId, body.Values, ct);
-            TempData["msg"] = SharedResource.Msg_Added;
-            return Ok();
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> SaveSet([FromBody] AnswerSetPost body, CancellationToken ct)
+        //{
+        //    if (body == null || body.Values == null) return BadRequest();
+        //    await _svc.BulkCreate(body.QuestionId, body.Values, ct);
+        //    TempData["msg"] = SharedResource.Msg_Added;
+        //    return Ok();
+        //}
     }
 }
