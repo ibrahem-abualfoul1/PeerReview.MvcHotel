@@ -69,8 +69,13 @@ namespace PeerReview.MvcHotel.Models
         public string? DescriptionEn { get; set; }
         public int? CategoryId { get; set; }
         public int? SubCategoryId { get; set; }
-        public List<QuestionItemCreateDto>? Items { get; set; }
+        public List<int>? Items { get; set; }
     }
+
+
+    public class QuestionUpdateDto : QuestionCreateDto { }
+
+
     public class QuestionItemCreateDto
     {
         public string? TextAr { get; set; }
@@ -82,8 +87,6 @@ namespace PeerReview.MvcHotel.Models
         public int? ParentItemId { get; set; }
         public string? ShowWhenValue { get; set; }
     }
-
-    public class QuestionUpdateDto : QuestionCreateDto { }
 
     public class QuestionItemDto
     {
@@ -231,5 +234,82 @@ namespace PeerReview.MvcHotel.Models
         public bool isActive { get; set; } = true;
     }
 
-    
+
+
+    public class AnswerForScoringDto
+    {
+        public int AnswerId { get; set; }
+        public int QuestionId { get; set; }
+        public int? QuestionItemId { get; set; }
+
+        public string? ItemTextAr { get; set; }
+        public string? ItemTextEn { get; set; }
+
+        public string? Value { get; set; }           // نص/قيمة الإجابة (قد تكون Base64 للملفات)
+        public DateTime? SubmittedAt { get; set; }
+
+    }
+    public class WithUnScoredAnswersDto
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
+        public int? UnscoredCount { get; set; }
+    }
+
+    public class ScoreItemDto
+    {
+        public int AnswerId { get; set; }
+        public int Score { get; set; }
+        public string? Notes { get; set; }
+    }
+
+    public class ScorePostDto
+    {
+        public List<ScoreItemDto> Items { get; set; } = new();
+    }
+
+    public class AllScoresDto
+    {
+        public int UserId { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public int TotalScore { get; set; }
+        public int AnswersCount { get; set; }
+    }
+
+    public class ReviewersSummaryDto
+    {
+        public int ReviewerUserId { get; set; }
+        public string ReviewerFullName { get; set; } = string.Empty;
+        public string ReviewerUserName { get; set; } = string.Empty;
+        public int ReviewedAnswersCount { get; set; }
+        public DateTime? LastReviewedAt { get; set; }
+    }
+
+    public class ScoreRowVm
+    {
+        public int AnswerId { get; set; }
+        public int QuestionId { get; set; }
+        public int? QuestionItemId { get; set; }
+        public string? ItemTextAr { get; set; }
+        public string? ItemTextEn { get; set; }
+        public string? Value { get; set; }
+        public DateTime? SubmittedAt { get; set; }
+
+        // للـ POST من الفورم
+        public int Score { get; set; }
+        public string? Notes { get; set; }
+    }
+
+    public class ScorePostVm
+    {
+        public int UserId { get; set; }
+        public string? FullName { get; set; }
+        public string? UserName { get; set; }
+        public List<ScoreRowVm> Items { get; set; } = new();
+    }
+
 }

@@ -1,0 +1,40 @@
+﻿@model List<ReviewersSummaryDto>
+
+@{
+    ViewData["Title"] = "ملخص المراجعين";
+}
+
+<h3 class="mb-3">ملخص المراجعين (Reviewers Summary)</h3>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>#</th>
+            <th>اسم المراجع</th>
+            <th>اسم المستخدم</th>
+            <th>عدد الإجابات المراجَعة</th>
+            <th>آخر مراجعة</th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (Model != null && Model.Any())
+    {
+        var i = 1;
+        foreach (var r in Model.OrderByDescending(x => x.LastReviewedAt))
+        {
+            <tr>
+                <td>@i</td>
+                <td>@r.ReviewerFullName</td>
+                <td>@r.ReviewerUserName</td>
+                <td>@r.ReviewedAnswersCount</td>
+                <td>@(r.LastReviewedAt?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+            </tr>
+            i++;
+        }
+    }
+    else
+    {
+        <tr><td colspan="5" class="text-center text-muted">لا توجد بيانات</td></tr>
+    }
+    </tbody>
+</table>

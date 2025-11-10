@@ -431,9 +431,9 @@
             updateProgress();
             return;
           }
-
+          
           let html = '';
-          html += `<div class="group-title">${group.Title ?? ''}</div>`;
+          html += `<div class="group-title">${group.Title   ?? ''}</div>`;
           html += `<div class="group-description">${group.Description ?? ''}</div>`;
 
           (group.Items ?? []).forEach(item => { html += renderQuestion(item); });

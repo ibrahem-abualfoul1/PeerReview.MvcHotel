@@ -59,13 +59,21 @@ namespace PeerReview.MvcHotel.Controllers
         [HttpGet]
         public async Task<IActionResult> UpsertPartial(int? id)
         {
+            var culture = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
+
             // أنواع السؤال (Multi-Select)
             var types = await _svc.GetTypes(); // يرجع List<(int Id, string Name)>
             ViewBag.QuestionTypes = new SelectList((System.Collections.IEnumerable)types, "Id", "Name");
 
             var Category = await _lookupsService.List();
-            var culture = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
             ViewBag.Categorys = new SelectList(Category, "Id", culture == "ar" ? "NameAr" : "NameEn");
+
+            var QuestionItems = await _svc.ListQuestionItems();
+            ViewBag.QuestionItems = new SelectList(QuestionItems, "Id", culture == "ar" ? "TextAr" : "TextEn");
+
+
+
+
             // تحضير الموديل
             var model = new QuestionCreateDto();
 

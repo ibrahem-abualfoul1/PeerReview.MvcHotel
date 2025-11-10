@@ -63,10 +63,7 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav scroll-sidebar h-100" data-simplebar="">
           <ul id="sidebarnav">
-            <li class="nav-small-cap">
-              <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4"></iconify-icon>
-              <span class="hide-menu">Home</span>
-            </li>
+            
             <li class="sidebar-item">
               <a class="sidebar-link" href="/Home/Index" aria-expanded="false">
                 <i class="ti ti-atom"></i>
@@ -145,103 +142,43 @@
                             </a>
                         </li>
 
-            @* <li class="sidebar-item">
-              <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
-                <div class="d-flex align-items-center gap-3">
-                  <span class="d-flex">
-                    <i class="ti ti-layout-grid"></i>
-                  </span>
-                  <span class="hide-menu">Front Pages</span>
-                </div>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link justify-content-between" target="_self"
+                               href="/AnswerScoring/Index" aria-expanded="false">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="d-flex">
+                                        <i class="ti ti-shopping-cart"></i>
+                                    </span>
+                                    <span class="hide-menu">Users With Unscored Answers</span>
+                                </div>
+                            </a>
+                        </li>
 
-              </a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <li class="sidebar-item">
-                  <a class="sidebar-link justify-content-between" target="_blank"
-                    href="https://bootstrapdemos.wrappixel.com/flexy/dist/main/frontend-landingpage.html?showBtn=1">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="round-16 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-circle"></i>
-                      </div>
-                      <span class="hide-menu">Homepage</span>
-                    </div>
-                    <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
-                  </a>
-                </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link justify-content-between" target="_blank"
-                    href="https://bootstrapdemos.wrappixel.com/flexy/dist/main/frontend-aboutpage.html?showBtn=1">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="round-16 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-circle"></i>
-                      </div>
-                      <span class="hide-menu">About Us</span>
-                    </div>
-                    <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
-                  </a>
-                </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link justify-content-between" target="_blank"
-                    href="https://bootstrapdemos.wrappixel.com/flexy/dist/main/frontend-blogpage.html?showBtn=1">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="round-16 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-circle"></i>
-                      </div>
-                      <span class="hide-menu">Blog</span>
-                    </div>
-                    <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
-                  </a>
-                </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link justify-content-between" target="_blank"
-                    href="https://bootstrapdemos.wrappixel.com/flexy/dist/main/frontend-blogdetailpage.html?showBtn=1">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="round-16 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-circle"></i>
-                      </div>
-                      <span class="hide-menu">Blog Details</span>
-                    </div>
-                    <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
-                  </a>
-                </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link justify-content-between" target="_blank"
-                    href="https://bootstrapdemos.wrappixel.com/flexy/dist/main/frontend-contactpage.html?showBtn=1">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="round-16 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-circle"></i>
-                      </div>
-                      <span class="hide-menu">Contact Us</span>
-                    </div>
-                    <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
-                  </a>
-                </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link justify-content-between" target="_blank"
-                    href="https://bootstrapdemos.wrappixel.com/flexy/dist/main/frontend-portfoliopage.html?showBtn=1">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="round-16 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-circle"></i>
-                      </div>
-                      <span class="hide-menu">Portfolio</span>
-                    </div>
-                    <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
-                  </a>
-                </li>
-                <li class="sidebar-item">
-                  <a class="sidebar-link justify-content-between" target="_blank"
-                    href="https://bootstrapdemos.wrappixel.com/flexy/dist/main/frontend-pricingpage.html?showBtn=1">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="round-16 d-flex align-items-center justify-content-center">
-                        <i class="ti ti-circle"></i>
-                      </div>
-                      <span class="hide-menu">Pricing</span>
-                    </div>
-                    <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
-                  </a>
-                </li>
-              </ul>
-            </li> *@
+                        <li class="sidebar-item">
+                            <a class="sidebar-link justify-content-between" target="_self"
+                               href="/AnswerScoring/AllScores" aria-expanded="false">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="d-flex">
+                                        <i class="ti ti-shopping-cart"></i>
+                                    </span>
+                                    <span class="hide-menu">All Scores</span>
+                                </div>
+                            </a>
+                        </li>
+
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link justify-content-between" target="_self"
+                               href="/AnswerScoring/ReviewersSummary" aria-expanded="false">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="d-flex">
+                                        <i class="ti ti-shopping-cart"></i>
+                                    </span>
+                                    <span class="hide-menu">Reviewers Summary</span>
+                                </div>
+                            </a>
+                        </li>
+            
           </ul>
         </nav>
         <!-- End Sidebar navigation -->

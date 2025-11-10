@@ -14,5 +14,8 @@ namespace PeerReview.MvcHotel.Services
         public async Task Create(QuestionCreateDto dto){ (await _api.Post("/api/Questions", dto)).EnsureSuccessStatusCode(); }
         public async Task Update(int id, QuestionUpdateDto dto){ (await _api.Put($"/api/Questions/{id}", dto)).EnsureSuccessStatusCode(); }
         public async Task Delete(int id){ (await _api.Delete($"/api/Questions/{id}")).EnsureSuccessStatusCode(); }
+
+        public Task<List<QuestionItemDto>?> ListQuestionItems() => _api.Get<List<QuestionItemDto>>("/api/Questions/GetQuestionCategories");
+
     }
 }

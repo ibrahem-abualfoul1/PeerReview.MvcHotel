@@ -72,46 +72,7 @@
     }
 </style>
 
-<div class="page-header d-flex justify-content-between align-items-center">
-    <h3>@SharedResource.Assignments_Title <small class="text-muted">— إدارة الإسنادات</small></h3>
-    <div class="d-flex gap-2">
-        <button class="btn btn-gold" id="btnAdd"><i class="bi bi-plus-lg"></i> Assignments_Add</button>
 
-        <button class="btn btn-outline-primary" id="btnBulk"><i class="bi bi-arrow-down-up"></i> @SharedResource.Assignments_Bulk_Title</button>
-    </div>
-</div>
-
-<!-- فلترة -->
-<div class="card card-hotel p-3 mb-3">
-    <div class="section-title">Filter</div>
-    <form id="filterForm" class="mt-1">
-        <div class="row g-2 align-items-end">
-            <div class="col-md-4">
-                <label class="form-label">@SharedResource.Assignments_Filter_ByUser</label>
-                <select name="userId" class="form-select">
-                    <option value="">—</option>
-                    @foreach (var u in users)
-                    {
-                        <option value="@u.id">@u.fullName (@u.userName)</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">@SharedResource.Assignments_Filter_ByQuestion</label>
-                <select name="questionId" class="form-select">
-                    <option value="">—</option>
-                    @foreach (var q in qs)
-                    {
-                        <option value="@q.Id">@q.TitleEn</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-gold w-100" type="submit"><i class="bi bi-search"></i> @SharedResource.Assignments_Show</button>
-            </div>
-        </div>
-    </form>
-</div>
 
 <!-- Bulk -->
 <div class="card card-hotel p-3 mb-3">
