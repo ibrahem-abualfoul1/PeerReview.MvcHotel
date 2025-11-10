@@ -1,0 +1,93 @@
+﻿@model List<PeerReview.MvcHotel.Models.AnswerForScoringDto>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+
+@{
+    ViewData["Title"] = L["Unscored Answers"];
+}
+
+<div class="container mt-4">
+    <h3 class="mb-3">@L["Unscored Answers"]</h3>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            @L["There are no unscored answers for this user."]
+        </div>
+    }
+    else
+    {
+        <form asp-controller="AnswerScoring" asp-action="AddScore" method="post" class="needs-validation" novalidate>
+            @Html.AntiForgeryToken()
+
+            <table class="table table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:60px;">#</th>
+                        <th>@L["Question ID"]</th>
+                        <th>@L["Item (Arabic)"]</th>
+                        <th>@L["Item (English)"]</th>
+                        <th>@L["Answer Value"]</th>
+                        <th>@L["Submitted At"]</th>
+                        <th style="width:130px;">@L["Score"]</th>
+                        <th>@L["Notes"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var a = Model[i];
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@a.QuestionId</td>
+                            <td>@a.ItemTextAr</td>
+                            <td>@a.ItemTextEn</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(a.Value))
+                                {
+                                    <span>@a.Value</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>@(a.SubmittedAt?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                            <td>
+                                <input type="hidden" name="AnswerId" value="@a.AnswerId" />
+                                <input type="number" name="Score" class="form-control form-control-sm" min="0" max="100" step="1" required />
+                            </td>
+                            <td>
+                                <input type="text" name="Notes" class="form-control form-control-sm" placeholder="@L["Optional note"]" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="mt-3 text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> @L["Submit Scores"]
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">@L["Back"]</a>
+            </div>
+        </form>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

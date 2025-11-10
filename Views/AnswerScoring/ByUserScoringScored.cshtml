@@ -1,0 +1,79 @@
+﻿@model List<PeerReview.MvcHotel.Models.AnswerForScoringDto>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@{
+    ViewData["Title"] = (L["ScoredAnswers"] ?? "Scored Answers");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">@ViewData["Title"]</h5>
+    <a class="btn btn-link" href="@Url.Action("Index", "AnswerScoring")">← @(L["Back"] ?? "Back")</a>
+</div>
+
+@if (Model?.Any() != true)
+{
+    <div class="alert alert-info">@("No scored answers found.")</div>
+}
+else
+{
+    <form method="post" action="~/AnswerScoring/update-form" class="card shadow-sm">
+
+
+        <input type="hidden" name="UserId" value="@ViewBag.UserId" />
+
+        @Html.AntiForgeryToken()
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>@(L["Question"] ?? "Question")</th>
+                            <th>@(L["Item"] ?? "Item")</th>
+                            <th>@(L["Answer"] ?? "Answer")</th>
+                            <th style="width:140px">@("Score")</th>
+                            <th>@(L["Notes"] ?? "Notes")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.Count; i++)
+                        {
+                            var a = Model[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td><div class="small text-muted">Q# @a.QuestionId</div></td>
+                                <td>
+                                    <div>@(a.ItemTextAr ?? a.ItemTextEn)</div>
+                                    <div class="small text-muted">ItemId: @a.QuestionItemId</div>
+                                </td>
+                                <td>
+                                    <div style="white-space:pre-wrap">@a.Value</div>
+                                    <div class="small text-muted">@a.SubmittedAt</div>
+                                </td>
+
+                                <td>
+                                    <input type="hidden" name="Items[@i].AnswerId" value="@a.AnswerId" />
+                                    <input type="number"
+                                           class="form-control"
+                                           name="Items[@i].Score"
+                                           step="0.5" min="0" max="100"
+                                           placeholder="—" />
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="Items[@i].Notes"
+                                           placeholder="—" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-primary">
+                @(L["Update"] ?? "Update")
+            </button>
+        </div>
+    </form>
+}

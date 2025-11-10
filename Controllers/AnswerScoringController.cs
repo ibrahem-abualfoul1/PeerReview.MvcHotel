@@ -6,96 +6,71 @@ using PeerReview.MvcHotel.Services;
 
 namespace PeerReview.MvcHotel.Controllers
 {
+    [Route("[controller]")]
     public class AnswerScoringController : Controller
     {
         private readonly AnswerScoringService _svc;
         private readonly IStringLocalizer<SharedResource> _L;
 
-        public AnswerScoringController(AnswerScoringService svc, IStringLocalizer<SharedResource> l )
+        public AnswerScoringController(AnswerScoringService svc, IStringLocalizer<SharedResource> l)
         {
             _svc = svc;
             _L = l;
         }
 
         // GET /AnswerScoring
-        // قائمة المستخدمين اللي عندهم UnscoredCount > 0
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        [HttpGet("")]
+        public async Task<IActionResult> Index(CancellationToken ct)
         {
-            var users = await _svc.UsersWithunScoredAnswers() ?? new List<WithUnScoredAnswersDto>();
+            var users = await _svc.UsersScoredStatus() ?? new ReviewerUsersOverviewDto();
             return View(users);
         }
 
-        // GET /AnswerScoring/ByUser?userId=1
-        // عرض كل الإجابات غير المقيّمة لمستخدم معيّن
-        [HttpGet("ByUser")]
-        public async Task<IActionResult> ByUser(int userId)
+        // GET /AnswerScoring/users/5/unscored
+        [HttpGet("users/{userId:int}/unscored")]
+        public async Task<IActionResult> ByUserUnscored(int userId, CancellationToken ct)
         {
-            var answers = await _svc.ByUserScoring(userId) ?? new List<AnswerForScoringDto>();
-            // ممكن تجيب هوية المستخدم من نفس API ثاني، أو تمرّر بالكواري لو عندك
-            // هون بنبني ViewModel للعرض والتقييم
-            var vm = new ScorePostVm
-            {
-                UserId = userId,
-                Items = answers.Select(a => new ScoreRowVm
-                {
-                    AnswerId = a.AnswerId,
-                    QuestionId = a.QuestionId,
-                    QuestionItemId = a.QuestionItemId,
-                    ItemTextAr = a.ItemTextAr,
-                    ItemTextEn = a.ItemTextEn,
-                    Value = a.Value,
-                    SubmittedAt = a.SubmittedAt,
-                    Score = 0,        // افتراضي
-                    Notes = null
-                }).ToList()
-            };
-
-            return View(vm);
+            var answers = await _svc.ByUserScoringUnscored(userId) ?? new List<AnswerForScoringDto>();
+            return View("ByUserScoringUnscored", answers);
         }
 
-        // POST /AnswerScoring/AddScores
-        // يستقبل الفورم من ByUser ويحوّله ل ScorePostDto ثم ينادي API
-        [HttpPost("AddScores")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddScores(ScorePostVm vm)
+        // GET /AnswerScoring/users/5/scored
+        [HttpGet("users/{userId:int}/scored")]
+        public async Task<IActionResult> ByUserScored(int userId, CancellationToken ct)
         {
-            if (vm == null || vm.Items == null || vm.Items.Count == 0)
+            var answers = await _svc.ByUserScoringScored(userId) ?? new List<AnswerForScoringDto>();
+            ViewBag.UserId = userId; // <-- ضفها
+            return View("ByUserScoringScored", answers);
+        }
+
+
+        // If submitting from Razor FORM -> keep POST
+        // POST /AnswerScoring/add
+        [HttpPost("add")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddScore([FromForm] ScorePostDto req, CancellationToken ct)
+        {
+            await _svc.AddScore(req);
+            TempData["Toast"] = _L["ScoreAdded"];
+            return Redirect(Request.Headers.Referer.ToString() ?? Url.Action("Index")!);
+        }
+
+        // داخل AnswerScoringController (حتى لو فيه [Route("[controller]")])
+        [HttpPost("/AnswerScoring/update-form", Name = "AnswerScoring_UpdateForm")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateForm([FromForm] ScoreUpdateDto req, CancellationToken ct)
+        {
+            if (req.Items == null || req.Items.Count == 0)
             {
-                TempData["Err"] = "لا توجد عناصر لإرسالها.";
-                return RedirectToAction(nameof(Index));
+                TempData["Toast"] = "لا يوجد درجات لتحديثها.";
+                return Redirect(Request.Headers.Referer.ToString() ?? Url.Action("Index")!);
             }
 
-            // تحويل إلى DTO للإرسال
-            var dto = new ScorePostDto
-            {
-                Items = vm.Items.Select(x => new ScoreItemDto
-                {
-                    AnswerId = x.AnswerId,
-                    Score = x.Score,
-                    Notes = x.Notes
-                }).ToList()
-            };
-
-            await _svc.AddScore(dto);
-
-            TempData["Ok"] = "تم حفظ التقييمات بنجاح.";
-            return RedirectToAction(nameof(Index));
+            await _svc.UpdateScore(req);
+            TempData["Toast"] = _L["ScoreUpdated"];
+            return Redirect(Request.Headers.Referer.ToString() ?? Url.Action("Index")!);
         }
 
-        [HttpGet("AllScores")]
-        public async Task<IActionResult> AllScores()
-        {
-            var data = await _svc.AllScores() ?? new List<AllScoresDto>();
-            return View(data);
-        }
-
-        [HttpGet("ReviewersSummary")]
-        public async Task<IActionResult> ReviewersSummary()
-        {
-            var data = await _svc.ReviewersSummary() ?? new List<ReviewersSummaryDto>();
-            return View(data);
-        }
 
     }
 }

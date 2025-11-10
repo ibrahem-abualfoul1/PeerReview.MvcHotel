@@ -1,71 +1,128 @@
-﻿@model List<WithUnScoredAnswersDto>
-
+﻿@model PeerReview.MvcHotel.Models.ReviewerUsersOverviewDto
+@using System.Globalization
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @{
-    ViewData["Title"] = "Answer Scoring - Users";
+    ViewData["Title"] = L["AnswerScoring_Title"] ?? "Answer Scoring";
+    var scored = Model?.Scored ?? new List<PeerReview.MvcHotel.Models.ReviewerUserRowDto>();
+    var unscored = Model?.Unscored ?? new List<PeerReview.MvcHotel.Models.ReviewerUserRowDto>();
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>المستخدمون ذوو الإجابات غير المقيّمة</h3>
-</div>
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">@ViewData["Title"]</h5>
+        <span class="small text-muted">ReviewerId: @Model?.ReviewerId</span>
+    </div>
 
-@if (TempData["Ok"] != null)
-{
-    <div class="alert alert-success">@TempData["Ok"]</div>
-}
-@if (TempData["Err"] != null)
-{
-    <div class="alert alert-danger">@TempData["Err"]</div>
-}
+    <ul class="nav nav-tabs px-3 pt-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-unscored" type="button">
+                Unscored (@unscored.Count)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-scored" type="button">
+                Scored (@scored.Count)
+            </button>
+        </li>
+    </ul>
 
-<table class="table table-striped table-hover align-middle">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>الاسم</th>
-            <th>اسم المستخدم</th>
-            <th>البريد</th>
-            <th>الحالة</th>
-            <th class="text-center">غير مُقيّم</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            var i = 1;
-            foreach (var u in Model.OrderByDescending(x => x.UnscoredCount ?? 0))
-            {
-                <tr>
-                    <td>@i</td>
-                    <td>@u.FullName</td>
-                    <td>@u.UserName</td>
-                    <td>@u.Email</td>
-                    <td>
-                        @if (u.IsActive)
+    <div class="tab-content card-body p-0">
+        <!-- Unscored -->
+        <div class="tab-pane fade show active" id="tab-unscored">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>@(L["UserName"] ?? "User Name")</th>
+                            <th>@(L["FullName"] ?? "Full Name")</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Unscored</th>
+                            <th class="text-center">Scored</th>
+                            <th>@(L["LastUpdated"] ?? "Last Scored At")</th>
+                            <th>@(L["Actions"] ?? "Actions")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (unscored.Any())
                         {
-                            <span class="badge bg-success">Active</span>
+                            var i = 1;
+                            foreach (var u in unscored)
+                            {
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@u.UserName</td>
+                                    <td>@u.FullName</td>
+                                    <td class="text-center">@u.TotalAnswers</td>
+                                    <td class="text-center"><span class="badge bg-warning text-dark">@u.UnscoredCount</span></td>
+                                    <td class="text-center"><span class="badge bg-success">@u.ScoredCount</span></td>
+                                    <td>@(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a class="btn btn-primary" href="@Url.Action("ByUserUnscored", "AnswerScoring", new { userId = u.UserId })">Review Unscored</a>
+                                            <a class="btn btn-outline-secondary" href="@Url.Action("ByUserScored", "AnswerScoring", new { userId = u.UserId })">View Scored</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
                         }
                         else
                         {
-                            <span class="badge bg-secondary">Inactive</span>
+                            <tr><td colspan="8" class="text-center text-muted p-4">@(L["NoData"] ?? "No data to display.")</td></tr>
                         }
-                    </td>
-                    <td class="text-center">
-                        <span class="badge bg-warning text-dark">@((u.UnscoredCount ?? 0))</span>
-                    </td>
-                    <td class="text-end">
-                        <a class="btn btn-sm btn-primary"
-                           href="@Url.Action("ByUser", "AnswerScoring", new { userId = u.Id })">
-                            تقييم الإجابات
-                        </a>
-                    </td>
-                </tr>
-                i++;
-            }
-        }
-        else
-        {
-            <tr><td colspan="7" class="text-center text-muted">لا توجد بيانات</td></tr>
-        }
-    </tbody>
-</table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Scored -->
+        <div class="tab-pane fade" id="tab-scored">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>@(L["UserName"] ?? "User Name")</th>
+                            <th>@(L["FullName"] ?? "Full Name")</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Scored</th>
+                            <th class="text-center">Unscored</th>
+                            <th>@(L["LastUpdated"] ?? "Last Scored At")</th>
+                            <th>@(L["Actions"] ?? "Actions")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (scored.Any())
+                        {
+                            var i = 1;
+                            foreach (var u in scored)
+                            {
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@u.UserName</td>
+                                    <td>@u.FullName</td>
+                                    <td class="text-center">@u.TotalAnswers</td>
+                                    <td class="text-center"><span class="badge bg-success">@u.ScoredCount</span></td>
+                                    <td class="text-center"><span class="badge bg-warning text-dark">@u.UnscoredCount</span></td>
+                                    <td>@(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a class="btn btn-outline-secondary" href="@Url.Action("ByUserScored", "AnswerScoring", new { userId = u.UserId })">View Scored</a>
+                                            <a class="btn btn-primary" href="@Url.Action("ByUserUnscored", "AnswerScoring", new { userId = u.UserId })">Review Unscored</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="8" class="text-center text-muted p-4">@(L["NoData"] ?? "No data to display.")</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
