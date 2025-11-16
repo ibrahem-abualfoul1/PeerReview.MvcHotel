@@ -25,6 +25,7 @@
                 <td>
                     <a class="btn btn-sm btn-outline-primary" href="/Questions/Edit/@q.id">@L["Questions_Action_Edit"]</a> <a class="btn btn-sm btn-outline-secondary ms-1" href="/Answers/Screen/@q.id">Fill</a>
                     <form method="post" action="/Questions/Delete/@q.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
+                        @Html.AntiForgeryToken()
                         <button class="btn btn-sm btn-outline-danger">@L["Questions_Action_Delete"]</button>
                     </form>
                 </td>
@@ -65,6 +66,7 @@
                                 <button class="btn btn-sm btn-outline-primary" type="button" onclick="openQuestionModal(@q.Id)">تعديل</button>
                                 @* <a class="btn btn-sm btn-outline-secondary ms-1" href="/Answers/Screen/@q.id">Fill</a> *@
                                 <form method="post" action="/Questions/Delete/@q.Id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
+                                    @Html.AntiForgeryToken()
                                     <button class="btn btn-sm btn-outline-danger">حذف</button>
                                 </form>
                             </td>

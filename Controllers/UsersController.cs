@@ -41,6 +41,7 @@ namespace PeerReview.MvcHotel.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserCreateDto model)
         {
             if (!ModelState.IsValid)
@@ -81,6 +82,7 @@ namespace PeerReview.MvcHotel.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UserUpdateDto model)
         {
             await _svc.Update(id, model);
@@ -88,6 +90,7 @@ namespace PeerReview.MvcHotel.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             await _svc.Delete(id);
@@ -95,12 +98,14 @@ namespace PeerReview.MvcHotel.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Activate(int id)
         {
             await _svc.Activate(id);
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deactivate(int id)
         {
             await _svc.Deactivate(id);

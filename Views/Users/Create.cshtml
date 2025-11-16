@@ -3,6 +3,7 @@
 @{ ViewData["Title"]="مستخدم جديد"; }
 <h3>مستخدم جديد</h3>
 <form method="post" class="card card-hotel p-3">
+  @Html.AntiForgeryToken()
   <div class="row g-2">
     <div class="col-md-4"><label class="form-label">اسم المستخدم</label><input asp-for="userName" class="form-control" required /></div>
     <div class="col-md-4"><label class="form-label">الاسم الكامل</label><input asp-for="fullName" class="form-control" /></div>

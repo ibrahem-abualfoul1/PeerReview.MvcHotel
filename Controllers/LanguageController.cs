@@ -7,6 +7,7 @@ namespace PeerReview.MvcHotel.Controllers
     public class LanguageController : Controller
     {
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Set(string culture, string? returnUrl = "/")
         {
             Response.Cookies.Append(

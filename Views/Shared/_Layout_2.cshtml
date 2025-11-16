@@ -27,7 +27,7 @@
         }
     </style>
 </head>
-<body>
+<body class="theme-light">
     <header class="topbar navbar navbar-expand-lg" style="color:white !important">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-gold" href="/">@L["AppTitle"]</a>
@@ -48,8 +48,15 @@
                         <li class="nav-item"><span class="navbar-text me-2">@userName</span></li>
                         <li class="nav-item"><a class="btn btn-gold ms-2" href="/Auth/Logout">@L["Menu_Logout"]</a></li>
                     }
+                    <li class="nav-item d-flex align-items-center ms-3">
+                        <button type="button" id="themeToggle" class="btn btn-light btn-pill px-3 py-2 theme-switch">
+                            <span class="dot" aria-hidden="true"></span>
+                            <span class="ms-1" data-theme-label="light">Light</span>
+                        </button>
+                    </li>
                     <li class="nav-item ms-2">
-                        <form method="post" action="/Language/Set">
+                        <form method="post" action="/Language/Set" class="language-select">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
                             <select name="culture" class="form-select form-select-sm" onchange="this.form.submit()">
                                 <option value="ar" selected="@(isRtl ? "selected" : null)">@L["Lang_Arabic"]</option>
@@ -62,7 +69,7 @@
         </div>
     </header>
 
-    <main class="container my-3">
+    <main class="container my-3 glass-shell">
         @if (TempData["msg"] != null)
         {
             <div class="alert alert-success">@TempData["msg"]</div>
@@ -70,14 +77,38 @@
         @RenderBody()
     </main>
 
-    <footer class="text-center py-3 border-top">
-        <small>© @DateTime.Now.Year @L["AppTitle"]</small>
+    <footer class="text-center py-3 border-0">
+        <small class="footer-text">© @DateTime.Now.Year @L["AppTitle"]</small>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.slim.js"></script>
     <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        (() => {
+            const body = document.body;
+            const saved = localStorage.getItem('pr-theme') || 'light';
+            const toggle = document.getElementById('themeToggle');
+            const label = toggle?.querySelector('[data-theme-label]');
+
+            const applyTheme = (theme) => {
+                body.classList.remove('theme-light', 'theme-dark');
+                body.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
+                if (label) {
+                    label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+                }
+                localStorage.setItem('pr-theme', theme);
+            };
+
+            applyTheme(saved);
+
+            toggle?.addEventListener('click', () => {
+                const current = body.classList.contains('theme-dark') ? 'dark' : 'light';
+                applyTheme(current === 'dark' ? 'light' : 'dark');
+            });
+        })();
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

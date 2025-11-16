@@ -7,6 +7,7 @@
 }
 <h3>@SharedResource.Answers_Create_Title</h3>
 <form method="post" class="card card-hotel p-3">
+  @Html.AntiForgeryToken()
   <div class="row g-2">
         <div class="col-md-4"><label class="form-label">@SharedResource.Field_QuestionId</label><input asp-for="questionId" class="form-control" type="number" required /></div>
         <div class="col-md-4"><label class="form-label">@SharedResource.Field_QuestionItemId</label><input asp-for="questionItemId" class="form-control" type="number" /></div>

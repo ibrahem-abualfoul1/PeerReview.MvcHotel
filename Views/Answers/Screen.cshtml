@@ -9,6 +9,7 @@
 @if (!string.IsNullOrWhiteSpace(Model?.DescriptionEn)){ <p class="text-muted">@Model.DescriptionEn</p> }
 
 <form id="dynForm" class="card card-hotel p-3">
+  @Html.AntiForgeryToken()
   <input type="hidden" id="questionId" value="@qid" />
   <div class="row g-3">
     
@@ -67,6 +68,7 @@
   // parse items dependencies
   const items = Array.from(document.querySelectorAll('.item'));
   const indexById = {};
+  const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
   items.forEach(d => {
     const id = parseInt(d.id.replace('item-',''));
     indexById[id] = d;
@@ -137,7 +139,7 @@
     });
 
     // First save non-file values
-    await fetch('/Answers/SaveSet', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    await fetch('/Answers/SaveSet', { method:'POST', headers:{'Content-Type':'application/json','RequestVerificationToken': antiForgeryToken}, body: JSON.stringify(body) });
 
     // Then upload file answers (one by one)
     for (const f of files){
@@ -145,7 +147,7 @@
       fd.append('questionId', String(qid));
       fd.append('questionItemId', String(f.itemId));
       fd.append('file', f.file);
-      await fetch('/Answers/Upload', { method:'POST', body: fd });
+      await fetch('/Answers/Upload', { method:'POST', headers:{'RequestVerificationToken': antiForgeryToken}, body: fd });
     }
 
     location.href = '/Answers/Mine';
