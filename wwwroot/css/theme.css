@@ -1,0 +1,113 @@
+:root {
+    --bg-main: #f3f4f6;
+    --bg-panel: #ffffff;
+    --bg-subtle: #f9fafb;
+    --primary-gold: #c9a227;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --border-soft: #d1d5db;
+    --shadow-soft: 0 20px 60px rgba(15, 23, 42, 0.15);
+}
+
+body.theme-dark {
+    --bg-main: #020617;
+    --bg-panel: #0b1120;
+    --bg-subtle: #0f172a;
+    --primary-gold: #c9a227;
+    --text-main: #f9fafb;
+    --text-muted: #9ca3af;
+    --border-soft: #94a3b8;
+    --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+}
+
+body {
+    background: var(--bg-main);
+    color: var(--text-main);
+    transition: background 0.2s ease, color 0.2s ease;
+    font-family: "Inter", "Tajawal", system-ui, -apple-system, sans-serif;
+}
+
+.left-sidebar,
+.app-header2,
+.navbar,
+.sidebar-nav {
+    background: var(--bg-panel);
+    border-color: var(--border-soft) !important;
+}
+
+.left-sidebar .sidebar-item .sidebar-link {
+    color: var(--text-main);
+    border-radius: 12px;
+}
+
+.left-sidebar .sidebar-item .sidebar-link:hover,
+.left-sidebar .sidebar-item .sidebar-link.active {
+    background: var(--bg-subtle);
+    color: var(--primary-gold);
+}
+
+.page-wrapper {
+    background: var(--bg-main);
+}
+
+.body-wrapper-inner {
+    padding: 12px;
+}
+
+.glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(16px);
+    padding: 16px;
+}
+
+.stat-card,
+.panel-card {
+    background: var(--bg-panel);
+    border-radius: 20px;
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-primary,
+.btn-outline-primary {
+    border-radius: 999px;
+    border-width: 2px;
+}
+
+.btn-primary {
+    background: var(--primary-gold);
+    border-color: var(--primary-gold);
+    color: #0b1120;
+}
+
+.btn-outline-primary {
+    color: var(--text-main);
+    border-color: var(--border-soft);
+}
+
+.theme-icon {
+    font-size: 16px;
+}
+
+.theme-label {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.table > :not(caption) > * > * {
+    background-color: var(--bg-panel);
+    color: var(--text-main);
+}
+
+.table thead th {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.alert-success {
+    border-radius: 12px;
+}

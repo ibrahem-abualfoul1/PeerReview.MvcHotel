@@ -6,7 +6,8 @@
     var userId = Context.Session.GetInt32("userId") ?? 0;
     var culture = System.Threading.CancellationToken.None; // ignore
     var ci = System.Globalization.CultureInfo.CurrentUICulture;
-    var isRtl = ci.TwoLetterISOLanguageName == "en";
+    var isRtl = ci.TwoLetterISOLanguageName == "ar";
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
 }
 <!DOCTYPE html>
 <html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@(isRtl ? "rtl" : "ltr")">
@@ -17,6 +18,7 @@
     <title>@ViewData["Title"] - @L["AppTitle"]</title>
     <link rel="shortcut icon" type="image/png" href="~/assets/images/logos/logo_1.png" />
   <link rel="stylesheet" href="~/assets/css/styles.min.css" />
+    <link rel="stylesheet" href="~/css/theme.css" />
     <style>
         body {
             direction: @(isRtl ? "rtl" : "ltr");
@@ -182,8 +184,23 @@
                 </a>
             </li>
           </ul>
-          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-           
+          <div class="navbar-collapse justify-content-end align-items-center gap-2 px-0" id="navbarNav">
+              <div class="btn-group" role="group" aria-label="Language toggle">
+                  <form asp-controller="Language" asp-action="Set" method="post" class="d-inline">
+                      <input type="hidden" name="culture" value="ar" />
+                      <input type="hidden" name="returnUrl" value="@returnUrl" />
+                      <button type="submit" class="btn btn-outline-primary btn-sm px-3">AR</button>
+                  </form>
+                  <form asp-controller="Language" asp-action="Set" method="post" class="d-inline">
+                      <input type="hidden" name="culture" value="en" />
+                      <input type="hidden" name="returnUrl" value="@returnUrl" />
+                      <button type="submit" class="btn btn-outline-primary btn-sm px-3">EN</button>
+                  </form>
+              </div>
+              <button id="themeToggle" class="btn btn-primary btn-sm d-flex align-items-center gap-2" type="button">
+                  <span class="theme-icon" aria-hidden="true">🌙</span>
+                  <span class="theme-label">Toggle theme</span>
+              </button>
           </div>
         </nav>
       </header>
@@ -192,11 +209,15 @@
         <div class="container-fluid">
           <!--  Row 1 -->
           <div class="row">
-            @if (TempData["msg"] != null)
-            {
-                <div class="alert alert-success">@TempData["msg"]</div>
-            }
-            @RenderBody()
+              <div class="col-12">
+                  <div class="glass-card">
+                      @if (TempData["msg"] != null)
+                      {
+                          <div class="alert alert-success">@TempData["msg"]</div>
+                      }
+                      @RenderBody()
+                  </div>
+              </div>
           </div>
          
         </div>
@@ -215,8 +236,32 @@
   <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
   <script src="~/lib/jquery/dist/jquery.slim.js"></script>
   <script src="~/lib/jquery/dist/jquery.js"></script>
+  <script>
+      (function () {
+          const root = document.body;
+          const toggleButton = document.getElementById('themeToggle');
+          const icon = toggleButton?.querySelector('.theme-icon');
+          const label = toggleButton?.querySelector('.theme-label');
+          const storedTheme = localStorage.getItem('peerreview-theme') || 'light';
+
+          function applyTheme(theme) {
+              const isDark = theme === 'dark';
+              root.classList.toggle('theme-dark', isDark);
+              if (icon) icon.textContent = isDark ? '🌙' : '☀️';
+              if (label) label.textContent = isDark ? 'Dark' : 'Light';
+          }
+
+          applyTheme(storedTheme);
+
+          toggleButton?.addEventListener('click', function () {
+              const nextTheme = root.classList.contains('theme-dark') ? 'light' : 'dark';
+              localStorage.setItem('peerreview-theme', nextTheme);
+              applyTheme(nextTheme);
+          });
+      })();
+  </script>
   @RenderSection("Scripts", required: false)
-  
+
   <!-- solar icons -->
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 </body>
