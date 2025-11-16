@@ -343,6 +343,7 @@
 </head>
 
 <body>
+    <form id="afTokenForm" class="d-none">@Html.AntiForgeryToken()</form>
     <div class="container">
         <div class="header">
             <h1>@(Model?.HeaderTitle ?? "استطلاع الفنادق")</h1>
@@ -368,6 +369,7 @@
         const surveyData = @Html.Raw(json);
 
         // ===== الحالة العامة =====
+        const antiForgeryToken = document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]')?.value || '';
         let currentGroupIndex = 0;
         // التخزين: answers[questionId] = { questionId, type, value }
         let answers = {};
@@ -679,7 +681,10 @@
           try {
             const res = await fetch('@Url.Action("Submit", "UserQuestions")', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                  'Content-Type': 'application/json',
+                  'RequestVerificationToken': antiForgeryToken
+              },
               body: JSON.stringify(payload)            // يطابق Dictionary<int, object?>
             });
             if (!res.ok) throw new Error('Failed to submit');

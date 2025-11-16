@@ -22,25 +22,32 @@ namespace PeerReview.MvcHotel.Controllers
             var list = await _svc.Mine() ?? new(); 
             return View(list); }
         public IActionResult Create() => View(new AnswerCreateDto());
-        [HttpPost] public async Task<IActionResult> Create(List<AnswerCreateDto> dto)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(List<AnswerCreateDto> dto)
         {
             await _svc.Create(dto);
-            TempData["msg"] = SharedResource.Msg_Added; 
+            TempData["msg"] = SharedResource.Msg_Added;
             return RedirectToAction(nameof(Mine));
         }
         public IActionResult Edit(int id) => View(new AnswerUpdateDto());
-        [HttpPost] public async Task<IActionResult> Edit(int id, AnswerUpdateDto dto) {
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, AnswerUpdateDto dto) {
             await _svc.Update(id, dto);
             TempData["msg"] = SharedResource.Msg_Updated;
             return RedirectToAction(nameof(Mine));
         }
-        [HttpPost] public async Task<IActionResult> Delete(int id) {
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id) {
             await _svc.Delete(id);
             TempData["msg"] = SharedResource.Msg_Deleted;
             return RedirectToAction(nameof(Mine));
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(int questionId, int questionItemId, IFormFile file)
         {
             using var ms = new MemoryStream();

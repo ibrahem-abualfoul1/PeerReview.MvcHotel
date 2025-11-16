@@ -33,7 +33,7 @@
       </div>
 
       <form id="questionUpsertForm" method="post" action="@url">
-        @Html.AntiForgeryToken()
+          @Html.AntiForgeryToken()
         @if (isEdit) { <input type="hidden" name="id" value="@id" /> }
 
         <div class="modal-body">

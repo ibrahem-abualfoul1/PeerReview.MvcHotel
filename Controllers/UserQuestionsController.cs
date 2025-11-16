@@ -52,6 +52,7 @@ namespace PeerReview.MvcHotel.Controllers
         }
 
         [HttpPost("submit")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit([FromBody] List<AnswerCreateDto> answers)
         {
             if (answers is null || answers.Count == 0)

@@ -50,6 +50,7 @@
                     }
                     <li class="nav-item ms-2">
                         <form method="post" action="/Language/Set">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
                             <select name="culture" class="form-select form-select-sm" onchange="this.form.submit()">
                                 <option value="ar" selected="@(isRtl ? "selected" : null)">@L["Lang_Arabic"]</option>

@@ -26,12 +26,19 @@
       <td class="text-nowrap">
         <a class="btn btn-sm btn-outline-primary" href="/Users/Edit/@u.id">@SharedResource.Users_Action_Edit</a>
         <form method="post" action="/Users/Delete/@u.id" style="display:inline" onsubmit="return confirm('Delete?');">
+          @Html.AntiForgeryToken()
           <button class="btn btn-sm btn-outline-danger">@SharedResource.Users_Action_Delete</button>
         </form>
         @if(u.isActive){
-          <form method="post" action="/Users/Deactivate/@u.id" style="display:inline"><button class="btn btn-sm btn-outline-warning">@SharedResource.Users_Action_Deactivate</button></form>
+          <form method="post" action="/Users/Deactivate/@u.id" style="display:inline">
+            @Html.AntiForgeryToken()
+            <button class="btn btn-sm btn-outline-warning">@SharedResource.Users_Action_Deactivate</button>
+          </form>
         } else {
-          <form method="post" action="/Users/Activate/@u.id" style="display:inline"><button class="btn btn-sm btn-outline-success">@SharedResource.Users_Action_Activate</button></form>
+          <form method="post" action="/Users/Activate/@u.id" style="display:inline">
+            @Html.AntiForgeryToken()
+            <button class="btn btn-sm btn-outline-success">@SharedResource.Users_Action_Activate</button>
+          </form>
         }
       </td>
     </tr>

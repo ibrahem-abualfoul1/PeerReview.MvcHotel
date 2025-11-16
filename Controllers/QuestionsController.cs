@@ -28,6 +28,7 @@ namespace PeerReview.MvcHotel.Controllers
         //public IActionResult Create() => View(new QuestionCreateDto());
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(QuestionCreateDto model)
         {
             await _svc.Create(model);
