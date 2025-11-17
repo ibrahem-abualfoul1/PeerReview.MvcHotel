@@ -4,221 +4,200 @@
 @{
     var userName = Context.Session.GetString("userName") ?? "";
     var userId = Context.Session.GetInt32("userId") ?? 0;
-    var culture = System.Threading.CancellationToken.None; // ignore
+    var role = Context.Session.GetString("role") ?? "";
+
     var ci = System.Globalization.CultureInfo.CurrentUICulture;
-    var isRtl = ci.TwoLetterISOLanguageName == "en";
+    var isRtl = ci.TwoLetterISOLanguageName == "ar";
+    var dir = isRtl ? "rtl" : "ltr";
+    var lang = ci.TwoLetterISOLanguageName;
 }
+
 <!DOCTYPE html>
-<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@(isRtl ? "rtl" : "ltr")">
-
+<html lang="@lang" dir="@dir" data-theme="dark">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - @L["AppTitle"]</title>
+
     <link rel="shortcut icon" type="image/png" href="~/assets/images/logos/logo_1.png" />
-  <link rel="stylesheet" href="~/assets/css/styles.min.css" />
-    <style>
-        body {
-            direction: @(isRtl ? "rtl" : "ltr");
-            text-align: @(isRtl ? "right" : "left");
-        }
 
-        .nav-link {
-            color: white !important;
-        }
+    <!-- Bootstrap (لو أنت أصلاً مستخدمه رح يضل شغال بشكل طبيعي) -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
-        #main-wrapper[data-layout=vertical][data-sidebar-position=fixed] .left-sidebar{
-            position: fixed;
-            top: 1px !important;
-        }
-        .app-header2{
-            position: relative;
-            z-index: 50;
-            width: 100%;
-            background: var(--bs-body-bg);
-            padding: 0 10px;
-            top: 1px !important;
-        }
-    </style>
+    <!-- الثيم الجديد -->
+    <link rel="stylesheet" href="~/css/peerreview-theme.css" />
+
+    @RenderSection("Styles", required: false)
 </head>
-
 <body>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-
-    <!-- Sidebar Start -->
-    <aside class="left-sidebar">
-      <!-- Sidebar scroll-->
-      <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="./index.html" class="text-nowrap logo-img">
-                        <img src="~/assets/images/logos/logo_1.png" alt="" width="80%" height="100%" 
-                             />
-          </a>
-          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-            <i class="ti ti-x fs-6"></i>
-          </div>
-        </div>
-        <!-- Sidebar navigation-->
-        <nav class="sidebar-nav scroll-sidebar h-100" data-simplebar="">
-          <ul id="sidebarnav">
-            
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="/Home/Index" aria-expanded="false">
-                <i class="ti ti-atom"></i>
-                <span class="hide-menu">Dashboard</span>
-              </a>
-            </li>
-            <!-- ---------------------------------- -->
-            <!-- Dashboard -->
-            <!-- ---------------------------------- -->
-            <li class="sidebar-item">
-           <a class="sidebar-link justify-content-between" target="_self" 
-               href="/Questions/Index" aria-expanded="false">
-                <div class="d-flex align-items-center gap-3">
-                  <span class="d-flex">
-                    <i class="ti ti-aperture"></i>
-                  </span>
-                  <span class="hide-menu">Quastions</span>
+    <div class="app-shell">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div>
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-logo">
+                        <a href="@Url.Action("Index", "Home")">
+                            <img src="~/assets/images/logos/logo_1.png"
+                                 alt="Logo"
+                                 style="width:100%;height:100%;object-fit:cover;" />
+                        </a>
+                    </div>
+                    <div>
+                        <div class="sidebar-brand-title">PeerReview Platform</div>
+                        <div class="sidebar-brand-sub">
+                            @L["Evaluation & Review System"]
+                        </div>
+                    </div>
                 </div>
-              </a>
-            </li>
-            <li class="sidebar-item">
-                            <a class="sidebar-link justify-content-between" target="_self"
-                href="/Assignments/Index" aria-expanded="false">
-                <div class="d-flex align-items-center gap-3">
-                  <span class="d-flex">
-                    <i class="ti ti-shopping-cart"></i>
-                  </span>
-                  <span class="hide-menu">Assign</span>
+
+                <nav class="sidebar-nav">
+                    @if(role == "Admin"){
+                    <a class="sidebar-link @(ViewBag.ActiveMenu == "Dashboard" ? "active" : "")"
+                       href="@Url.Action("Index", "Home")">
+                        <span class="icon">📊</span>
+                        <span>@L["Dashboard"]</span>
+                    </a>
+
+                    <a class="sidebar-link @(ViewBag.ActiveMenu == "Users" ? "active" : "")"
+                       href="@Url.Action("Index", "Users")">
+                        <span class="icon">👥</span>
+                        <span>@L["Users"]</span>
+                    </a>
+
+                    <a class="sidebar-link @(ViewBag.ActiveMenu == "Questions" ? "active" : "")"
+                       href="@Url.Action("Index", "Questions")">
+                        <span class="icon">❓</span>
+                        <span>@L["Questions"]</span>
+                    </a>
+
+                    <a class="sidebar-link @(ViewBag.ActiveMenu == "Assignments" ? "active" : "")"
+                       href="@Url.Action("Index", "Assignments")">
+                        <span class="icon">📝</span>
+                        <span>@L["Assignments"]</span>
+                    </a>
+
+                    <a class="sidebar-link @(ViewBag.ActiveMenu == "Answers" ? "active" : "")"
+                       href="@Url.Action("Mine", "Answers")">
+                        <span class="icon">📥</span>
+                        <span>@L["Answers"]</span>
+                    </a>
+
+                    <a class="sidebar-link @(ViewBag.ActiveMenu == "Scoring" ? "active" : "")"
+                       href="@Url.Action("Index", "AnswerScoring")">
+                        <span class="icon">⭐</span>
+                        <span>@L["Scoring"]</span>
+                    </a>
+
+                    <a class="sidebar-link @(ViewBag.ActiveMenu == "Lookups" ? "active" : "")"
+                       href="@Url.Action("Index", "Lookups")">
+                        <span class="icon">📚</span>
+                        <span>@L["Lookups"]</span>
+                    </a>
+
+                    }
+                    <a class="sidebar-link @(ViewBag.ActiveMenu == "user-questions" ? "active" : "")"
+                       href="@Url.Action("Survey", "UserQuestions", new { userId = userId })">
+                        <span class="icon">🧾</span>
+                        <span>@L["user-questions"]</span>
+                    </a>
+
+
+                    
+                </nav>
+            </div>
+
+            <!-- bottom: theme + language + user -->
+            <div>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <!-- Theme toggle -->
+                    <button type="button" class="btn-pr btn-pr-icon" id="themeToggle" title="Theme">
+                        🌙
+                    </button>
+
+                    <!-- Language toggle
+                         NOTE: عدّل الروت حسب Controller اللغة عندك (Lang / Language / Culture...) -->
+                    <div class="btn-group">
+                        <a class="btn-pr btn-pr-soft @(isRtl ? "active" : "")"
+                           href="~/Lang/Set?culture=ar-SA&returnUrl=@Context.Request.Path">
+                            ع
+                        </a>
+                        <a class="btn-pr btn-pr-soft @(!isRtl ? "active" : "")"
+                           href="~/Lang/Set?culture=en-US&returnUrl=@Context.Request.Path">
+                            EN
+                        </a>
+                    </div>
                 </div>
-              </a>
-            </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link justify-content-between" target="_self"
-                               href="/Users/Index" aria-expanded="false">
-                                <div class="d-flex align-items-center gap-3">
-                                    <span class="d-flex">
-                                        <i class="ti ti-shopping-cart"></i>
-                                    </span>
-                                    <span class="hide-menu">User</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link justify-content-between" target="_self"
-                               href="/Lookups" aria-expanded="false">
-                                <div class="d-flex align-items-center gap-3">
-                                    <span class="d-flex">
-                                        <i class="ti ti-shopping-cart"></i>
-                                    </span>
-                                    <span class="hide-menu">LookUps</span>
-                                </div>
-                            </a>
-                        </li>
 
-                        <li class="sidebar-item">
-                            <a class="sidebar-link justify-content-between" target="_self"
-                               href="/Answers/Mine" aria-expanded="false">
-                                <div class="d-flex align-items-center gap-3">
-                                    <span class="d-flex">
-                                        <i class="ti ti-shopping-cart"></i>
-                                    </span>
-                                    <span class="hide-menu">Answers</span>
-                                </div>
-                            </a>
-                        </li>
+                <div class="user-pill">
+                    <div class="user-pill-avatar">
+                        @((!string.IsNullOrEmpty(userName) ? userName[0].ToString().ToUpper() : "U"))
+                    </div>
+                    <div>
+                        <div style="font-size:0.85rem;">@userName</div>
+                        <div class="text-muted-soft">@L["Logged in"]</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
 
-                        <li class="sidebar-item">
-                            <a class="sidebar-link justify-content-between" target="_self"
-                               href="/user-questions/survey/@userId" aria-expanded="false">
-                                <div class="d-flex align-items-center gap-3">
-                                    <span class="d-flex">
-                                        <i class="ti ti-shopping-cart"></i>
-                                    </span>
-                                    <span class="hide-menu">UserQuestions</span>
-                                </div>
-                            </a>
-                        </li>
+        <!-- Main -->
+        <main class="app-main">
+            <!-- Header -->
+            <header class="app-header">
+                <div>
+                    <h1 class="h-page-title mb-0">
+                        @ViewData["Title"]
+                    </h1>
+                    <div class="text-muted-soft mt-1">
+                        @RenderSection("PageSubtitle", required: false)
+                    </div>
+                </div>
 
-                        <li class="sidebar-item">
-                            <a class="sidebar-link justify-content-between" target="_self"
-                               href="/AnswerScoring" aria-expanded="false">
-                                <div class="d-flex align-items-center gap-3">
-                                    <span class="d-flex">
-                                        <i class="ti ti-shopping-cart"></i>
-                                    </span>
-                                    <span class="hide-menu">Users With Answers</span>
-                                </div>
-                            </a>
-                        </li>
+                <div class="d-flex align-items-center gap-2">
+                    @RenderSection("HeaderActions", required: false)
 
-                        
+                    <a href="@Url.Action("Logout", "Auth")"
+                       class="btn-pr btn-pr-outline">
+                        @L["Logout"]
+                    </a>
+                </div>
+            </header>
 
+            <!-- Content -->
+            <section class="app-content mt-2">
+                @RenderBody()
+            </section>
 
-            
-          </ul>
-        </nav>
-        <!-- End Sidebar navigation -->
-      </div>
-      <!-- End Sidebar scroll-->
-    </aside>
-    <!--  Sidebar End -->
-    <!--  Main wrapper -->
-    <div class="body-wrapper">
-      <!--  Header Start -->
-      <header class="app-header2">
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <ul class="navbar-nav">
-            <li class="nav-item d-block d-xl-none">
-              <a class="nav-link sidebartoggler " id="headerCollapse" href="javascript:void(0)">
-                <i class="ti ti-menu-2"></i>
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link " href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown" aria-expanded="false">
-                +
-                </a>
-            </li>
-          </ul>
-          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-           
-          </div>
-        </nav>
-      </header>
-      <!--  Header End -->
-      <div class="body-wrapper-inner">
-        <div class="container-fluid">
-          <!--  Row 1 -->
-          <div class="row">
-            @if (TempData["msg"] != null)
-            {
-                <div class="alert alert-success">@TempData["msg"]</div>
-            }
-            @RenderBody()
-          </div>
-         
-        </div>
-      </div>
+            <footer class="mt-3 text-center text-muted-soft">
+                © @DateTime.Now.Year PeerReview Platform
+            </footer>
+        </main>
     </div>
-  </div>
 
-  <!-- Scripts -->
-  <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="~/assets/js/sidebarmenu.js"></script>
-  <script src="~/assets/js/app.min.js"></script>
-  <script src="~/assets/libs/simplebar/dist/simplebar.js"></script>
-  <script src="~/assets/js/dashboard.js"></script>
-  <script src="~/lib/jquery/dist/jquery.min.js"></script>
-  <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
-  <script src="~/lib/jquery/dist/jquery.slim.js"></script>
-  <script src="~/lib/jquery/dist/jquery.js"></script>
-  @RenderSection("Scripts", required: false)
-  
-  <!-- solar icons -->
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        (function () {
+            const root = document.documentElement;
+            const savedTheme = localStorage.getItem("pr-theme") || "dark";
+            root.setAttribute("data-theme", savedTheme);
+
+            const btn = document.getElementById("themeToggle");
+            if (btn) {
+                btn.textContent = savedTheme === "dark" ? "🌙" : "☀️";
+
+                btn.addEventListener("click", function () {
+                    const current = root.getAttribute("data-theme") || "dark";
+                    const next = current === "dark" ? "light" : "dark";
+                    root.setAttribute("data-theme", next);
+                    localStorage.setItem("pr-theme", next);
+                    btn.textContent = next === "dark" ? "🌙" : "☀️";
+                });
+            }
+        })();
+    </script>
+
+    @RenderSection("Scripts", required: false)
 </body>
-
 </html>

@@ -85,13 +85,24 @@ namespace PeerReview.MvcHotel.Controllers
                 if (existing == null) return NotFound();
 
                 model.TitleEn = existing.TitleEn;
+                model.TitleAr = existing.TitleAr;
                 model.DescriptionEn = existing.DescriptionEn;
+                model.DescriptionAr = existing.DescriptionAr;
                 model.CategoryId = existing.CategoryId;
+                model.Items = existing.Items?.Select(item => item.Id).ToList();
                 // items: ما منرجّعها هون (بس نهيئها للتحديث لاحقاً)
                 ViewBag.Id = id.Value;
             }
 
             return PartialView("_QuestionPopup", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _svc.Delete(id);
+            TempData["msg"] = SharedResource.Msg_Deleted;
+            return RedirectToAction(nameof(Index));
         }
     }
 }

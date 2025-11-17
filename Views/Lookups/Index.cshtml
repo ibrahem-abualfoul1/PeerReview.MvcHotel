@@ -4,76 +4,222 @@
 
 @{
     ViewData["Title"] = L["Lookups"];
+    ViewBag.ActiveMenu = "Lookups";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>@L["Lookups"]</h3>
-        <a asp-action="Create" class="btn btn-primary">@L["AddNew"]</a>
+@section Styles {
+    <style>
+        .lk-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: .75rem;
+        }
+
+        .lk-hint {
+            font-size: 0.85rem;
+            color: var(--text-muted, #9ca3af);
+        }
+
+        .lk-pill {
+            border-radius: 999px;
+            padding: .18rem .8rem;
+            font-size: .78rem;
+            border: 1px solid var(--border-soft, rgba(148,163,184,.45));
+            background: rgba(15,23,42,.85);
+            color: var(--text-main,#e5e7eb);
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+            .lk-pill.badge-type {
+                background: rgba(15,23,42,.95);
+            }
+
+            .lk-pill.badge-code {
+                background: rgba(201,162,39,.08);
+                border-color: rgba(201,162,39,.6);
+                color: var(--primary,#c9a227);
+                font-weight: 500;
+            }
+
+                .lk-pill.badge-code small {
+                    font-size: .7rem;
+                    opacity: .75;
+                }
+
+        .lk-msg {
+            border-radius: 999px;
+            padding: .3rem .9rem;
+            font-size: .8rem;
+        }
+
+        .pr-table thead th {
+            font-size: .78rem;
+            letter-spacing: .02em;
+            text-transform: uppercase;
+            opacity: .85;
+        }
+
+        .pr-table tbody tr:hover {
+            background: rgba(15,23,42,.85);
+        }
+
+        .pr-table td.text-clip {
+            max-width: 260px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lk-actions {
+            display: inline-flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: .35rem;
+        }
+
+        .btn-pr.btn-pr-xs {
+            padding-inline: .6rem;
+            padding-block: .25rem;
+            font-size: .75rem;
+            border-radius: 999px;
+        }
+    </style>
+}
+
+<div class="pr-card">
+
+    <!-- Header -->
+    <div class="lk-header-top">
+        <div>
+            <div class="h-section-title mb-1">
+                @L["Lookups"]
+            </div>
+            <div class="lk-hint">
+                @L["Lookups_Hint"]
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <a asp-action="Create" class="btn-pr btn-pr-primary">
+                <i class="bi bi-plus-lg me-1"></i> @L["AddNew"]
+            </a>
+        </div>
     </div>
 
     @if (TempData["msg"] != null)
     {
-        <div class="alert alert-success">@TempData["msg"]</div>
+        <div class="alert alert-success lk-msg d-inline-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>@TempData["msg"]</span>
+        </div>
     }
 
-    <table class="table table-striped table-bordered align-middle">
-        <thead class="table-light">
-            <tr>
-                <th>@L["Id"]</th>
-                <th>@L["NameEn"]</th>
-                <th>@L["NameAR"]</th>
-                <th>@L["TypeAr"]</th>
-                <th>@L["TypeEn"]</th>
-                <th>@L["Code"]</th>
-                <th class="text-center">@L["Actions"]</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var item in Model)
+    <!-- Table -->
+    <div class="table-responsive mt-1">
+        <table class="pr-table align-middle">
+            <thead>
+                <tr>
+                    <th style="width:60px;">@L["Id"]</th>
+                    <th>@L["NameEn"]</th>
+                    <th>@L["NameAR"]</th>
+                    <th>@L["TypeEn"]</th>
+                    <th>@L["TypeAr"]</th>
+                    <th>@L["Code"]</th>
+                    <th class="text-center" style="width:220px;">@L["Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+
+                            <td class="text-clip" title="@item.NameEn">
+                                @item.NameEn
+                            </td>
+
+                            <td class="text-clip" title="@item.NameAr">
+                                @item.NameAr
+                            </td>
+
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.TypeEn))
+                                {
+                                    <span class="lk-pill badge-type" title="@item.TypeEn">
+                                        <i class="bi bi-tag"></i>
+                                        @item.TypeEn
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.TypeAr))
+                                {
+                                    <span class="lk-pill badge-type" title="@item.TypeAr">
+                                        <i class="bi bi-tag"></i>
+                                        @item.TypeAr
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.Code))
+                                {
+                                    <span class="lk-pill badge-code" title="@item.Code">
+                                        <small>@L["Code"]</small>
+                                        @item.Code
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="text-center">
+                                <div class="lk-actions">
+                                    <a asp-controller="Lookups"
+                                       asp-action="Edit"
+                                       asp-route-code="@item.Code"
+                                       class="btn-pr btn-pr-xs btn-pr-soft">
+                                        <i class="bi bi-pencil-square me-1"></i>@L["Edit"]
+                                    </a>
+
+                                    <a asp-controller="Lookups"
+                                       asp-action="Sub"
+                                       asp-route-id="@item.Id"
+                                       class="btn-pr btn-pr-xs btn-pr-outline">
+                                        <i class="bi bi-diagram-3 me-1"></i>@L["SubLookup"]
+                                    </a>
+
+                                    <form asp-controller="Lookups"
+                                          asp-action="Delete"
+                                          asp-route-code="@item.Code"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('@L["ConfirmDelete"]');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit"
+                                                class="btn-pr btn-pr-xs btn-pr-danger">
+                                            <i class="bi bi-trash me-1"></i>@L["Delete"]
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>@item.Id</td>
-                        <td>@item.NameEn</td>
-                        <td>@item.NameAr</td>
-
-                        <td>@item.TypeAr</td>
-                        <td>@item.TypeEn</td>
-
-
-                        <td>@item.Code</td>
-                       
-                        <td class="text-center">
-                            <a asp-controller="Lookups" asp-action="Edit" asp-route-code="@item.Code" class="btn btn-sm btn-outline-primary">
-                                @L["Edit"]
-                            </a>
-
-                            <form asp-controller="Lookups"
-                                  asp-action="Delete"
-                                  asp-route-code="@item.Code"
-                                  method="post"
-                                  class="d-inline"
-                                  onsubmit="return confirm('@L["ConfirmDelete"]');">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    @L["Delete"]
-                                </button>
-                            </form>
-
-                            <a asp-controller="Lookups" asp-action="Sub" asp-route-Id="@item.Id" class="btn btn-sm btn-outline-primary">
-                                @L["SubLookup"]
-                            </a>
-                           
+                        <td colspan="7" class="text-center text-muted-soft py-4">
+                            @L["NoRecordsFound"]
                         </td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr><td colspan="5" class="text-center text-muted">@L["NoRecordsFound"]</td></tr>
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -1,20 +1,69 @@
-
 @model UserCreateDto
-@{ ViewData["Title"]="مستخدم جديد"; }
-<h3>مستخدم جديد</h3>
-<form method="post" class="card card-hotel p-3">
-  @Html.AntiForgeryToken()
-  <div class="row g-2">
-    <div class="col-md-4"><label class="form-label">اسم المستخدم</label><input asp-for="userName" class="form-control" required /></div>
-    <div class="col-md-4"><label class="form-label">الاسم الكامل</label><input asp-for="fullName" class="form-control" /></div>
-    <div class="col-md-4"><label class="form-label">البريد</label><input asp-for="email" class="form-control" /></div>
-    <div class="col-md-4"><label class="form-label">كلمة المرور</label><input asp-for="password" type="password" class="form-control" /></div>
-        <div class="col-md-4">
-            <label class="form-label">الدور</label>
-            <select asp-for="roleId" asp-items="@(new SelectList(ViewBag.Roles, "Value", "Text"))" class="form-select">
-                <option value="">-- اختر الدور --</option>
-            </select>
+
+@{
+    ViewData["Title"] = "مستخدم جديد";
+    ViewBag.ActiveMenu = "Users";
+}
+
+@section HeaderActions {
+    <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
+        ← رجوع
+    </a>
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+        <div class="pr-card">
+            <div class="h-section-title mb-3">
+                مستخدم جديد
+            </div>
+
+            <form asp-action="Create" asp-controller="Users" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="pr-field">
+                    <input asp-for="userName" placeholder=" " required />
+                    <label>اسم المستخدم</label>
+                    @Html.ValidationMessageFor(m => m.userName, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="pr-field">
+                    <input asp-for="fullName" placeholder=" " />
+                    <label>الاسم الكامل</label>
+                    @Html.ValidationMessageFor(m => m.fullName, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="pr-field">
+                    <input asp-for="email" placeholder=" " type="email" />
+                    <label>البريد الإلكتروني</label>
+                    @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="pr-field">
+                    <input asp-for="password" placeholder=" " type="password" />
+                    <label>كلمة المرور</label>
+                    @Html.ValidationMessageFor(m => m.password, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="pr-field">
+                    <select asp-for="roleId"
+                            class="form-select"
+                            asp-items="@(new SelectList(ViewBag.Roles, "Value", "Text"))">
+                        <option value="">-- اختر الدور --</option>
+                    </select>
+                    <label>الدور</label>
+                    @Html.ValidationMessageFor(m => m.roleId, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
+                        رجوع
+                    </a>
+                    <button type="submit" class="btn-pr btn-pr-primary">
+                        حفظ
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-  <button class="btn btn-gold mt-2">حفظ</button> <a class="btn btn-secondary mt-2" href="/Users">رجوع</a>
-</form>
+</div>

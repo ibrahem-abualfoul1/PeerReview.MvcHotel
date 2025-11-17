@@ -5,118 +5,277 @@
 
 @{
     ViewData["Title"] = SharedResource.Assignments_Title;
+    ViewBag.ActiveMenu = "Assignments";
+
     var users = ViewBag.Users as List<User> ?? new();
     var qs = ViewBag.Questions as List<QuestionDto> ?? new();
-    // var isAr = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ar";
-
 }
 
-<style>
-    :root {
-        --hotel-gold: #C7A462;
-        --muted: #6c757d;
-    }
-
-    .page-header {
-        background: linear-gradient(135deg, rgba(199,164,98,.15), rgba(0,0,0,.03));
-        border: 1px solid rgba(199,164,98,.25);
-        border-radius: 16px;
-        padding: 16px;
-        margin-bottom: 14px;
-    }
-
-        .page-header h3 {
-            margin: 0;
-            display: flex;
-            gap: 10px;
-            align-items: center;
+@section Styles {
+    <style>
+        .badge-active {
+            background: #eaf6ed;
+            color: #137333;
+            border: 1px solid #cfe9d6;
+            padding: .25rem .6rem;
+            border-radius: 999px;
+            font-size: .75rem;
         }
 
-    .btn-gold {
-        background: linear-gradient(180deg,#d6bb7e,var(--hotel-gold));
-        color: #1b1b1b;
-        border: none;
-        font-weight: 700;
-        border-radius: 12px;
-    }
+        .badge-inactive {
+            background: #fff4e5;
+            color: #8a5a00;
+            border: 1px solid #ffe3bf;
+            padding: .25rem .6rem;
+            border-radius: 999px;
+            font-size: .75rem;
+        }
 
-    .card-hotel {
-        border-radius: 16px;
-        border: 1px solid rgba(0,0,0,.06);
-        box-shadow: 0 6px 24px rgba(0,0,0,.06);
-    }
+        .row-inactive {
+            opacity: .6;
+        }
 
-    .section-title {
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
+        .dt-buttons .btn {
+            border-radius: 999px;
+            font-size: .8rem;
+            padding-inline: .75rem;
+        }
 
-    .row-inactive {
-        opacity: .65;
-    }
+        .assign-filter-label {
+            font-size: 0.8rem;
+            color: var(--text-muted, #9ca3af);
+            margin-bottom: 0.15rem;
+        }
 
-    .badge-active {
-        background: #eaf6ed;
-        color: #137333;
-        border: 1px solid #cfe9d6;
-        padding: .35rem .6rem;
-        border-radius: 12px;
-    }
+        /* 🔹 Multi-select dropdown شيك */
+        .pr-multi {
+            position: relative;
+        }
 
-    .badge-inactive {
-        background: #fff4e5;
-        color: #8a5a00;
-        border: 1px solid #ffe3bf;
-        padding: .35rem .6rem;
-        border-radius: 12px;
-    }
-</style>
+        .pr-multi-toggle {
+            width: 100%;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft, rgba(148,163,184,0.35));
+            background: rgba(15,23,42,0.7);
+            padding: .45rem .85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .5rem;
+            font-size: .85rem;
+            cursor: pointer;
+        }
 
+            .pr-multi-toggle span {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
+            .pr-multi-toggle .pr-multi-placeholder {
+                opacity: .7;
+            }
 
-<!-- Bulk -->
-<div class="card card-hotel p-3 mb-3">
-    <div class="section-title"><i class="bi bi-lightning-charge"></i> @SharedResource.Assignments_Bulk_Title</div>
-    <div class="text-muted mb-2">أدخل مُعرّفات مفصولة بفواصل، مثال: 1,2,3</div>
-    <form id="bulkForm" class="mt-1">
-        <div class="col-md-6">
-            <label class="form-label">@SharedResource.Assignments_Bulk_QuestionIds</label>
-            <select name="questionIds" class="form-select" multiple size="8">
-                @foreach (var q in qs)
-                {
-                    <option value="@q.Id">@( q.TitleEn)</option>
-                }
-            </select>
-            <div class="form-text">اختر سؤالًا واحدًا أو أكثر.</div>
+        .pr-multi-menu {
+            position: absolute;
+            inset-inline: 0;
+            margin-top: .4rem;
+            background: var(--panel, #020617);
+            border-radius: 1rem;
+            border: 1px solid var(--border-soft, rgba(148,163,184,0.35));
+            box-shadow: 0 18px 45px rgba(15,23,42,.7);
+            overflow: hidden;
+            max-height: 260px;
+            display: none;
+            z-index: 1080;
+        }
+
+        .pr-multi.open .pr-multi-menu {
+            display: block;
+        }
+
+        .pr-multi-header {
+            padding: .45rem .85rem;
+            border-bottom: 1px solid var(--border-soft, rgba(148,163,184,0.35));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .5rem;
+            font-size: .8rem;
+        }
+
+            .pr-multi-header label {
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: .35rem;
+                margin: 0;
+            }
+
+        .pr-multi-list {
+            max-height: 210px;
+            overflow: auto;
+            padding: .25rem .85rem .6rem;
+        }
+
+        .pr-multi-item {
+            display: flex;
+            align-items: flex-start;
+            gap: .5rem;
+            padding: .2rem 0;
+            font-size: .85rem;
+            cursor: pointer;
+        }
+
+            .pr-multi-item input[type="checkbox"] {
+                margin-top: .2rem;
+            }
+
+            .pr-multi-item span {
+                flex: 1;
+            }
+
+        .pr-multi-count {
+            font-size: .75rem;
+            opacity: .7;
+        }
+
+        /* تقصير النص في جدول الإسنادات */
+        #assignTable td:nth-child(2) {
+            max-width: 260px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+}
+
+<div class="row g-3">
+
+    <!-- 🔹 Bulk Assignment -->
+    <div class="col-lg-4">
+        <div class="pr-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="h-section-title mb-0">
+                    <span class="me-1">⚡</span>
+                    @SharedResource.Assignments_Bulk_Title
+                </div>
+                <span class="badge-pill badge-soft">
+                    @SharedResource.Assignments_Action_Activate
+                </span>
+            </div>
+
+            <p class="text-muted-soft mb-3" style="font-size:0.85rem;">
+                @SharedResource.Assignments_Action_Activate
+            </p>
+
+            <form id="bulkForm" class="mt-1">
+                <!-- أسئلة -->
+                <div class="mb-3">
+                    <div class="assign-filter-label">@SharedResource.Assignments_Bulk_QuestionIds</div>
+
+                    <div class="pr-multi" data-placeholder="اختر الأسئلة" data-group="questions">
+                        <button type="button" class="pr-multi-toggle">
+                            <span class="pr-multi-label pr-multi-placeholder">اختر الأسئلة</span>
+                            <span class="pr-multi-count"></span>
+                        </button>
+                        <div class="pr-multi-menu">
+                            <div class="pr-multi-header">
+                                <label>
+                                    <input type="checkbox" class="pr-multi-selectall" data-group="questions" />
+                                    <span>تحديد الكل</span>
+                                </label>
+                            </div>
+                            <div class="pr-multi-list">
+                                @foreach (var q in qs)
+                                {
+                                    var text = string.IsNullOrWhiteSpace(q.TitleAr) ? q.TitleEn : q.TitleAr;
+                                    <label class="pr-multi-item">
+                                        <input type="checkbox"
+                                               name="questionIds"
+                                               value="@q.Id"
+                                               data-group="questions" />
+                                        <span>@text</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-text">@SharedResource.Answers_Add</div>
+                </div>
+
+                <!-- مستخدمون -->
+                <div class="mb-3">
+                    <div class="assign-filter-label">@SharedResource.Assignments_Bulk_UserIds</div>
+
+                    <div class="pr-multi" data-placeholder="اختر المستخدمين" data-group="users">
+                        <button type="button" class="pr-multi-toggle">
+                            <span class="pr-multi-label pr-multi-placeholder">اختر المستخدمين</span>
+                            <span class="pr-multi-count"></span>
+                        </button>
+                        <div class="pr-multi-menu">
+                            <div class="pr-multi-header">
+                                <label>
+                                    <input type="checkbox" class="pr-multi-selectall" data-group="users" />
+                                    <span>تحديد الكل</span>
+                                </label>
+                            </div>
+                            <div class="pr-multi-list">
+                                @foreach (var u in users)
+                                {
+                                    <label class="pr-multi-item">
+                                        <input type="checkbox"
+                                               name="userIds"
+                                               value="@u.id"
+                                               data-group="users" />
+                                        <span>@u.fullName (@u.userName)</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-text">@SharedResource.Answers_Add</div>
+                </div>
+
+                <div class="mt-2 d-flex gap-2">
+                    <button type="submit" class="btn-pr btn-pr-primary flex-grow-1">
+                        <i class="bi bi-check2-circle me-1"></i>
+                        @SharedResource.Assignments_Bulk_Execute
+                    </button>
+                    <button type="reset" class="btn-pr btn-pr-outline">
+                        <i class="bi bi-x-lg"></i>
+                        Reset
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <div class="col-md-6">
-            <label class="form-label">@SharedResource.Assignments_Bulk_UserIds</label>
-            <select name="userIds" class="form-select" multiple size="8">
-                @foreach (var u in users)
-                {
-                    <option value="@u.id">@u.fullName (@u.userName)</option>
-                }
-            </select>
-            <div class="form-text">اختر مستخدمًا واحدًا أو أكثر.</div>
+    <!-- 🔹 قائمة الإسنادات -->
+    <div class="col-lg-8">
+        <div class="pr-card mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="h-section-title mb-0">
+                    @SharedResource.Assignments_Action_Activate
+                </div>
+                <span class="text-muted-soft" style="font-size:0.8rem;">
+                    @SharedResource.Assignments_Action_Activate
+                </span>
+            </div>
+
+            <div id="assignTableWrap" class="mt-2">
+                @Html.Partial("_AssignmentsTable", Model)
+            </div>
         </div>
-        <div class="mt-2 d-flex gap-2">
-            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-check2-circle"></i> @SharedResource.Assignments_Bulk_Execute</button>
-            <button type="reset" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i> Reset</button>
-        </div>
-    </form>
+    </div>
 </div>
-
-<!-- الجدول (سيتم تحميله/إعادة تحميله بالبارشال عبر AJAX) -->
-<div id="assignTableWrap" class="card card-hotel p-3">
-    @await Html.PartialAsync("_AssignmentUpsertModal", Model)
-</div>
-
 
 <!-- حاوية المودال -->
 <div id="assignUpsertHost"></div>
 
-<!-- توكن مضاد للتزوير للاستعمال في الطلبات AJAX -->
+<!-- توكن مضاد للتزوير للاستعمال في طلبات AJAX -->
 <form id="afTokenForm" class="d-none">@Html.AntiForgeryToken()</form>
 
 @section Scripts {
@@ -133,100 +292,201 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        const getAfToken = ()=> document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]').value;
-        debugger
-        function initDataTable(){
-          const $tbl = $('#assignTable');
-          if ($.fn.dataTable.isDataTable($tbl)) $tbl.DataTable().destroy();
-          $tbl.DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-              { extend: 'copyHtml5', text: '<i class="bi bi-clipboard"></i> Copy' },
-              { extend: 'excelHtml5', text: '<i class="bi bi-filetype-xlsx"></i> Excel' },
-              { extend: 'pdfHtml5',   text: '<i class="bi bi-filetype-pdf"></i> PDF', orientation:'landscape', pageSize:'A4' }
-            ],
-            pageLength: 10
-          });
+        const getAfToken = () =>
+            document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]').value;
+
+        function initDataTable() {
+            const $tbl = $('#assignTable');
+            if (!$tbl.length) return;
+
+            const isRtl = document.documentElement.dir === 'rtl';
+
+            if ($.fn.dataTable.isDataTable($tbl)) {
+                $tbl.DataTable().destroy();
+            }
+
+            $tbl.DataTable({
+                dom: "<'row mb-2'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 text-md-end'B>>" +
+                     "<'row'<'col-sm-12'tr>>" +
+                     "<'row mt-2'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    { extend: 'copyHtml5',  text: '<i class="bi bi-clipboard"></i> Copy' },
+                    { extend: 'excelHtml5', text: '<i class="bi bi-filetype-xlsx"></i> Excel' },
+                    { extend: 'pdfHtml5',   text: '<i class="bi bi-filetype-pdf"></i> PDF', orientation: 'landscape', pageSize: 'A4' }
+                ],
+                pageLength: 10,
+                order: [],
+                language: isRtl ? {
+                    search: "بحث:",
+                    lengthMenu: "إظهار _MENU_ سجل",
+                    info: "إظهار _START_ إلى _END_ من أصل _TOTAL_ سجل",
+                    paginate: {
+                        first: "الأولى",
+                        last: "الأخيرة",
+                        next: "التالي",
+                        previous: "السابق"
+                    },
+                    zeroRecords: "لا توجد بيانات",
+                    infoEmpty: "لا توجد سجلات",
+                    infoFiltered: "(تمت التصفية من إجمالي _MAX_ سجلات)"
+                } : {}
+            });
         }
 
-        function reloadAssignmentsTable(query){
-          const qs = new URLSearchParams(query || Object.fromEntries(new FormData(document.getElementById('filterForm')))).toString();
-          const url = '/Assignments/Table' + (qs ? ('?' + qs) : '');
-          $('#assignTableWrap').load(url, function(){
+        function reloadAssignmentsTable() {
+            const url = '/Assignments/Table';
+            $('#assignTableWrap').load(url, function () {
+                initDataTable();
+            });
+        }
+
+        $(function () {
             initDataTable();
-          });
+            initMultiSelects();
+        });
+
+        // 🔹 Multi-select behavior (checkbox + select all)
+        function initMultiSelects() {
+            document.querySelectorAll('.pr-multi').forEach(ms => {
+                const toggle = ms.querySelector('.pr-multi-toggle');
+                const menu = ms.querySelector('.pr-multi-menu');
+                const labelEl = ms.querySelector('.pr-multi-label');
+                const countEl = ms.querySelector('.pr-multi-count');
+                const placeholder = ms.getAttribute('data-placeholder') || '';
+                const group = ms.getAttribute('data-group');
+                const allCheckbox = ms.querySelector('.pr-multi-selectall');
+                const itemCheckboxes = ms.querySelectorAll('input[type="checkbox"][data-group="' + group + '"]');
+
+                function updateState() {
+                    const checked = Array.from(itemCheckboxes).filter(c => c.checked);
+                    if (checked.length === 0) {
+                        labelEl.textContent = placeholder;
+                        labelEl.classList.add('pr-multi-placeholder');
+                        countEl.textContent = '';
+                    } else {
+                        labelEl.textContent = checked.length === 1
+                            ? checked[0].nextElementSibling?.textContent.trim()
+                            : `${checked.length} محدد`;
+                        labelEl.classList.remove('pr-multi-placeholder');
+                        countEl.textContent = checked.length > 1 ? '✓' : '';
+                    }
+
+                    if (allCheckbox) {
+                        allCheckbox.checked = checked.length === itemCheckboxes.length;
+                    }
+                }
+
+                if (toggle) {
+                    toggle.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        ms.classList.toggle('open');
+                    });
+                }
+
+                if (allCheckbox) {
+                    allCheckbox.addEventListener('change', function () {
+                        const checked = this.checked;
+                        itemCheckboxes.forEach(c => c.checked = checked);
+                        updateState();
+                    });
+                }
+
+                itemCheckboxes.forEach(c => {
+                    c.addEventListener('change', updateState);
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!ms.contains(e.target)) {
+                        ms.classList.remove('open');
+                    }
+                });
+
+                updateState();
+            });
         }
 
-        // أول تحميل: DataTable
-        $(function(){ initDataTable(); });
+        // Bulk عبر AJAX
+        $('#bulkForm').on('submit', function (e) {
+            e.preventDefault();
+            const fd = new FormData(this);
 
-        // فلترة بدون ريفريش
-        $('#filterForm').on('submit', function(e){
-          e.preventDefault();
-          reloadAssignmentsTable();
+            const qs = (fd.getAll('questionIds') || []).map(Number).filter(x => !isNaN(x));
+            const us = (fd.getAll('userIds') || []).map(Number).filter(x => !isNaN(x));
+
+            if (!qs.length || !us.length) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'تنبيه',
+                    text: 'يرجى اختيار الأسئلة والمستخدمين قبل التنفيذ'
+                });
+                return;
+            }
+
+            fetch('/Assignments/Bulk', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': getAfToken()
+                },
+                body: JSON.stringify({ questionIds: qs, userIds: us })
+            })
+            .then(r => r.json())
+            .then(j => {
+                if (j.ok) {
+                    const msg = (typeof j.message === 'object'
+                                    ? j.message.value
+                                    : j.message)
+                                || 'تم توزيع الأسئلة على المستخدمين';
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تمت العملية بنجاح',
+                        text: msg,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    reloadAssignmentsTable();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'فشل التنفيذ',
+                        text: 'حدث خطأ أثناء الإسناد'
+                    });
+                }
+            })
+            .catch(() =>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطأ',
+                    text: 'حدث خطأ في تنفيذ العملية'
+                })
+            );
         });
 
-        // فتح مودال إضافة
-        $('#btnAdd').on('click', function(){ openUpsert(); });
+        // تفعيل/تعطيل
+        $(document).on('click', '.js-activate, .js-deactivate', function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            const isAct = $(this).hasClass('js-activate');
+            const url = (isAct ? '/Assignments/Activate/' : '/Assignments/Deactivate/') + id;
 
-        // فتح مودال تعديل
-        $(document).on('click', '.js-edit', function () {
-          const id = $(this).data('id');
-          const userId = $(this).data('userid');
-          openUpsert(id, userId);
-        });
-
-        function openUpsert(id, userId){
-          const params = new URLSearchParams();
-          if (id) params.set('id', id);
-          if (userId) params.set('userId', userId);
-          const url = '/Assignments/Upsert' + (params.toString() ? ('?' + params.toString()) : '');
-
-          $('#assignUpsertHost').load(url, function(){
-            const el = document.getElementById('assignmentUpsertModal');
-            const modal = new bootstrap.Modal(el);
-            modal.show();
-          });
-        }
-
-        // Bulk عبر AJAX + Anti-forgery
-         $('#bulkForm').on('submit', function (e) {
-             debugger
-          e.preventDefault();
-          const fd = new FormData(this);
-
-          const qs = (fd.getAll('questionIds') || []).map(Number);
-          const us = (fd.getAll('userIds') || []).map(Number);
-
-          fetch('/Assignments/Bulk', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'RequestVerificationToken': getAfToken()
-            },
-            body: JSON.stringify({ questionIds: qs, userIds: us })
-          })
-          .then(r => r.json())
-          .then(j => j.ok ? reloadAssignmentsTable() : alert('فشل التنفيذ'))
-          .catch(() => alert('خطأ في تنفيذ العملية'));
-        });
-
-
-        // تفعيل/تعطيل عبر AJAX بدون ريفريش
-        $(document).on('click', '.js-activate, .js-deactivate', function(e){
-          e.preventDefault();
-          const id = $(this).data('id');
-          const isAct = $(this).hasClass('js-activate');
-          const url = isAct ? '/Assignments/Activate/' + id : '/Assignments/Deactivate/' + id;
-
-          fetch(url, {
-            method: 'POST',
-            headers: { 'RequestVerificationToken': getAfToken() }
-          }).then(r => r.json())
-            .then(j => { if(j.ok){ reloadAssignmentsTable(); } else { alert('فشل العملية'); }})
-            .catch(()=> alert('خطأ أثناء التنفيذ'));
+            fetch(url, {
+                method: 'POST',
+                headers: { 'RequestVerificationToken': getAfToken() }
+            })
+            .then(r => r.json())
+            .then(j => {
+                if (j.ok) {
+                    reloadAssignmentsTable();
+                } else {
+                    alert('فشل العملية');
+                }
+            })
+            .catch(() => alert('خطأ أثناء التنفيذ'));
         });
     </script>
 }

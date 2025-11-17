@@ -1,79 +1,220 @@
 ﻿@model List<PeerReview.MvcHotel.Models.AnswerForScoringDto>
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+
 @{
     ViewData["Title"] = (L["ScoredAnswers"] ?? "Scored Answers");
+    ViewBag.ActiveMenu = "Scoring";
+
+    var ci = System.Globalization.CultureInfo.CurrentUICulture;
+    var isRtl = ci.TwoLetterISOLanguageName == "ar";
+}
+
+@section Styles {
+    <style>
+        .score-question {
+            font-weight: 600;
+        }
+
+        .score-meta {
+            font-size: .75rem;
+            opacity: .8;
+        }
+
+        .score-answer-cell {
+            max-width: 320px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .score-input {
+            max-width: 110px;
+        }
+    </style>
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">@ViewData["Title"]</h5>
-    <a class="btn btn-link" href="@Url.Action("Index", "AnswerScoring")">← @(L["Back"] ?? "Back")</a>
+    <div>
+        <div class="h-section-title mb-1">
+            @ViewData["Title"]
+        </div>
+        <div class="text-muted-soft" style="font-size:0.85rem;">
+            @L["ScoredAnswers_Hint"]
+        </div>
+    </div>
+    <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
+        ← @(L["Back"] ?? "Back")
+    </a>
 </div>
 
 @if (Model?.Any() != true)
 {
-    <div class="alert alert-info">@("No scored answers found.")</div>
+    <div class="pr-card">
+        <div class="text-center text-muted-soft py-4">
+            @L["NoScoredAnswers"]
+        </div>
+    </div>
 }
 else
 {
-    <form method="post" action="~/AnswerScoring/update-form" class="card shadow-sm">
-
+    <form method="post"
+          action="~/AnswerScoring/update-form"
+          class="pr-card">
 
         <input type="hidden" name="UserId" value="@ViewBag.UserId" />
-
         @Html.AntiForgeryToken()
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped mb-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>@(L["Question"] ?? "Question")</th>
-                            <th>@(L["Item"] ?? "Item")</th>
-                            <th>@(L["Answer"] ?? "Answer")</th>
-                            <th style="width:140px">@("Score")</th>
-                            <th>@(L["Notes"] ?? "Notes")</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (var i = 0; i < Model.Count; i++)
-                        {
-                            var a = Model[i];
-                            <tr>
-                                <td>@(i + 1)</td>
-                                <td><div class="small text-muted">Q# @a.QuestionId</div></td>
-                                <td>
-                                    <div>@(a.ItemTextAr ?? a.ItemTextEn)</div>
-                                    <div class="small text-muted">ItemId: @a.QuestionItemId</div>
-                                </td>
-                                <td>
-                                    <div style="white-space:pre-wrap">@a.Value</div>
-                                    <div class="small text-muted">@a.SubmittedAt</div>
-                                </td>
 
-                                <td>
-                                    <input type="hidden" name="Items[@i].AnswerId" value="@a.AnswerId" />
-                                    <input type="number"
-                                           class="form-control"
-                                           name="Items[@i].Score"
-                                           step="0.5" min="0" max="100"
-                                           placeholder="—" />
-                                </td>
-                                <td>
-                                    <input type="text"
-                                           class="form-control"
-                                           name="Items[@i].Notes"
-                                           placeholder="—" />
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-responsive mt-1">
+            <table class="pr-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width:50px;">#</th>
+                        <th style="min-width:220px;">@(L["Question"] ?? "Question")</th>
+                        <th style="min-width:180px;">@(L["Item"] ?? "Item")</th>
+                        <th style="min-width:240px;">@(L["Answer"] ?? "Answer")</th>
+                        <th style="width:140px">@("Score")</th>
+                        <th style="min-width:180px;">@(L["Notes"] ?? "Notes")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        var a = Model[i];
+                        <tr>
+                            <td>@(i + 1)</td>
+
+                            <!-- Question -->
+                            <td>
+                                <div class="score-question">
+                                    @{
+                                        var q = a.question;
+                                        string qText;
+                                        if (isRtl)
+                                        {
+                                            qText = q?.TitleAr
+                                            ?? q?.DescriptionAr
+                                            ?? $"Q#{a.QuestionId}";
+                                        }
+                                        else
+                                        {
+                                            qText = q?.TitleEn
+                                            ?? q?.DescriptionEn
+                                            ?? $"Q#{a.QuestionId}";
+                                        }
+                                    }
+                                @qText
+                            </div>
+                            <div class="score-meta text-muted">
+                                Q# @a.QuestionId
+                            </div>
+                        </td>
+
+                        <!-- Item -->
+                        <td>
+                            <div>
+                                @(
+                                                            isRtl
+                                                            ? (a.ItemTextAr ?? a.ItemTextEn)
+                                                            : (a.ItemTextEn ?? a.ItemTextAr)
+                                                            )
+                            </div>
+                            <div class="score-meta text-muted">
+                                ItemId: @a.QuestionItemId
+                            </div>
+                        </td>
+
+                            <!-- Answer -->
+                            <td class="score-answer-cell">
+                        @if (a.questionItem?.Type == 7)  // File upload
+                                {
+                                    if (!string.IsNullOrWhiteSpace(a.Value))
+                                    {
+                                        <button type="button"
+                                                class="btn-pr btn-pr-sm btn-pr-soft"
+                                                onclick="openBase64File('@a.Value')">
+                                            <i class="bi bi-file-earmark-arrow-down me-1"></i>
+                                            @L["ViewFile"]
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">@L["NoFile"]</span>
+                                    }
+                                }
+                                else
+                                {
+                                    @a.Value
+                                }
+                            </td>
+
+                            <!-- Score -->
+                            <td>
+                                <input type="hidden"
+                                       name="Items[@i].AnswerId"
+                                       value="@a.AnswerId" />
+
+                                <input type="number"
+                                       class="form-control form-control-sm score-input"
+                                       name="Items[@i].Score"
+                                       step="0.5"
+                                       min="0"
+                                       max="100"
+                                       placeholder="—" />
+                            </td>
+
+                            <!-- Notes -->
+                            <td>
+                                <input type="text"
+                                       class="form-control form-control-sm"
+                                       name="Items[@i].Notes"
+                                       placeholder="—" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-        <div class="card-footer d-flex justify-content-end gap-2">
-            <button type="submit" class="btn btn-primary">
+
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <button type="submit" class="btn-pr btn-pr-primary">
                 @(L["Update"] ?? "Update")
             </button>
+            <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
+                @(L["Cancel"] ?? "Cancel")
+            </a>
         </div>
     </form>
 }
+
+<script>
+    function openBase64File(base64String) {
+        let base64 = base64String;
+        let mime = "";
+
+        if (base64String.includes("base64,")) {
+            mime = base64String.substring(
+                base64String.indexOf(":") + 1,
+                base64String.indexOf(";")
+            );
+            base64 = base64String.split("base64,")[1];
+        } else {
+            mime = "application/octet-stream";
+        }
+
+        try {
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
+
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: mime });
+
+            const blobUrl = URL.createObjectURL(blob);
+            window.open(blobUrl, "_blank");
+        } catch {
+            alert('تعذر فتح الملف.');
+        }
+    }
+</script>

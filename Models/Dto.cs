@@ -247,6 +247,10 @@ namespace PeerReview.MvcHotel.Models
 
         public string? Value { get; set; }           // نص/قيمة الإجابة (قد تكون Base64 للملفات)
         public DateTime? SubmittedAt { get; set; }
+        public QuestionItemDto questionItem { get; set; }
+        public QuestionDto question { get; set; }
+
+
 
     }
     public class ScoreDto
@@ -287,6 +291,21 @@ namespace PeerReview.MvcHotel.Models
         public DateTime? LastScoredAt { get; set; }
     }
 
+    public class DashboardMetricsDto
+    {
+        public MetricsDto Metrics { get; set; } = new();
+    }
+
+    public class MetricsDto
+    {
+        public int AssignedToMe { get; set; }
+        public int AnsweredByMe { get; set; }
+        public int MyPending { get; set; }
+        public int TotalUsers { get; set; }
+        public int TotalQuestions { get; set; }
+        public int TotalAssignments { get; set; }
+        public int TotalAnswers { get; set; }
+    }
 
 
 }

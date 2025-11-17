@@ -51,11 +51,10 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> AddScore([FromForm] ScorePostDto req, CancellationToken ct)
         {
             await _svc.AddScore(req);
-            TempData["Toast"] = _L["ScoreAdded"];
-            return Redirect(Request.Headers.Referer.ToString() ?? Url.Action("Index")!);
+            TempData["Toast"] = _L["ScoreAdded"].Value;
+            return View(Index(ct));
         }
 
-        // داخل AnswerScoringController (حتى لو فيه [Route("[controller]")])
         [HttpPost("/AnswerScoring/update-form", Name = "AnswerScoring_UpdateForm")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateForm([FromForm] ScoreUpdateDto req, CancellationToken ct)
@@ -63,13 +62,18 @@ namespace PeerReview.MvcHotel.Controllers
             if (req.Items == null || req.Items.Count == 0)
             {
                 TempData["Toast"] = "لا يوجد درجات لتحديثها.";
-                return Redirect(Request.Headers.Referer.ToString() ?? Url.Action("Index")!);
+                // الأحسن ترجع Redirect بدل View(Index(ct))
+                return RedirectToAction(nameof(Index));
             }
 
             await _svc.UpdateScore(req);
-            TempData["Toast"] = _L["ScoreUpdated"];
-            return Redirect(Request.Headers.Referer.ToString() ?? Url.Action("Index")!);
+
+            TempData["Toast"] = _L["ScoreUpdated"].Value;  
+
+            // نفس الكلام هنا
+            return RedirectToAction(nameof(Index));
         }
+
 
 
     }

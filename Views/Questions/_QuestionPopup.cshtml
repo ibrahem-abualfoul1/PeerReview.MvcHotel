@@ -1,5 +1,6 @@
 ﻿@model QuestionCreateDto
 @using Microsoft.AspNetCore.Mvc.Rendering
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 
 @{
     var id = ViewBag.Id as int?;
@@ -9,177 +10,154 @@
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
     var categories = ViewBag.Categorys as SelectList
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
-
     var questionItems = ViewBag.QuestionItems as SelectList
-    ?? new SelectList(Enumerable.Empty<SelectListItem>());
+                ?? new SelectList(Enumerable.Empty<SelectListItem>());
 
     string url = isEdit
         ? Url.Action("Edit", "Questions", new { id = id!.Value })!
         : Url.Action("Create", "Questions")!;
-
-    // سنبني خيارات النوع كـ HTML ونستخدمها في الصفوف الجاهزة والقالب
-    var typeOptionsHtml = string.Join("",
-        (types ?? new SelectList(Enumerable.Empty<SelectListItem>()))
-        .Select(o => $"<option value=\"{o.Value}\">{o.Text}</option>"));
 }
 
 <div class="modal fade" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content shadow-lg" style="border-radius:1rem">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content shadow-lg" style="border-radius:1rem; overflow:hidden;">
 
-      <div class="modal-header bg-light border-0">
-        <h5 class="modal-title fw-bold">@(isEdit ? "تعديل سؤال" : "إضافة سؤال")</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <form id="questionUpsertForm" method="post" action="@url">
-          @Html.AntiForgeryToken()
-        @if (isEdit) { <input type="hidden" name="id" value="@id" /> }
-
-        <div class="modal-body">
-          <!-- بطاقة: بيانات السؤال -->
-          <div class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0">
-              <h6 class="m-0 fw-semibold">بيانات السؤال</h6>
+            <!-- Header -->
+            <div class="modal-header border-0" style="background:var(--panel);">
+                <h5 class="modal-title fw-bold text-body">
+                    @(isEdit ? L["Questions_Edit"] : L["Questions_Add"])
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
-            <div class="card-body pt-2">
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input class="form-control" asp-for="TitleEn" id="TitleEn" placeholder="Title (EN)" required />
-                    <label for="TitleEn">العنوان (EN)</label>
-                  </div>
-                  <small class="text-danger d-block" asp-validation-for="TitleEn"></small>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input class="form-control" asp-for="TitleAr" id="TitleAr" placeholder="العنوان (AR)" required />
-                    <label for="TitleAr">العنوان (AR)</label>
-                  </div>
-                  <small class="text-danger d-block" asp-validation-for="TitleAr"></small>
-                </div>
 
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <textarea class="form-control" style="height:110px" asp-for="DescriptionEn" id="DescriptionEn" placeholder="Description (EN)" required></textarea>
-                    <label for="DescriptionEn">الوصف (EN)</label>
-                  </div>
-                  <small class="text-danger d-block" asp-validation-for="DescriptionEn"></small>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <textarea class="form-control" style="height:110px" asp-for="DescriptionAr" id="DescriptionAr" placeholder="الوصف (AR)" required></textarea>
-                    <label for="DescriptionAr">الوصف (AR)</label>
-                  </div>
-                  <small class="text-danger d-block" asp-validation-for="DescriptionAr"></small>
-                </div>
+            <!-- Form -->
+            <form id="questionUpsertForm" method="post" action="@url">
+                @Html.AntiForgeryToken()
+                @if (isEdit)
+                {
+                    <input type="hidden" name="Id" value="@id" />
+                }
 
-                <div class="col-12">
-                  <label class="form-label fw-semibold" asp-for="CategoryId">التصنيف</label>
-                  <select class="form-select" asp-for="CategoryId" asp-items="categories" required>
-                    <option value="">— اختر التصنيف —</option>
-                  </select>
-                  <small class="text-muted">اختر تصنيفًا واحدًا لهذا السؤال.</small>
-                  <small class="text-danger d-block" asp-validation-for="CategoryId"></small>
-                </div>
+                <div class="modal-body" style="background:var(--app-bg);">
+                    <div class="pr-card mb-0">
+                        <div class="h-section-title mb-3">
+                            @L["Questions_Details"]
+                        </div>
 
-                @*  <div class="col-12">
-                     <label class="form-label fw-semibold" asp-for="CategoryId"> public async Task<IActionResult> Sub(int id) التصنيف تابع </label>
-                     <select class="form-select" asp-for="SubCategoryId" asp-items="categories" required>
-                         <option value="">— اختر التصنيف —</option>
-                     </select>
-                     <small class="text-muted">اختر تصنيفًا واحدًا لهذا السؤال.</small>
-                     <small class="text-danger d-block" asp-validation-for="CategoryId"></small>
-                 </div> *@
-                                <div class="col-12">
-                                    <label class="form-label fw-semibold" asp-for="Items">عناصر السؤال</label>
-
-                                    <select class="form-select"
-                                            asp-for="Items"
-                                            asp-items="questionItems"
-                                            multiple="multiple"
-                                            size="8">
-                                        @* اختياري: حدّد طول القائمة *@
-                                    </select>
-
-                                    <small class="text-muted d-block">اختر عنصرًا أو أكثر.</small>
-                                    <small class="text-danger d-block" asp-validation-for="Items"></small>
+                        <div class="row g-3">
+                            <!-- Title EN -->
+                            <div class="col-md-6">
+                                <div class="pr-field">
+                                    <input asp-for="TitleEn" placeholder=" " required />
+                                    <label>@L["Questions_TitleEn"]</label>
+                                    <span class="text-danger small" asp-validation-for="TitleEn"></span>
                                 </div>
+                            </div>
 
-              </div>
-            </div>
-          </div>
+                            <!-- Title AR -->
+                            <div class="col-md-6">
+                                <div class="pr-field">
+                                    <input asp-for="TitleAr" placeholder=" " required />
+                                    <label>@L["Questions_TitleAr"]</label>
+                                    <span class="text-danger small" asp-validation-for="TitleAr"></span>
+                                </div>
+                            </div>
 
+                            <!-- Description EN -->
+                            <div class="col-md-6">
+                                <div class="pr-field">
+                                    <textarea asp-for="DescriptionEn" rows="3" placeholder=" " required></textarea>
+                                    <label>@L["Questions_DescEn"]</label>
+                                    <span class="text-danger small" asp-validation-for="DescriptionEn"></span>
+                                </div>
+                            </div>
+
+                            <!-- Description AR -->
+                            <div class="col-md-6">
+                                <div class="pr-field">
+                                    <textarea asp-for="DescriptionAr" rows="3" placeholder=" " required></textarea>
+                                    <label>@L["Questions_DescAr"]</label>
+                                    <span class="text-danger small" asp-validation-for="DescriptionAr"></span>
+                                </div>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-md-6">
+                                <div class="pr-field">
+                                    <select asp-for="CategoryId"
+                                            class="form-select"
+                                            asp-items="categories">
+                                        <option value="">— @L["Select_Category"] —</option>
+                                    </select>
+                                    <label>@L["Questions_Category"]</label>
+                                    <span class="text-danger small" asp-validation-for="CategoryId"></span>
+                                </div>
+                                <small class="text-muted-soft d-block">
+                                    @L["Questions_Category_Help"]
+                                </small>
+                            </div>
+
+                            <!-- SubCategory (جاهزة لو حاب تفعلها لاحقاً) -->
+                            @* 
+                            <div class="col-md-6">
+                                <div class="pr-field">
+                                    <select asp-for="SubCategoryId"
+                                            class="form-select"
+                                            asp-items="ViewBag.SubCategories as SelectList">
+                                        <option value="">— @L["Select_SubCategory"] —</option>
+                                    </select>
+                                    <label>@L["Questions_SubCategory"]</label>
+                                    <span class="text-danger small" asp-validation-for="SubCategoryId"></span>
+                                </div>
+                            </div>
+                            *@
+
+                            <!-- Items multi-select -->
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-body" asp-for="Items">
+                                    @L["Questions_Items"]
+                                </label>
+
+                                <select class="form-select"
+                                        asp-for="Items"
+                                        asp-items="questionItems"
+                                        multiple="multiple"
+                                        size="8">
+                                </select>
+
+                                <small class="text-muted-soft d-block">
+                                    @L["Questions_Items_Help"]  @* اختر عنصرًا أو أكثر *@
+                                </small>
+                                <span class="text-danger small d-block" asp-validation-for="Items"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer border-0" style="background:var(--panel);">
+                    <button type="button"
+                            class="btn-pr btn-pr-outline"
+                            data-bs-dismiss="modal">
+                        @L["Cancel"]
+                    </button>
+                    <button type="submit" class="btn-pr btn-pr-primary">
+                        @L["Save"]
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">إلغاء</button>
-          <button type="submit" class="btn btn-primary rounded-pill px-4">حفظ</button>
-        </div>
-      </form>
-
     </div>
-  </div>
 </div>
 
 @section Scripts {
-<style>
-  .table thead th{ font-weight:600; }
-  #itemsTable tbody tr.item-row:hover{ background:rgba(0,0,0,.02); transition:background .15s; }
-</style>
-
-<script>
-  // مفتاح فريد لكل صف جديد
-  function newKey(){ return 'k' + Date.now() + Math.floor(Math.random()*10000); }
-
-  // إظهار/إخفاء خلايا الخيارات حسب النوع
-  function toggleOptionsVisibility(row) {
-    if (!row) return;
-    var sel = row.querySelector('.item-type');
-    var typeVal = parseInt((sel && sel.value) || '0');
-    var cells = row.querySelectorAll('.item-options-ar, .item-options-en');
-    if ([3,4].includes(typeVal)) {
-      cells.forEach(function(c){ c.closest('td').style.display = ''; });
-    } else {
-      cells.forEach(function(c){ c.closest('td').style.display = 'none'; c.value=''; });
-    }
-  }
-
-  // إضافة صف جديد
-  function addRow() {
-    var tpl = document.getElementById('itemRowTemplate');
-    if (!tpl) return;
-    var key = newKey();
-    var html = tpl.innerHTML.replaceAll('__key__', key);
-
-    var modal = document.getElementById('questionUpsertModal');
-    var tbody = modal.querySelector('#itemsTable tbody');
-    tbody.insertAdjacentHTML('beforeend', html);
-
-    var lastRow = tbody.querySelector('tr:last-child');
-    toggleOptionsVisibility(lastRow);
-  }
-
-  // تفويض النقر/التغيير—يبقى شغال حتى لو اتبدّل محتوى المودال
-  document.addEventListener('click', function (e) {
-    if (e.target.closest('#addItemBtn')) { e.preventDefault(); addRow(); }
-    if (e.target.closest('.remove-item')) {
-      e.preventDefault();
-      var tr = e.target.closest('tr');
-      if (tr) tr.remove();
-    }
-  });
-
-  document.addEventListener('change', function (e) {
-    if (e.target.matches('.item-type')) {
-      toggleOptionsVisibility(e.target.closest('tr'));
-    }
-  });
-
-  // عند فتح المودال: طبّق المنطق على الصفوف الموجودة
-  document.addEventListener('shown.bs.modal', function (ev) {
-    if (ev.target.id !== 'questionUpsertModal') return;
-    ev.target.querySelectorAll('#itemsTable tbody tr').forEach(function(row){ toggleOptionsVisibility(row); });
-  });
-</script>
+    <script>
+        // لو حاب بعد الحفظ تستخدم AJAX وتغلق المودال وتعيد تحميل الجدول:
+        // يمكنك في الـ Controller إرجاع JSON success،
+        // وهنا تتعامل مع submit بالـ JS وتطلق event: question:upserted
+        // حالياً النموذج يشتغل Submit عادي حسب الـ action.
+    </script>
 }

@@ -1,38 +1,66 @@
 @model UserUpdateDto
+
 @{
     ViewData["Title"] = "تعديل مستخدم";
+    ViewBag.ActiveMenu = "Users";
 }
 
-<form method="post" asp-action="Edit" asp-route-id="@(ViewBag.UserId)">
-    @Html.AntiForgeryToken()
-    <div class="row g-2">
-        <div class="col-md-4">
-            <label class="form-label">الاسم الكامل</label>
-            <input asp-for="fullName" class="form-control" />
-        </div>
+@section HeaderActions {
+    <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
+        ← رجوع
+    </a>
+}
 
-        <div class="col-md-4">
-            <label class="form-label">البريد</label>
-            <input asp-for="email" class="form-control" />
-        </div>
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+        <div class="pr-card">
+            <div class="h-section-title mb-3">
+                تعديل مستخدم
+            </div>
 
-        <div class="col-md-4">
-            <label class="form-label">الحالة</label><br />
-            <input asp-for="isActive" class="form-check-input" type="checkbox" />
-            <label class="form-check-label" for="isActive">نشط</label>
-        </div>
+            <form method="post" asp-action="Edit" asp-route-id="@(ViewBag.UserId)">
+                @Html.AntiForgeryToken()
 
-        <div class="col-md-4">
-            <label class="form-label">الدور</label>
-            <select asp-for="roleId"
-                    class="form-select"
-                    asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.Roles, "Value", "Text"))">
-                <option value="">-- اختر الدور --</option>
-            </select>
-            <span asp-validation-for="roleId" class="text-danger"></span>
+                <!-- الاسم الكامل -->
+                <div class="pr-field">
+                    <input asp-for="fullName" placeholder=" " />
+                    <label>الاسم الكامل</label>
+                    @Html.ValidationMessageFor(m => m.fullName, "", new { @class = "text-danger small" })
+                </div>
+
+                <!-- البريد -->
+                <div class="pr-field">
+                    <input asp-for="email" placeholder=" " type="email" />
+                    <label>البريد الإلكتروني</label>
+                    @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger small" })
+                </div>
+
+                <!-- الدور -->
+                <div class="pr-field">
+                    <select asp-for="roleId"
+                            class="form-select"
+                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.Roles, "Value", "Text"))">
+                        <option value="">-- اختر الدور --</option>
+                    </select>
+                    <label>الدور</label>
+                    @Html.ValidationMessageFor(m => m.roleId, "", new { @class = "text-danger small" })
+                </div>
+
+                <!-- الحالة -->
+                <div class="form-check form-switch mb-3">
+                    @Html.CheckBoxFor(m => m.isActive, new { @class = "form-check-input", id = "isActive" })
+                    <label class="form-check-label" for="isActive">نشط</label>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
+                        رجوع
+                    </a>
+                    <button type="submit" class="btn-pr btn-pr-primary">
+                        حفظ
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-
-    <button class="btn btn-gold mt-2">حفظ</button>
-    <a class="btn btn-secondary mt-2" href="/Users">رجوع</a>
-</form>
+</div>

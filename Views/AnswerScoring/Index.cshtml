@@ -1,46 +1,226 @@
 ﻿@model PeerReview.MvcHotel.Models.ReviewerUsersOverviewDto
 @using System.Globalization
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+
 @{
     ViewData["Title"] = L["AnswerScoring_Title"] ?? "Answer Scoring";
+    ViewBag.ActiveMenu = "Scoring";
+
     var scored = Model?.Scored ?? new List<PeerReview.MvcHotel.Models.ReviewerUserRowDto>();
     var unscored = Model?.Unscored ?? new List<PeerReview.MvcHotel.Models.ReviewerUserRowDto>();
+
+    var totalUsers = scored.Select(x => x.UserId)
+                           .Concat(unscored.Select(x => x.UserId))
+                           .Distinct()
+                           .Count();
 }
 
-<div class="card shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">@ViewData["Title"]</h5>
-        <span class="small text-muted">ReviewerId: @Model?.ReviewerId</span>
+@section Styles {
+    <style>
+        .score-layout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .score-pill-small {
+            font-size: 0.75rem;
+            border-radius: 999px;
+            padding: .15rem .7rem;
+            border: 1px solid var(--border-soft, rgba(148,163,184,0.45));
+            color: var(--text-muted, #9ca3af);
+            background: rgba(15,23,42,0.7);
+        }
+
+        .score-stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem;
+            margin-bottom: .75rem;
+        }
+
+        .score-stat-card {
+            border-radius: 999px;
+            padding: .45rem .9rem;
+            background: radial-gradient(circle at top left, rgba(201,162,39,0.16), rgba(15,23,42,0.95));
+            border: 1px solid rgba(201,162,39,0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .8rem;
+            color: var(--text-main, #f9fafb);
+        }
+
+        .score-stat-number {
+            font-weight: 700;
+            font-size: .95rem;
+        }
+
+        .score-stat-label {
+            opacity: .8;
+        }
+
+        .nav-score-tabs {
+            border-bottom: 1px solid var(--border-soft, rgba(148,163,184,0.35));
+            padding-inline: .75rem;
+        }
+
+            .nav-score-tabs .nav-link {
+                border: none;
+                border-bottom: 2px solid transparent;
+                border-radius: 0;
+                padding-inline: .9rem;
+                padding-block: .55rem;
+                font-size: .9rem;
+                font-weight: 500;
+                color: var(--text-muted, #9ca3af);
+                display: flex;
+                align-items: center;
+                gap: .4rem;
+            }
+
+                .nav-score-tabs .nav-link .badge-tab-count {
+                    border-radius: 999px;
+                    padding: .1rem .5rem;
+                    font-size: .75rem;
+                    background: rgba(15,23,42,0.9);
+                    border: 1px solid var(--border-soft, rgba(148,163,184,0.45));
+                }
+
+                .nav-score-tabs .nav-link.active {
+                    color: var(--text-main, #f9fafb);
+                    border-bottom-color: var(--primary, #c9a227);
+                }
+
+                    .nav-score-tabs .nav-link.active .badge-tab-count {
+                        background: rgba(201,162,39,0.18);
+                        border-color: rgba(201,162,39,0.7);
+                    }
+
+        .score-badge-unscored {
+            background: #fef3c7;
+            color: #92400e;
+            padding: .2rem .6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+        }
+
+        .score-badge-scored {
+            background: #dcfce7;
+            color: #166534;
+            padding: .2rem .6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+        }
+
+        .score-user-name {
+            font-weight: 600;
+        }
+
+        .pr-table td.text-clip {
+            max-width: 240px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .score-empty-row {
+            height: 72px;
+        }
+    </style>
+}
+
+<div class="pr-card">
+    <!-- Header -->
+    <div class="score-layout-header">
+        <div>
+            <div class="h-section-title mb-1">
+                @ViewData["Title"]
+            </div>
+            <div class="text-muted-soft" style="font-size:0.85rem;">
+                @L["AnswerScoring_Overview_Hint"]
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-2">
+            <span class="score-pill-small">
+                @L["TotalReviewUsers"]: @totalUsers
+            </span>
+            <span class="score-pill-small">
+                ReviewerId: @Model?.ReviewerId
+            </span>
+        </div>
     </div>
 
-    <ul class="nav nav-tabs px-3 pt-3" role="tablist">
+    <!-- Small stats -->
+    <div class="score-stats-row">
+        <div class="score-stat-card">
+            <div>
+                <div class="score-stat-label">@L["UnscoredUsers"]</div>
+                <div class="score-stat-number">@unscored.Count</div>
+            </div>
+        </div>
+
+        <div class="score-stat-card">
+            <div>
+                <div class="score-stat-label">@L["ScoredUsers"]</div>
+                <div class="score-stat-number">@scored.Count</div>
+            </div>
+        </div>
+
+        <div class="score-stat-card">
+            <div>
+                <div class="score-stat-label">@L["AnswerScoring_Progress"]</div>
+                @{
+                    var totalAnswers = scored.Sum(x => x.TotalAnswers) + unscored.Sum(x => x.TotalAnswers);
+                    var totalScored = scored.Sum(x => x.ScoredCount);
+                    var pct = totalAnswers > 0 ? (int)Math.Round((double)totalScored * 100 / totalAnswers) : 0;
+                }
+                <div class="score-stat-number">@pct%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs nav-score-tabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-unscored" type="button">
-                Unscored (@unscored.Count)
+            <button class="nav-link active"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-unscored"
+                    type="button">
+                <span>@L["UnscoredUsers"]</span>
+                <span class="badge-tab-count">@unscored.Count</span>
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-scored" type="button">
-                Scored (@scored.Count)
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-scored"
+                    type="button">
+                <span>@L["ScoredUsers"]</span>
+                <span class="badge-tab-count">@scored.Count</span>
             </button>
         </li>
     </ul>
 
-    <div class="tab-content card-body p-0">
+    <!-- Content -->
+    <div class="tab-content card-body px-0 pb-0 pt-2">
         <!-- Unscored -->
         <div class="tab-pane fade show active" id="tab-unscored">
             <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="table-light">
+                <table class="pr-table align-middle mb-0">
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>@(L["UserName"] ?? "User Name")</th>
                             <th>@(L["FullName"] ?? "Full Name")</th>
-                            <th class="text-center">Total</th>
-                            <th class="text-center">Unscored</th>
-                            <th class="text-center">Scored</th>
+                            <th class="text-center">@L["TotalAnswers"]</th>
+                            <th class="text-center">@L["Unscored"]</th>
+                            <th class="text-center">@L["Scored"]</th>
                             <th>@(L["LastUpdated"] ?? "Last Scored At")</th>
-                            <th>@(L["Actions"] ?? "Actions")</th>
+                            <th class="text-center">@L["Actions"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,16 +231,30 @@
                             {
                                 <tr>
                                     <td>@i</td>
-                                    <td>@u.UserName</td>
-                                    <td>@u.FullName</td>
+                                    <td class="text-clip">
+                                        <div class="score-user-name">@u.UserName</div>
+                                    </td>
+                                    <td class="text-clip">@u.FullName</td>
                                     <td class="text-center">@u.TotalAnswers</td>
-                                    <td class="text-center"><span class="badge bg-warning text-dark">@u.UnscoredCount</span></td>
-                                    <td class="text-center"><span class="badge bg-success">@u.ScoredCount</span></td>
-                                    <td>@(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")</td>
+                                    <td class="text-center">
+                                        <span class="score-badge-unscored">@u.UnscoredCount</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="score-badge-scored">@u.ScoredCount</span>
+                                    </td>
                                     <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a class="btn btn-primary" href="@Url.Action("ByUserUnscored", "AnswerScoring", new { userId = u.UserId })">Review Unscored</a>
-                                            <a class="btn btn-outline-secondary" href="@Url.Action("ByUserScored", "AnswerScoring", new { userId = u.UserId })">View Scored</a>
+                                        @(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                            <a class="btn-pr btn-pr-sm btn-pr-primary"
+                                               href="@Url.Action("ByUserUnscored", "AnswerScoring", new { userId = u.UserId })">
+                                                @L["ReviewUnscored"]
+                                            </a>
+                                            <a class="btn-pr btn-pr-sm btn-pr-soft"
+                                               href="@Url.Action("ByUserScored", "AnswerScoring", new { userId = u.UserId })">
+                                                @L["ViewScored"]
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -69,7 +263,11 @@
                         }
                         else
                         {
-                            <tr><td colspan="8" class="text-center text-muted p-4">@(L["NoData"] ?? "No data to display.")</td></tr>
+                            <tr class="score-empty-row">
+                                <td colspan="8" class="text-center text-muted-soft">
+                                    @(L["NoData"] ?? "No data to display.")
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -79,17 +277,17 @@
         <!-- Scored -->
         <div class="tab-pane fade" id="tab-scored">
             <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="table-light">
+                <table class="pr-table align-middle mb-0">
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>@(L["UserName"] ?? "User Name")</th>
                             <th>@(L["FullName"] ?? "Full Name")</th>
-                            <th class="text-center">Total</th>
-                            <th class="text-center">Scored</th>
-                            <th class="text-center">Unscored</th>
+                            <th class="text-center">@L["TotalAnswers"]</th>
+                            <th class="text-center">@L["Scored"]</th>
+                            <th class="text-center">@L["Unscored"]</th>
                             <th>@(L["LastUpdated"] ?? "Last Scored At")</th>
-                            <th>@(L["Actions"] ?? "Actions")</th>
+                            <th class="text-center">@L["Actions"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,16 +298,30 @@
                             {
                                 <tr>
                                     <td>@i</td>
-                                    <td>@u.UserName</td>
-                                    <td>@u.FullName</td>
+                                    <td class="text-clip">
+                                        <div class="score-user-name">@u.UserName</div>
+                                    </td>
+                                    <td class="text-clip">@u.FullName</td>
                                     <td class="text-center">@u.TotalAnswers</td>
-                                    <td class="text-center"><span class="badge bg-success">@u.ScoredCount</span></td>
-                                    <td class="text-center"><span class="badge bg-warning text-dark">@u.UnscoredCount</span></td>
-                                    <td>@(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")</td>
+                                    <td class="text-center">
+                                        <span class="score-badge-scored">@u.ScoredCount</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="score-badge-unscored">@u.UnscoredCount</span>
+                                    </td>
                                     <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a class="btn btn-outline-secondary" href="@Url.Action("ByUserScored", "AnswerScoring", new { userId = u.UserId })">View Scored</a>
-                                            <a class="btn btn-primary" href="@Url.Action("ByUserUnscored", "AnswerScoring", new { userId = u.UserId })">Review Unscored</a>
+                                        @(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                            <a class="btn-pr btn-pr-sm btn-pr-soft"
+                                               href="@Url.Action("ByUserScored", "AnswerScoring", new { userId = u.UserId })">
+                                                @L["ViewScored"]
+                                            </a>
+                                            <a class="btn-pr btn-pr-sm btn-pr-primary"
+                                               href="@Url.Action("ByUserUnscored", "AnswerScoring", new { userId = u.UserId })">
+                                                @L["ReviewUnscored"]
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -118,7 +330,11 @@
                         }
                         else
                         {
-                            <tr><td colspan="8" class="text-center text-muted p-4">@(L["NoData"] ?? "No data to display.")</td></tr>
+                            <tr class="score-empty-row">
+                                <td colspan="8" class="text-center text-muted-soft">
+                                    @(L["NoData"] ?? "No data to display.")
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>

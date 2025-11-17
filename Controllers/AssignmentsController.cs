@@ -56,8 +56,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Index(int? userId, int? questionId)
         {
             var list = new List<AssignmentDto>();
-            if (userId.HasValue) list = await _svc.ByUser(userId.Value) ?? new();
-            else if (questionId.HasValue) list = await _svc.ByQuestion(questionId.Value) ?? new();
+            list = await _svc.GetAll() ?? new();
 
             // جلب البيانات الخام للفلاتر
             var users = await _users.List() ?? new();
@@ -81,8 +80,8 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Table(int? userId, int? questionId)
         {
             var list = new List<AssignmentDto>();
-            if (userId.HasValue) list = await _svc.ByUser(userId.Value) ?? new();
-            else if (questionId.HasValue) list = await _svc.ByQuestion(questionId.Value) ?? new();
+             list = await _svc.GetAll() ?? new();
+            
 
             ViewBag.Users = await _users.List() ?? new();
             ViewBag.Questions = await _questions.List() ?? new();

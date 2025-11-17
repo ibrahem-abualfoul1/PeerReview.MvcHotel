@@ -1,53 +1,225 @@
-
+﻿@using System.Collections.Generic
+@using PeerReview.MvcHotel.Models
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
-@model System.Collections.Generic.List<PeerReview.MvcHotel.Models.Answer>
+@model List<PeerReview.MvcHotel.Models.Answer>
+
 @{
-    ViewData["Title"] = @SharedResource.Answers_Title; 
+    ViewData["Title"] = SharedResource.Answers_Title;
+    ViewBag.ActiveMenu = "Answers";
 }
-@* <div class="d-flex justify-content-between align-items-center mb-2">
-    <h3 class="m-0">@SharedResource.Answers_Title</h3>
-    <a class="btn btn-gold" href="/Answers/Create">@SharedResource.Answers_Add</a>
-</div> *@
-<table class="table table-hover bg-white card-hotel">
-  <thead><tr>
-            <th>@SharedResource.Answers_Col_Id</th>
-            <th>@SharedResource.Answers_Col_Question</th>
-            <th>@SharedResource.Users_Col_FullName</th>
 
-            <th>@SharedResource.Answers_Col_Item</th>
-            <th>@SharedResource.Answers_Col_Value</th>
-            <th>@SharedResource.Answers_Col_Date</th>
-    @* <th>Actions</th> *@
-  </tr></thead>
-  <tbody>
-  @foreach (var a in Model){
-    <tr>
-      <td>@a.id</td>
-                <td>@a.question.DescriptionEn</td>
-                <td>@a.user.fullName</td>
+@functions {
+    public static string Trunc(string? text, int maxLen)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        return text!.Length <= maxLen ? text : text.Substring(0, maxLen) + "...";
+    }
+}
 
-                <td>@a.questionItem.TextEn</td>
-      <td>@a.value</td>
-                <td>@(a.submittedAt?.ToString("yyyy-MM-dd") ?? "�")</td>
-                @* <td class="text-nowrap">
-                    <a class="btn btn-sm btn-outline-primary" href="/Answers/Edit/@a.id">@SharedResource.Answers_Action_Edit</a>
-                    <form method="post" action="/Answers/Delete/@a.id" style="display:inline" onsubmit="return confirm('@SharedResource.Confirm_Delete');">
-                        <button class="btn btn-sm btn-outline-danger">@SharedResource.Answers_Action_Delete</button>
-        </form>
-      </td> *@
-    </tr>
-  }
-  </tbody>
-</table>
+@section Styles {
+    <style>
+        .answers-header-note {
+            font-size: 0.85rem;
+            color: var(--text-muted, #9ca3af);
+        }
 
-@* <div class="card card-hotel p-3 mt-3">
-    <h5>@SharedResource.Upload_File_Title</h5>
-  <form method="post" enctype="multipart/form-data" action="/Answers/Upload">
-    <div class="row g-2">
-            <div class="col-md-3"><label class="form-label">@SharedResource.Field_QuestionId</label><input name="questionId" type="number" class="form-control" required /></div>
-            <div class="col-md-3"><label class="form-label">@SharedResource.Field_QuestionItemId</label><input name="questionItemId" type="number" class="form-control" required /></div>
-            <div class="col-md-6"><label class="form-label">@SharedResource.Upload_File_File</label><input name="file" type="file" class="form-control" required /></div>
+        .answers-table td.text-clip {
+            max-width: 260px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .answers-table td.text-clip-wide {
+            max-width: 320px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .answers-file-btn {
+            font-size: 0.8rem;
+            border-radius: 999px;
+            padding-inline: .75rem;
+        }
+
+        .answers-badge-type {
+            font-size: 0.75rem;
+            border-radius: 999px;
+            padding: .15rem .5rem;
+            border: 1px solid var(--border-soft, rgba(148,163,184,0.4));
+            opacity: 0.85;
+        }
+
+        .dt-buttons .btn {
+            border-radius: 999px;
+            font-size: .8rem;
+            padding-inline: .75rem;
+        }
+    </style>
+}
+
+<div class="pr-card">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div>
+            <div class="h-section-title mb-1">
+                @SharedResource.Answers_Title
+            </div>
+            <div class="answers-header-note">
+                @SharedResource.Answers_Add
+            </div>
+        </div>
+        <span class="answers-badge-type">
+            @SharedResource.Answers_Action_Delete
+        </span>
     </div>
-        <button class="btn btn-gold mt-2">@SharedResource.Upload_File_Submit</button>
-  </form>
-</div> *@
+
+    <div class="table-responsive mt-2">
+        <table id="answersMineTable" class="pr-table answers-table align-middle">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>@SharedResource.Answers_Col_Question</th>
+                    <th>@SharedResource.Answers_Col_Item</th>
+                    <th>@SharedResource.Answers_Col_Value</th>
+                    <th>@SharedResource.Answers_Col_Date</th>
+                    <th class="text-center">@SharedResource.Upload_File_File</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    var i = 1;
+                    foreach (var a in Model)
+                    {
+                        var qTitle = a.question?.TitleEn ?? a.question?.TitleAr ?? "";
+                        var itemText = a.questionItem?.TextEn ?? a.questionItem?.TextAr ?? "";
+                        var val = a.value ?? "";
+
+                        <tr>
+                            <td>@i</td>
+
+                            <td class="text-clip" title="@qTitle">
+                                @Trunc(qTitle, 70)
+                            </td>
+
+                            <td class="text-clip" title="@itemText">
+                                @Trunc(itemText, 60)
+                            </td>
+
+                            @if (a.questionItem?.Type == 7)   @* File Upload *@
+                            {
+                                <td class="text-clip-wide text-muted" title="@val">
+                                    @SharedResource.Upload_File_File
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-clip-wide" title="@val">
+                                    @Trunc(val, 80)
+                                </td>
+                            }
+
+                            <td>
+                                @(a.submittedAt?.ToString("yyyy-MM-dd HH:mm") ?? "—")
+                            </td>
+
+                            <td class="text-center">
+                                @if (a.questionItem?.Type == 7 && !string.IsNullOrWhiteSpace(a.value))
+                                {
+                                    <button type="button"
+                                            class="btn-pr btn-pr-sm btn-pr-soft answers-file-btn"
+                                            onclick="openBase64File('@a.value')">
+                                        <i class="bi bi-file-earmark-arrow-down me-1"></i>
+                                        @SharedResource.Upload_File_File
+                                    </button>
+                                }
+                                else
+                                {
+                                    <span class="text-muted-soft" style="font-size:0.8rem;">
+                                        @SharedResource.Upload_File_File
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted-soft">
+                            @SharedResource.Upload_File_File
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(function () {
+            const isRtl = document.documentElement.dir === 'rtl';
+
+            $('#answersMineTable').DataTable({
+                order: [[4, 'desc']],   // ترتيب حسب التاريخ
+                pageLength: 10,
+                language: isRtl ? {
+                    search: "بحث:",
+                    lengthMenu: "إظهار _MENU_ سجل",
+                    info: "إظهار _START_ إلى _END_ من أصل _TOTAL_ سجل",
+                    paginate: {
+                        first: "الأولى",
+                        last: "الأخيرة",
+                        next: "التالي",
+                        previous: "السابق"
+                    },
+                    zeroRecords: "لا توجد بيانات",
+                    infoEmpty: "لا توجد سجلات",
+                    infoFiltered: "(تمت التصفية من إجمالي _MAX_ سجلات)"
+                } : {}
+            });
+        });
+
+        function openBase64File(base64String) {
+            if (!base64String) return;
+
+            let base64 = base64String;
+            let mime = "";
+
+            if (base64String.includes("base64,")) {
+                mime = base64String.substring(
+                    base64String.indexOf(":") + 1,
+                    base64String.indexOf(";")
+                );
+                base64 = base64String.split("base64,")[1];
+            } else {
+                mime = "application/octet-stream";
+            }
+
+            try {
+                const byteCharacters = atob(base64);
+                const byteNumbers = new Array(byteCharacters.length);
+
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: mime });
+
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, "_blank");
+            } catch {
+                alert('تعذر فتح الملف.');
+            }
+        }
+    </script>
+}

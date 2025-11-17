@@ -4,8 +4,8 @@
 
 @{
     ViewData["Title"] = Model?.HeaderTitle ?? "استطلاع";
+    var groups = Model?.Groups ?? new List<QuestionGroup>();
 
-    var groups = Model?.Groups ?? new List<QuestionGroup>(); // نفس النوع
     var json = JsonSerializer.Serialize(
         groups,
         new JsonSerializerOptions
@@ -13,179 +13,208 @@
             PropertyNamingPolicy = null,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         });
+
+    var ci = System.Globalization.CultureInfo.CurrentUICulture;
+    var isRtl = ci.TwoLetterISOLanguageName == "ar";
 }
 
-
-<!DOCTYPE html>
-<html >
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استطلاع الفنادق</title>
+@section Styles {
     <style>
+        .survey-shell {
+            max-width: 880px;
+            margin: 0 auto;
+        }
 
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: white;
+        .survey-card {
+            background: var(--panel);
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.55);
             overflow: hidden;
-            animation: slideIn 0.5s ease-out;
+            border: 1px solid rgba(148,163,184,0.3);
+            animation: sv-slide-in 0.4s ease-out;
         }
 
-  
-
-        .header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
+        .survey-header {
+            background: radial-gradient(circle at top left, rgba(201,162,39,0.18) 0, rgba(15,23,42,0.95) 40%, rgba(15,23,42,1) 100%);
+            color: #f9fafb;
+            padding: 32px 28px 26px;
+            position: relative;
         }
 
-            .header h1 {
-                font-size: 2em;
-                margin-bottom: 10px;
+            .survey-header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.35rem;
                 font-weight: 700;
             }
 
-            .header p {
-                font-size: 1.1em;
-                opacity: 0.95;
+            .survey-header p {
+                font-size: 0.95rem;
+                opacity: 0.9;
+                margin: 0;
+            }
+
+        .sv-header-badge {
+            position: absolute;
+            inset-inline-end: 24px;
+            top: 24px;
+            padding: .2rem .7rem;
+            border-radius: 999px;
+            font-size: .75rem;
+            background: rgba(15,23,42,0.8);
+            border: 1px solid rgba(148,163,184,0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+            .sv-header-badge span {
+                opacity: .85;
             }
 
         .progress-container {
-            background: rgba(255, 255, 255, 0.2);
-            height: 8px;
-            border-radius: 10px;
-            margin-top: 20px;
+            background: rgba(15,23,42,0.5);
+            height: 7px;
+            border-radius: 999px;
+            margin-top: 18px;
             overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
-            background: white;
-            border-radius: 10px;
-            transition: width 0.4s ease;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background: linear-gradient(90deg, #c9a227, #facc15);
+            border-radius: 999px;
+            transition: width 0.35s ease;
+            box-shadow: 0 0 14px rgba(250, 204, 21, 0.7);
         }
 
         .progress-text {
-            margin-top: 10px;
-            font-size: 0.9em;
-            opacity: 0.9;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            opacity: 0.88;
         }
 
-        .content {
-            padding: 40px 30px;
+        .survey-body {
+            padding: 26px 26px 22px;
+            background: radial-gradient(circle at top, rgba(15,23,42,0.65) 0, rgba(2,6,23,1) 34%, rgba(2,6,23,1) 100%);
+            color: var(--text-main,#e5e7eb);
         }
 
         .group-title {
-            font-size: 1.8em;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 1.25rem;
+            margin-bottom: 6px;
             font-weight: 700;
         }
 
         .group-description {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.05em;
+            color: var(--text-muted,#9ca3af);
+            margin-bottom: 20px;
+            font-size: 0.9rem;
             line-height: 1.6;
         }
 
         .question {
-            margin-bottom: 35px;
-            animation: fadeIn 0.3s ease-out;
+            margin-bottom: 22px;
+            padding: 16px 16px 14px;
+            border-radius: 18px;
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.9) 0, rgba(15,23,42,0.95) 60%, rgba(15,23,42,1) 100%);
+            border: 1px solid rgba(31,41,55,0.9);
+            box-shadow: 0 10px 25px rgba(15,23,42,0.7);
+            animation: sv-fade-in 0.25s ease-out;
         }
 
-
         .question-text {
-            font-size: 1.15em;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 0.98rem;
+            margin-bottom: 10px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .required {
-            color: #e74c3c;
-            font-size: 1.2em;
+            color: #f97373;
+            font-size: 1.1em;
         }
 
         .input-field {
             width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #e0e0e0;
+            padding: 10px 12px;
             border-radius: 12px;
-            font-size: 1em;
-            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            border: 1px solid rgba(148,163,184,0.4);
+            background: rgba(15,23,42,0.85);
+            color: #e5e7eb;
             font-family: inherit;
+            transition: all 0.25s ease;
         }
 
             .input-field:focus {
                 outline: none;
-                border-color: #2a5298;
-                box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.1);
+                border-color: rgba(201,162,39,0.9);
+                box-shadow: 0 0 0 1px rgba(201,162,39,0.65);
+                background: rgba(15,23,42,0.9);
             }
 
         textarea.input-field {
-            min-height: 120px;
+            min-height: 110px;
             resize: vertical;
         }
 
         .options-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
+            margin-top: 4px;
         }
 
         .option-label {
             display: flex;
             align-items: center;
-            padding: 16px 20px;
-            border: 2px solid #e0e0e0;
+            padding: 10px 12px;
             border-radius: 12px;
+            border: 1px solid rgba(55,65,81,0.95);
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: white;
+            transition: all 0.2s ease;
+            background: rgba(15,23,42,0.9);
+            gap: 8px;
         }
 
+            .option-label span {
+                font-size: 0.92rem;
+            }
+
             .option-label:hover {
-                border-color: #2a5298;
-                background: rgba(42, 82, 152, 0.05);
-                transform: translateX(-5px);
+                border-color: rgba(201,162,39,0.9);
+                background: rgba(24,31,51,1);
+                transform: translateX( @(isRtl ? "5px" : "-5px") );
             }
 
             .option-label input {
-                margin-left: 12px;
                 cursor: pointer;
-                width: 20px;
-                height: 20px;
-                accent-color: #2a5298;
+                width: 18px;
+                height: 18px;
+                accent-color: #c9a227;
             }
 
             .option-label.selected {
-                border-color: #2a5298;
-                background: rgba(42, 82, 152, 0.1);
+                border-color: rgba(201,162,39,1);
+                background: radial-gradient(circle at top left, rgba(201,162,39,0.25) 0, rgba(15,23,42,1) 55%);
                 font-weight: 600;
             }
 
         .file-upload {
-            border: 2px dashed #2a5298;
-            border-radius: 12px;
-            padding: 30px;
+            border-radius: 14px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(42, 82, 152, 0.05);
+            transition: all 0.25s ease;
+            background: rgba(15,23,42,0.95);
+            border: 1.5px dashed rgba(201,162,39,0.7);
         }
 
             .file-upload:hover {
-                background: rgba(42, 82, 152, 0.1);
-                transform: scale(1.02);
+                background: radial-gradient(circle at top, rgba(201,162,39,0.22) 0, rgba(15,23,42,1) 45%);
+                transform: translateY(-1px);
             }
 
             .file-upload input {
@@ -193,104 +222,107 @@
             }
 
         .file-upload-text {
-            color: #2a5298;
+            color: #facc15;
             font-weight: 600;
-            font-size: 1.05em;
+            font-size: 0.95rem;
         }
 
         .file-name {
-            margin-top: 10px;
-            color: #666;
-            font-size: 0.95em;
+            margin-top: 6px;
+            color: #9ca3af;
+            font-size: 0.85rem;
         }
 
         .buttons {
             display: flex;
             justify-content: space-between;
-            gap: 15px;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 2px solid #f0f0f0;
+            gap: 10px;
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(31,41,55,0.85);
         }
 
-        .btn {
-            padding: 14px 32px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.05em;
+        .btn-sv {
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             font-family: inherit;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .35rem;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
+        .btn-sv-primary {
+            background: linear-gradient(135deg,#c9a227,#facc15);
+            color: #111827;
             flex: 1;
         }
 
-            .btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 20px rgba(42, 82, 152, 0.4);
+            .btn-sv-primary:hover {
+                filter: brightness(1.05);
+                box-shadow: 0 8px 22px rgba(250,204,21,0.35);
+                transform: translateY(-1px);
             }
 
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
+        .btn-sv-secondary {
+            background: rgba(15,23,42,0.9);
+            color: #e5e7eb;
+            border: 1px solid rgba(148,163,184,0.5);
+            min-width: 120px;
         }
 
-            .btn-secondary:hover {
-                background: #e0e0e0;
-                transform: translateY(-2px);
+            .btn-sv-secondary:hover {
+                background: rgba(31,41,55,1);
+                transform: translateY(-1px);
             }
 
-        .btn:disabled {
-            opacity: 0.5;
+        .btn-sv:disabled {
+            opacity: 0.45;
             cursor: not-allowed;
-            transform: none !important;
+            box-shadow: none;
+            transform: none;
         }
 
         .error-message {
-            color: #e74c3c;
-            font-size: 0.9em;
-            margin-top: 8px;
+            color: #fb7185;
+            font-size: 0.8rem;
+            margin-top: 6px;
             display: none;
-            animation: shake 0.3s ease;
         }
-
-
 
         .success-screen {
             text-align: center;
-            padding: 60px 30px;
+            padding: 40px 26px 30px;
             display: none;
         }
 
         .success-icon {
-            font-size: 5em;
-            margin-bottom: 20px;
-            animation: bounceIn 0.6s ease;
+            font-size: 3.5rem;
+            margin-bottom: 14px;
+            color: #22c55e;
         }
 
-
         .success-title {
-            font-size: 2em;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
             font-weight: 700;
         }
 
         .success-message {
-            color: #666;
-            font-size: 1.1em;
-            line-height: 1.6;
+            color: #9ca3af;
+            font-size: 0.95rem;
+            line-height: 1.7;
         }
 
-        @@keyframes slideIn {
+        @@keyframes sv-slide-in {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
 
             to {
@@ -299,413 +331,441 @@
             }
         }
 
-        @@keyframes fadeIn {
+        @@keyframes sv-fade-in {
             from {
                 opacity: 0;
-                transform: translateX(-20px);
+                transform: translateY(8px);
             }
 
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateY(0);
             }
         }
 
-        @@keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
+        @@media (max-width: 768px) {
+            .survey-card {
+                border-radius: 18px;
             }
 
-            25% {
-                transform: translateX(-10px);
+            .survey-header {
+                padding: 22px 18px 18px;
             }
 
-            75% {
-                transform: translateX(10px);
-            }
-        }
-
-        @@keyframes bounceIn {
-            0% {
-                transform: scale(0);
+            .survey-body {
+                padding: 20px 16px 16px;
             }
 
-            50% {
-                transform: scale(1.2);
+            .sv-header-badge {
+                position: static;
+                margin-top: 8px;
             }
 
-            100% {
-                transform: scale(1);
+            .buttons {
+                flex-direction: column-reverse;
             }
         }
-
     </style>
-</head>
+}
 
-<body>
+<div class="survey-shell">
     <form id="afTokenForm" class="d-none">@Html.AntiForgeryToken()</form>
-    <div class="container">
-        <div class="header">
-            <h1>@(Model?.HeaderTitle ?? "استطلاع الفنادق")</h1>
-            <p id="headerDescription">@(Model?.HeaderDescription ?? "مساعدتك في تحسين خدماتنا")</p>
-            <div class="progress-container">
+
+    <div class="survey-card">
+        <div class="survey-header header">
+            <div>
+                <h1>@(Model?.HeaderTitle ?? "استطلاع")</h1>
+                <p id="headerDescription">
+                    @(Model?.HeaderDescription ?? "مساهمتك تساعدنا على تحسين الخدمات.")
+                </p>
+            </div>
+
+            <div class="sv-header-badge">
+                <span>🧾</span>
+                <span>@(isRtl ? "استبيان" : "Survey")</span>
+            </div>
+
+            <div class="progress-container mt-3">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
-            <div class="progress-text" id="progressText">صفحة 1 من 1</div>
+            <div class="progress-text" id="progressText">
+                صفحة 1 من 1
+            </div>
         </div>
 
-        <div class="content" id="surveyContent"></div>
+        <div class="survey-body" id="surveyContent">
+            @* تُملأ بالـ JS *@
+        </div>
 
-        <div class="success-screen" id="successScreen" style="display:none">
+        <div class="success-screen" id="successScreen">
             <div class="success-icon">✓</div>
             <h2 class="success-title">شكراً لك!</h2>
-            <p class="success-message">تم إرسال إجاباتك بنجاح. نقدر وقتك ومساهمتك في تحسين خدماتنا.</p>
+            <p class="success-message">
+                تم إرسال إجاباتك بنجاح. نقدر وقتك ومساهمتك في تحسين خدماتنا.
+            </p>
         </div>
     </div>
+</div>
 
+@section Scripts {
     <script>
-        // ===== بيانات قادمة من السيرفر (Controller → ViewModel) =====
-        // نتوقع أن Model.Groups = array of groups: [{ id, title, description, items: [{ id, text, type, isRequired, optionsCsv }] }]
+        // ===== بيانات من السيرفر =====
         const surveyData = @Html.Raw(json);
 
         // ===== الحالة العامة =====
-        const antiForgeryToken = document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]')?.value || '';
+        const antiForgeryToken =
+            document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]')?.value || '';
+
         let currentGroupIndex = 0;
-        // التخزين: answers[questionId] = { questionId, type, value }
+        // answers[itemId] = { questionId, type, value }
         let answers = {};
 
-        // ===== تخزين/استرجاع محلي =====
+        // ===== تخزين/تحميل محلي =====
         function loadAnswers() {
-          try {
-            const saved = localStorage.getItem('surveyAnswers');
-            if (saved) answers = JSON.parse(saved) || {};
-          } catch {
-            answers = {};
-          }
+            try {
+                const saved = localStorage.getItem('surveyAnswers');
+                if (saved) answers = JSON.parse(saved) || {};
+            } catch {
+                answers = {};
+            }
         }
         function saveAnswers() {
-          localStorage.setItem('surveyAnswers', JSON.stringify(answers));
+            localStorage.setItem('surveyAnswers', JSON.stringify(answers));
         }
 
-        // العثور على عنصر السؤال بالـ id
-        debugger
         function findItemById(id) {
-          for (const g of surveyData || []) {
-            for (const it of (g.Items || [])) 
-            if (it.Id === id) 
-            return {...it, qId : g.Id};
-          }
-          debugger
-          return {id, type: 1 };
+            for (const g of surveyData || []) {
+                for (const it of (g.Items || [])) {
+                    if (it.Id === id) return { ...it, qId: g.Id };
+                }
+            }
+            return { Id: id, Type: 1 };
         }
 
-        // setter موحّد: يخزّن بصيغة {questionId,type,value}
         function setAnswer(item, value) {
-          answers[item.Id] = { questionId: item.Id, type: item.Type, value };
-          saveAnswers();
-          hideError(item.Id);
+            answers[item.Id] = { questionId: item.Id, type: item.Type, value };
+            saveAnswers();
+            hideError(item.Id);
         }
 
-        // getter يرجّع value فقط (ويدعم تخزين قديم إن وجد)
         function getStoredValue(item) {
-          const a = answers[item.Id];
-          if (!a) return undefined;
-          return (typeof a === 'object' && a !== null && 'value' in a) ? a.value : a;
+            const a = answers[item.Id];
+            if (!a) return undefined;
+            return (typeof a === 'object' && a !== null && 'value' in a) ? a.value : a;
         }
 
-        // ===== التقدّم =====
+        // ===== التقدم =====
         function updateProgress() {
-          const total = Math.max(1, (surveyData || []).length);
-          const progress = ((currentGroupIndex + 1) / total) * 100;
-          const bar = document.getElementById('progressBar');
-          if (bar) bar.style.width = progress + '%';
-          const txt = document.getElementById('progressText');
-          if (txt) txt.textContent = `صفحة ${currentGroupIndex + 1} من ${total}`;
+            const total = Math.max(1, (surveyData || []).length);
+            const progress = ((currentGroupIndex + 1) / total) * 100;
+            const bar = document.getElementById('progressBar');
+            if (bar) bar.style.width = progress + '%';
+
+            const txt = document.getElementById('progressText');
+            if (txt) txt.textContent = `صفحة ${currentGroupIndex + 1} من ${total}`;
         }
 
         // ===== الرسم =====
         function renderGroup() {
-          const group = (surveyData || [])[currentGroupIndex];
-          const content = document.getElementById('surveyContent');
+            const group = (surveyData || [])[currentGroupIndex];
+            const content = document.getElementById('surveyContent');
 
-          if (!group) {
-            content.innerHTML = '<div class="group-description">لا توجد أسئلة متاحة.</div>';
+            if (!group) {
+                content.innerHTML = '<div class="group-description">لا توجد أسئلة متاحة.</div>';
+                updateProgress();
+                return;
+            }
+
+            let html = '';
+            html += `<div class="group-title">${group.Title ?? ''}</div>`;
+            html += `<div class="group-description">${group.Description ?? ''}</div>`;
+
+            (group.Items ?? []).forEach(item => { html += renderQuestion(item); });
+
+            html += `
+                <div class="buttons">
+                    <button type="button"
+                            class="btn-sv btn-sv-secondary"
+                            id="prevBtn"
+                            ${(currentGroupIndex === 0) ? 'disabled' : ''}>
+                        @(isRtl ? "السابق" : "Previous")
+                    </button>
+                    <button type="button"
+                            class="btn-sv btn-sv-primary"
+                            id="nextBtn">
+                        ${currentGroupIndex === (surveyData?.length ?? 1) - 1
+                            ? '@(isRtl ? "إرسال" : "Submit")'
+                            : '@(isRtl ? "التالي" : "Next")'}
+                    </button>
+                </div>`;
+
+            content.innerHTML = html;
             updateProgress();
-            return;
-          }
-          
-          let html = '';
-          html += `<div class="group-title">${group.Title   ?? ''}</div>`;
-          html += `<div class="group-description">${group.Description ?? ''}</div>`;
-
-          (group.Items ?? []).forEach(item => { html += renderQuestion(item); });
-
-          html += `
-            <div class="buttons">
-              <button class="btn btn-secondary" id="prevBtn" ${currentGroupIndex === 0 ? 'disabled' : ''}>السابق</button>
-              <button class="btn btn-primary" id="nextBtn">${currentGroupIndex === (surveyData?.length ?? 1) - 1 ? 'إرسال' : 'التالي'}</button>
-            </div>
-          `;
-
-          content.innerHTML = html;
-          updateProgress();
-          attachEventListeners();
-          restoreAnswers();
+            attachEventListeners();
+            restoreAnswers();
         }
 
         function renderQuestion(item) {
-          const required = item.IsRequired ? '<span class="required">*</span>' : '';
-          const v = getStoredValue(item);
-          const id = item.Id;
-          let html = `
-            <div class="question" data-id="${id}">
-              <div class="question-text">${item.Text ?? ''} ${required}</div>
-          `;
+            const required = item.IsRequired ? '<span class="required">*</span>' : '';
+            const v = getStoredValue(item);
+            const id = item.Id;
+            let html = `
+                <div class="question" data-id="${id}">
+                    <div class="question-text">${item.Text ?? ''} ${required}</div>`;
 
-          const csv = (item.OptionsCsv ?? '')
-            .toString()
-            .split(',')
-            .map(s => s.trim())
-            .filter(Boolean);
+            const csv = (item.OptionsCsv ?? '')
+                .toString()
+                .split(',')
+                .map(s => s.trim())
+                .filter(Boolean);
 
-          switch (item.Type) {
-            case 1: // نص
-              html += `<textarea class="input-field" data-id="${id}" placeholder="اكتب إجابتك هنا...">${v ?? ''}</textarea>`;
-              break;
+            switch (item.Type) {
+                case 1: // نص
+                    html += `<textarea class="input-field"
+                                       data-id="${id}"
+                                       placeholder="اكتب إجابتك هنا...">${v ?? ''}</textarea>`;
+                    break;
 
-            case 2: // نعم/لا
-            case 3: // اختيار واحد
-              html += '<div class="options-container">';
-              csv.forEach(option => {
-                const checked = v === option ? 'checked' : '';
-                const selected = v === option ? 'selected' : '';
-                html += `
-                  <label class="option-label ${selected}">
-                    <span>${option}</span>
-                    <input type="radio" name="q${id}" value="${option}" data-id="${id}" ${checked}>
-                  </label>`;
-              });
-              html += '</div>';
-              break;
+                case 2: // نعم/لا
+                case 3: // اختيار واحد
+                    html += '<div class="options-container">';
+                    csv.forEach(option => {
+                        const checked = v === option ? 'checked' : '';
+                        const selected = v === option ? 'selected' : '';
+                        html += `
+                            <label class="option-label ${selected}">
+                                <input type="radio"
+                                       name="q${id}"
+                                       value="${option}"
+                                       data-id="${id}"
+                                       ${checked} />
+                                <span>${option}</span>
+                            </label>`;
+                    });
+                    html += '</div>';
+                    break;
 
-            case 4: // اختيارات متعددة
-              html += '<div class="options-container">';
-              const arr = Array.isArray(v) ? v : [];
-              csv.forEach(option => {
-                const checked = arr.includes(option) ? 'checked' : '';
-                const selected = arr.includes(option) ? 'selected' : '';
-                html += `
-                  <label class="option-label ${selected}">
-                    <span>${option}</span>
-                    <input type="checkbox" name="q${id}" value="${option}" data-id="${id}" ${checked}>
-                  </label>`;
-              });
-              html += '</div>';
-              break;
+                case 4: // اختيارات متعددة
+                    html += '<div class="options-container">';
+                    const arr = Array.isArray(v) ? v : [];
+                    csv.forEach(option => {
+                        const checked = arr.includes(option) ? 'checked' : '';
+                        const selected = arr.includes(option) ? 'selected' : '';
+                        html += `
+                            <label class="option-label ${selected}">
+                                <input type="checkbox"
+                                       name="q${id}"
+                                       value="${option}"
+                                       data-id="${id}"
+                                       ${checked} />
+                                <span>${option}</span>
+                            </label>`;
+                    });
+                    html += '</div>';
+                    break;
 
-            case 5: // رقم
-              html += `<input type="number" class="input-field" data-id="${id}" placeholder="أدخل رقماً..." value="${v ?? ''}">`;
-              break;
+                case 5: // رقم
+                    html += `<input type="number"
+                                    class="input-field"
+                                    data-id="${id}"
+                                    placeholder="أدخل رقماً..."
+                                    value="${v ?? ''}">`;
+                    break;
 
-            case 6: // تاريخ
-              html += `<input type="date" class="input-field" data-id="${id}" value="${v ?? ''}">`;
-              break;
+                case 6: // تاريخ
+                    html += `<input type="date"
+                                    class="input-field"
+                                    data-id="${id}"
+                                    value="${v ?? ''}">`;
+                    break;
 
-            case 7: // ملف (نخزّن Base64 فقط)
-              const hasFile = !!v; // v = base64 أو undefined
-              const fileLabel = hasFile ? 'تم اختيار ملف' : '';
-              html += `
-                <div class="file-upload" onclick="document.getElementById('file${id}').click()">
-                  <input type="file" id="file${id}" data-id="${id}" accept="image/*">
-                  <div class="file-upload-text">📁 اضغط لرفع ملف</div>
-                  <div class="file-name" id="fileName${id}">${fileLabel}</div>
-                </div>`;
-              break;
-          }
+                case 7: // ملف
+                    const hasFile = !!v;
+                    const fileLabel = hasFile ? 'تم اختيار ملف' : '';
+                    html += `
+                        <div class="file-upload"
+                             onclick="document.getElementById('file${id}').click()">
+                            <input type="file"
+                                   id="file${id}"
+                                   data-id="${id}"
+                                   accept="image/*,application/pdf">
+                            <div class="file-upload-text">📁 اضغط لرفع ملف</div>
+                            <div class="file-name" id="fileName${id}">${fileLabel}</div>
+                        </div>`;
+                    break;
+            }
 
-          html += `<div class="error-message" id="error${id}">هذا الحقل مطلوب</div></div>`;
-          return html;
+            html += `<div class="error-message" id="error${id}">هذا الحقل مطلوب</div></div>`;
+            return html;
         }
 
         // ===== الأحداث =====
         function attachEventListeners() {
-          // نص/رقم/تاريخ
-          document.querySelectorAll('.input-field').forEach(input => {
-            input.addEventListener('input', (e) => {
-              const id = parseInt(e.target.dataset.id);
-              const item = findItemById(id);
-              setAnswer(item, e.target.value);
+            document.querySelectorAll('.input-field').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    const item = findItemById(id);
+                    setAnswer(item, e.target.value);
+                });
             });
-          });
 
-          // راديو
-          document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-              const id = parseInt(e.target.dataset.id);
-              const item = findItemById(id);
-              setAnswer(item, e.target.value);
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    const item = findItemById(id);
+                    setAnswer(item, e.target.value);
 
-              const labels = e.target.closest('.options-container')?.querySelectorAll('.option-label') || [];
-              labels.forEach(l => l.classList.remove('selected'));
-              e.target.closest('.option-label')?.classList.add('selected');
+                    const labels = e.target.closest('.options-container')?.querySelectorAll('.option-label') || [];
+                    labels.forEach(l => l.classList.remove('selected'));
+                    e.target.closest('.option-label')?.classList.add('selected');
+                });
             });
-          });
 
-          // تشيك بوكس
-          document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-              const id = parseInt(e.target.dataset.id);
-              const item = findItemById(id);
-              const allChecked = document.querySelectorAll(`input[name="q${id}"]:checked`);
-              const arr = Array.from(allChecked).map(c => c.value);
-              setAnswer(item, arr);
+            document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+                chk.addEventListener('change', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    const item = findItemById(id);
+                    const allChecked = document.querySelectorAll(`input[name="q${id}"]:checked`);
+                    const arr = Array.from(allChecked).map(c => c.value);
+                    setAnswer(item, arr);
 
-              e.target.closest('.option-label')?.classList.toggle('selected', e.target.checked);
+                    e.target.closest('.option-label')?.classList
+                        .toggle('selected', e.target.checked);
+                });
             });
-          });
 
-          // ملف — حفظ Base64 فقط
-          document.querySelectorAll('input[type="file"]').forEach(fileInput => {
-            fileInput.addEventListener('change', (e) => {
-              const id = parseInt(e.target.dataset.id);
-              const item = findItemById(id);
-              const file = e.target.files?.[0];
-              if (!file) return;
+            document.querySelectorAll('input[type="file"]').forEach(fileInput => {
+                fileInput.addEventListener('change', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    const item = findItemById(id);
+                    const file = e.target.files?.[0];
+                    if (!file) return;
 
-              const reader = new FileReader();
-              reader.onload = (ev) => {
-                // value = Base64 فقط
-                setAnswer(item, ev.target.result);
-                const nameEl = document.getElementById(`fileName${id}`);
-                if (nameEl) nameEl.textContent = 'تم اختيار ملف';
-              };
-              reader.readAsDataURL(file);
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        setAnswer(item, ev.target.result);
+                        const nameEl = document.getElementById(`fileName${id}`);
+                        if (nameEl) nameEl.textContent = 'تم اختيار ملف';
+                    };
+                    reader.readAsDataURL(file);
+                });
             });
-          });
 
-          // تنقّل
-          document.getElementById('prevBtn')?.addEventListener('click', () => {
-            if (currentGroupIndex > 0) { currentGroupIndex--; renderGroup(); }
-          });
-          document.getElementById('nextBtn')?.addEventListener('click', () => {
-            if (validateCurrentGroup()) {
-              if (currentGroupIndex < (surveyData?.length ?? 1) - 1) {
-                currentGroupIndex++;
-                renderGroup();
-              } else {
-                submitSurvey();
-              }
-            }
-          });
+            document.getElementById('prevBtn')?.addEventListener('click', () => {
+                if (currentGroupIndex > 0) {
+                    currentGroupIndex--;
+                    renderGroup();
+                }
+            });
+
+            document.getElementById('nextBtn')?.addEventListener('click', () => {
+                if (validateCurrentGroup()) {
+                    if (currentGroupIndex < (surveyData?.length ?? 1) - 1) {
+                        currentGroupIndex++;
+                        renderGroup();
+                    } else {
+                        submitSurvey();
+                    }
+                }
+            });
         }
 
-        // ===== استرجاع/تحقق =====
         function restoreAnswers() {
-          const group = (surveyData || [])[currentGroupIndex];
-          (group?.Items ?? []).forEach(item => {
-            const v = getStoredValue(item);
-            if (v === undefined) return;
+            const group = (surveyData || [])[currentGroupIndex];
+            (group?.Items ?? []).forEach(item => {
+                const v = getStoredValue(item);
+                if (v === undefined) return;
 
-            if (item.Type === 4 && Array.isArray(v)) {
-              v.forEach(value => {
-                const checkbox = document.querySelector(`input[name="q${item.Id}"][value="${value}"]`);
-                if (checkbox) {
-                  checkbox.checked = true;
-                  checkbox.closest('.option-label')?.classList.add('selected');
+                if (item.Type === 4 && Array.isArray(v)) {
+                    v.forEach(value => {
+                        const checkbox = document
+                            .querySelector(`input[name="q${item.Id}"][value="${value}"]`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                            checkbox.closest('.option-label')?.classList.add('selected');
+                        }
+                    });
                 }
-              });
-            }
 
-            if (item.Type === 7 && v) {
-              const el = document.getElementById(`fileName${item.Id}`);
-              if (el) el.textContent = 'تم اختيار ملف';
-            }
-          });
+                if (item.Type === 7 && v) {
+                    const el = document.getElementById(`fileName${item.Id}`);
+                    if (el) el.textContent = 'تم اختيار ملف';
+                }
+            });
         }
 
         function validateCurrentGroup() {
-          const group = (surveyData || [])[currentGroupIndex];
-          let isValid = true;
+            const group = (surveyData || [])[currentGroupIndex];
+            let isValid = true;
 
-          (group?.Items ?? []).forEach(item => {
-            if (!item.IsRequired) return;
-            const val = getStoredValue(item);
-            const empty =
-              val === undefined || val === null ||
-              (Array.isArray(val) && val.length === 0) ||
-              (typeof val === 'string' && val.trim() === '');
-            if (empty) { showError(item.Id); isValid = false; }
-          });
+            (group?.Items ?? []).forEach(item => {
+                if (!item.IsRequired) return;
+                const val = getStoredValue(item);
+                const empty =
+                    val === undefined || val === null ||
+                    (Array.isArray(val) && val.length === 0) ||
+                    (typeof val === 'string' && val.trim() === '');
+                if (empty) {
+                    showError(item.Id);
+                    isValid = false;
+                }
+            });
 
-          return isValid;
+            return isValid;
         }
 
         function showError(id) {
-          const el = document.getElementById(`error${id}`);
-          if (el) el.style.display = 'block';
+            const el = document.getElementById(`error${id}`);
+            if (el) el.style.display = 'block';
         }
+
         function hideError(id) {
-          const el = document.getElementById(`error${id}`);
-          if (el) el.style.display = 'none';
+            const el = document.getElementById(`error${id}`);
+            if (el) el.style.display = 'none';
         }
 
-        // ===== تكوين Payload وإرساله =====
         function toArrayPayload() {
-          const out = [];
-          for (const g of (surveyData || [])) {
-            for (const it of (g.Items || [])) {
-              const v = getStoredValue(it);
-              out.push({ questionId: g.Id, questionItemId: it.Id, value: v ?? null });
+            const out = [];
+            for (const g of (surveyData || [])) {
+                for (const it of (g.Items || [])) {
+                    const v = getStoredValue(it);
+                    out.push({
+                        questionId: g.Id,
+                        questionItemId: it.Id,
+                        value: v ?? null
+                    });
+                }
             }
-          }
-          return out;
+            return out;
         }
 
-                // بدل toArrayPayload كلّها بهذا
-        // function toDictionaryPayload() {
-        //   const dict = {};
-        //   for (const g of (surveyData || [])) {
-        //     for (const it of (g.Items || [])) {
-        //       const v = getStoredValue(it);         
-        //       dict[it.Id] = (v ?? null);              
-        //     }
-        //   }
-        //   return dict;
-        // }
+        async function submitSurvey() {
+            const payload = toArrayPayload();
 
+            try {
+                const res = await fetch('@Url.Action("Submit", "UserQuestions")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': antiForgeryToken
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error('Failed to submit');
+            } catch (e) {
+                console.error(e);
+            }
 
-            async function submitSurvey() {
-                debugger
-          const payload = toArrayPayload();
+            localStorage.removeItem('surveyAnswers');
+            document.getElementById('surveyContent').style.display = 'none';
+            document.getElementById('successScreen').style.display = 'block';
 
-          try {
-            const res = await fetch('@Url.Action("Submit", "UserQuestions")', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'RequestVerificationToken': antiForgeryToken
-              },
-              body: JSON.stringify(payload)            // يطابق Dictionary<int, object?>
-            });
-            if (!res.ok) throw new Error('Failed to submit');
-          } catch (e) {
-            console.error(e);
-          }
-
-          localStorage.removeItem('surveyAnswers');
-          document.getElementById('surveyContent').style.display = 'none';
-          document.getElementById('successScreen').style.display = 'block';
-          const hdr = document.querySelector('.header');
-          if (hdr && hdr.style) hdr.style.display = 'none';
+            const hdr = document.querySelector('.survey-header');
+            if (hdr && hdr.style) hdr.style.display = 'none';
         }
 
-
-        // ===== تشغيل أولي =====
+        // تشغيل أولي
         loadAnswers();
         renderGroup();
     </script>
-
-
-</body>
-
-</html>
+}

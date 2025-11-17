@@ -10,9 +10,9 @@ namespace PeerReview.MvcHotel.Services
         private readonly ApiClient _api;
         private readonly IHttpContextAccessor _ctx;
 
-        public AuthService(ApiClient api, IHttpContextAccessor ctx){ _api = api; _ctx = ctx; }
+        public AuthService(ApiClient api, IHttpContextAccessor ctx) { _api = api; _ctx = ctx; }
 
-       
+
         public async Task<LoginResponse?> Login(LoginRequest req)
         {
             var res = await _api.Post("/api/Auth/login", req);
@@ -22,7 +22,7 @@ namespace PeerReview.MvcHotel.Services
             if (dto?.token != null) _ctx.HttpContext?.Session.SetString("jwt", dto.token);
             _ctx.HttpContext?.Session.SetString("userName", dto?.userName ?? "");
             _ctx.HttpContext?.Session.SetString("role", dto?.role ?? "");
-            _ctx.HttpContext?.Session.SetInt32("userId", dto?.UserId?? 0);
+            _ctx.HttpContext?.Session.SetInt32("userId", dto?.UserId ?? 0);
             return dto;
         }
 
@@ -32,5 +32,7 @@ namespace PeerReview.MvcHotel.Services
             _ctx.HttpContext?.Session.Remove("userName");
             _ctx.HttpContext?.Session.Remove("role");
         }
+
+        public Task<DashboardMetricsDto> List() => _api.Get<DashboardMetricsDto>("/api/Dashboard");
     }
 }

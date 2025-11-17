@@ -1,47 +1,107 @@
-
+﻿@model System.Collections.Generic.List<PeerReview.MvcHotel.Models.User>
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
-@model System.Collections.Generic.List<PeerReview.MvcHotel.Models.User>
-@{ ViewData["Title"]=@SharedResource.Users_Title; }
-<div class="d-flex justify-content-between align-items-center mb-2">
-  <h3 class="m-0">@SharedResource.Users_Title</h3>
-  <a class="btn btn-gold" href="/Users/Create">@SharedResource.Users_Add</a>
+
+@{
+    ViewData["Title"] = L["Menu_Users"];
+    ViewBag.ActiveMenu = "Users";
+}
+
+@section HeaderActions {
+    <a href="@Url.Action("Create", "Users")" class="btn-pr btn-pr-primary">
+        + @L["Users_Add"]
+    </a>
+}
+
+<div class="pr-card mb-3">
+    <form method="get" class="row g-2">
+        <div class="col-md-4">
+            <div class="pr-field">
+                <input type="text" name="q" value="@Context.Request.Query["q"]" placeholder=" " />
+                <label>@L["Users_Search"]</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="pr-field">
+                <select name="status" class="form-select">
+                    <option value="">@L["Users_Filter_Status_All"]</option>
+                    <option value="active">@L["Status_Active"]</option>
+                    <option value="inactive">@L["Status_Inactive"]</option>
+                </select>
+                <label>@L["Users_Col_Status"]</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn-pr btn-pr-soft w-100">
+                @L["Filter_Button"]
+            </button>
+        </div>
+    </form>
 </div>
-<table class="table table-hover bg-white card-hotel">
-  <thead><tr>
-    <th>@SharedResource.Users_Col_Id</th>
-    <th>@SharedResource.Users_Col_FullName</th>
-    <th>@SharedResource.Users_Col_UserName</th>
-    <th>@SharedResource.Users_Col_Status</th>
-    <th>@SharedResource.Users_Col_Role</th>
-    <th>Actions</th>
-  </tr></thead>
-  <tbody>
-  @foreach (var u in Model){
-    <tr>
-      <td>@u.id</td>
-      <td>@u.fullName</td>
-      <td>@u.userName</td>
-                <td>@(u.isActive ? SharedResource.Status_Active : SharedResource.Status_Inactive)</td>
-      <td>@u.RoleName</td>
-      <td class="text-nowrap">
-        <a class="btn btn-sm btn-outline-primary" href="/Users/Edit/@u.id">@SharedResource.Users_Action_Edit</a>
-        <form method="post" action="/Users/Delete/@u.id" style="display:inline" onsubmit="return confirm('Delete?');">
-          @Html.AntiForgeryToken()
-          <button class="btn btn-sm btn-outline-danger">@SharedResource.Users_Action_Delete</button>
-        </form>
-        @if(u.isActive){
-          <form method="post" action="/Users/Deactivate/@u.id" style="display:inline">
-            @Html.AntiForgeryToken()
-            <button class="btn btn-sm btn-outline-warning">@SharedResource.Users_Action_Deactivate</button>
-          </form>
-        } else {
-          <form method="post" action="/Users/Activate/@u.id" style="display:inline">
-            @Html.AntiForgeryToken()
-            <button class="btn btn-sm btn-outline-success">@SharedResource.Users_Action_Activate</button>
-          </form>
-        }
-      </td>
-    </tr>
-  }
-  </tbody>
-</table>
+
+<div class="pr-card">
+    <div class="table-responsive">
+        <table class="pr-table">
+            <thead>
+                <tr>
+                    <th>@L["Users_Col_Id"]</th>
+                    <th>@L["Users_Col_FullName"]</th>
+                    <th>@L["Users_Col_UserName"]</th>
+                    <th>@L["Users_Col_Email"]</th>
+                    <th>@L["Users_Col_Role"]</th>
+                    <th>@L["Users_Col_Status"]</th>
+                    <th>@L["Users_Col_Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted-soft">
+                            @L["Users_Empty"]
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var u in Model)
+                    {
+                        <tr>
+                            <td>@u.id</td>
+                            <td>@u.fullName</td>
+                            <td>@u.userName</td>
+                            <td>@u.email</td>
+                            <td>@u.RoleName</td>
+                            <td>
+                                @if (u.isActive)
+                                {
+                                    <span class="badge-pill badge-success">@L["Status_Active"]</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-pill badge-muted">@L["Status_Inactive"]</span>
+                                }
+                            </td>
+                            <td class="text-nowrap">
+                                <a class="btn-pr btn-pr-sm btn-pr-soft"
+                                   href="@Url.Action("Edit", "Users", new { id = u.id })">
+                                    @L["Users_Action_Edit"]
+                                </a>
+                                @* لو عندك Delete *@
+                                @* 
+                                <form method="post" action="@Url.Action("Delete","Users", new { id = u.id })"
+                                      style="display:inline"
+                                      onsubmit="return confirm('@L["Users_Confirm_Delete"]');">
+                                    @Html.AntiForgeryToken()
+                                    <button class="btn-pr btn-pr-sm btn-pr-outline">
+                                        @L["Users_Action_Delete"]
+                                    </button>
+                                </form>
+                                *@
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

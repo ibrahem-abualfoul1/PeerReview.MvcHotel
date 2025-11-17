@@ -1,93 +1,91 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @model System.Collections.Generic.List<PeerReview.MvcHotel.Models.QuestionDto>
+
 @{
     ViewData["Title"] = L["Questions_Title"];
+    ViewBag.ActiveMenu = "Questions";
 }
-@* <div class="d-flex justify-content-between align-items-center mb-2">
-    <h3 class="m-0">@L["Questions_Title"]</h3>
-    <a class="btn btn-gold" href="/Questions/Create">@L["Questions_Add"]</a>
-</div> *@
-@* <table class="table table-hover bg-white card-hotel">
-    <thead><tr>
-            <th>@L["Questions_Col_Id"]</th>
-            <th>@L["Questions_Col_Title"]</th>
-            <th>@L["Questions_Col_Description"]</th>
-            <th>@L["Questions_Col_Items"]</th>
-            <th>Actions</th>
-        </tr></thead>
-    <tbody>
-        @foreach (var q in Model){
-            <tr>
-                <td>@q.id</td>
-                <td>@q.title</td>
-                <td>@q.description</td>
-                <td>@(q.items?.Count ?? 0)</td>
-                <td>
-                    <a class="btn btn-sm btn-outline-primary" href="/Questions/Edit/@q.id">@L["Questions_Action_Edit"]</a> <a class="btn btn-sm btn-outline-secondary ms-1" href="/Answers/Screen/@q.id">Fill</a>
-                    <form method="post" action="/Questions/Delete/@q.id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
-                        @Html.AntiForgeryToken()
-                        <button class="btn btn-sm btn-outline-danger">@L["Questions_Action_Delete"]</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table> *@
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+@section HeaderActions {
+    <button type="button"
+            class="btn-pr btn-pr-primary"
+            id="btnAddQuestion">
+        + @L["Questions_Add"]
+    </button>
+}
 
-<div class="card">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="m-0">الأسئلة</h3>
-            <button class="btn btn-primary" id="btnAddQuestion">إضافة سؤال</button>
+<div class="pr-card mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="h-section-title mb-0">
+            @L["Questions_Title"]
         </div>
+        <div class="text-muted-soft" style="font-size:0.85rem;">
+            @L["Manage your questions, categories and items."]
+        </div>
+    </div>
 
-        <div id="modalHost"></div>
+    <div id="modalHost"></div>
 
-        <div class="table-responsive-sm">
-            <table id="qustions" class="table table-striped nowrap">
-                <thead>
+    <div class="table-responsive-sm mt-3">
+        <table id="qustions" class="pr-table display nowrap" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>@L["Questions_Col_Title"] (@L["Arabic"])</th>
+                    <th>@L["Questions_Col_Title"] (@L["English"])</th>
+                    <th>@L["Questions_Col_Description"]</th>
+                    <th>@L["Questions_Col_Items"]</th>
+                    <th>@L["Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var q in Model)
+                {
                     <tr>
-                        <th>العنوان</th>
-                        <th>الوصف</th>
-                        <th>#</th>
+                        <td>@q.TitleAr</td>
+                        <td>@q.TitleEn</td>
+                        <td>@q.DescriptionEn</td>
+                        <td>@(q.Items?.Count ?? 0)</td>
+                        <td class="text-nowrap">
+                            <button class="btn-pr btn-pr-sm btn-pr-soft"
+                                    type="button"
+                                    onclick="openQuestionModal(@q.Id)">
+                                @L["Questions_Action_Edit"]
+                            </button>
+
+                            @* زر تعبئة (إن حاب ترجع تشغّله)
+                            <a class="btn-pr btn-pr-sm btn-pr-outline ms-1"
+                               href="/Answers/Screen/@q.Id">
+                                Fill
+                            </a>
+                            *@
+
+                            <form method="post"
+                                  action="/Questions/Delete/@q.Id"
+                                  
+                                  onsubmit="return confirm('@L["Confirm_Delete"]');">
+                                @Html.AntiForgeryToken()
+                                <button class="btn-pr btn-pr-sm btn-pr-outline">
+                                    @L["Questions_Action_Delete"]
+                                </button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var q in Model)
-                    {
-                        <tr>
-                            <td>@q.TitleEn</td>
-                            <td>@q.DescriptionEn</td>
-                            @* <td>@(q.items?.Count ?? 0)</td> *@
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary" type="button" onclick="openQuestionModal(@q.Id)">تعديل</button>
-                                @* <a class="btn btn-sm btn-outline-secondary ms-1" href="/Answers/Screen/@q.id">Fill</a> *@
-                                <form method="post" action="/Questions/Delete/@q.Id" style="display:inline" onsubmit="return confirm('@L["Confirm_Delete"]');">
-                                    @Html.AntiForgeryToken()
-                                    <button class="btn btn-sm btn-outline-danger">حذف</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 
+@section Styles {
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css" />
+}
+
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.datatables.net/staterestore/1.4.3/js/dataTables.stateRestore.js"></script>
-    <script src="https://cdn.datatables.net/staterestore/1.4.3/js/stateRestore.bootstrap5.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.5/js/dataTables.buttons.js"></script>
-    <script src=" https://cdn.datatables.net/buttons/3.2.5/js/buttons.bootstrap5.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
@@ -99,44 +97,42 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>          <!-- Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>      <!-- PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>        <!-- PDF fonts -->
-    <!-- Buttons for HTML5 export (Copy/Excel/PDF) -->
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    @* <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script> *@
 
-    <!-- (اختياري) زر الطباعة -->
-    <!-- <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script> -->
     <script>
         $(function () {
-          $('#qustions').DataTable({
-            dom: 'Bftip', // أو 'Bfrtip'
-            buttons: ['copy', 'excel', 'pdf']
-          });
+            $('#qustions').DataTable({
+                dom: 'Bftip', // Copy / Excel / PDF + filter + table + pager
+                buttons: ['copy', 'excel', 'pdf'],
+                language: {
+                    url: '@(System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                                                    ? "https://cdn.datatables.net/plug-ins/1.13.8/i18n/ar.json"
+                                                    : "https://cdn.datatables.net/plug-ins/1.13.8/i18n/en-GB.json")'
+            }
         });
+    });
 
-               // فتح المودال (إنشاء)
+        // فتح المودال (إنشاء / تعديل)
         function openQuestionModal(id) {
-          var url = '@Url.Action("UpsertPartial", "Questions")' + (id ? ('?id=' + id) : '');
-          $('#modalHost').load(url, function () {
-            var modalEl = document.getElementById('questionUpsertModal');
-            var modal = new bootstrap.Modal(modalEl, { backdrop: 'static' });
-            modal.show();
-          });
+            var url = '@Url.Action("UpsertPartial", "Questions")' + (id ? ('?id=' + id) : '');
+            $('#modalHost').load(url, function () {
+                var modalEl = document.getElementById('questionUpsertModal');
+                var modal = new bootstrap.Modal(modalEl, { backdrop: 'static' });
+                modal.show();
+            });
         }
 
+        // زر إضافة سؤال
         $('#btnAddQuestion').on('click', function () {
             openQuestionModal(null);
         });
 
-        // مثال: ربط زر تحرير في جدولك
-        // $(document).on('click','.btn-edit-question', function(){
-        //     var id = $(this).data('id');
-        //     openQuestionModal(id);
-        // });
-
-        // بعد الحفظ: أعد تحميل الداتا/الجدول (DataTable مثلاً)
+        // بعد الحفظ من المودال (تقدر تستخدم هذا الحدث من داخل UpsertPartial)
         $(document).on('question:upserted', function (e, res) {
-            // مثال: إعادة تحميل DataTable
-            // $('#myTable').DataTable().ajax.reload(null, false);
-            // أو تحديث يدوي حسب بنية صفحتك
+            // مثال: إعادة تحميل DataTable بدون إعادة تحميل الصفحة كاملة
+            var tbl = $('#qustions').DataTable();
+            tbl.ajax ? tbl.ajax.reload(null, false) : location.reload();
         });
     </script>
 }

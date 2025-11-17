@@ -1,0 +1,64 @@
+﻿@using PeerReview.MvcHotel.Models
+@model List<AssignmentDto>
+
+<table id="assignTable" class="pr-table align-middle">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>السؤال</th>
+            <th>المستخدم</th>
+            <th>التاريخ</th>
+            <th>الحالة</th>
+            <th class="text-center">إجراءات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            var i = 1;
+            foreach (var a in Model)
+            {
+                var title = a.question?.TitleEn ?? "";
+                <tr class="@(a.isActive ? "" : "row-inactive")">
+                    <td>@i</td>
+                    <td title="@title">
+                        @(title?.Length > 60 ? title.Substring(0, 60) + "..." : title)
+                    </td>
+                    <td>@a.userId</td>
+                    <td>@a.assignedAt</td>
+                    <td>
+                        @if (a.isActive)
+                        {
+                            <span class="badge-active">مفعل</span>
+                        }
+                        else
+                        {
+                            <span class="badge-inactive">معطل</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (a.isActive)
+                        {
+                            <button class="btn-pr btn-pr-sm btn-pr-outline js-deactivate" data-id="@a.id">
+                                تعطيل
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn-pr btn-pr-sm btn-pr-soft js-activate" data-id="@a.id">
+                                تفعيل
+                            </button>
+                        }
+                    </td>
+                </tr>
+                i++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center text-muted-soft">لا توجد بيانات</td>
+            </tr>
+        }
+    </tbody>
+</table>

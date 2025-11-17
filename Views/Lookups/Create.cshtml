@@ -4,44 +4,127 @@
 
 @{
     ViewData["Title"] = L["AddLookup"];
+    ViewBag.ActiveMenu = "Lookups";
 }
 
-<div class="container mt-4">
-    <h3>@L["AddLookup"]</h3>
+@section Styles {
+    <style>
+        .lk-create-header-note {
+            font-size: 0.85rem;
+            color: var(--text-muted, #9ca3af);
+        }
 
-    <form asp-action="Create" method="post" class="mt-3">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        
-        <div class="mb-3">
-            <label asp-for="Code" class="form-label">@L["Code"]</label>
-            <input asp-for="Code" class="form-control" />
-            <span asp-validation-for="Code" class="text-danger"></span>
+        .lk-create-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem 1.25rem;
+        }
+
+        .pr-field span.field-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted, #9ca3af);
+            margin-top: 0.15rem;
+            display: block;
+        }
+    </style>
+}
+
+<div class="pr-card">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <div class="h-section-title mb-1">
+                @L["AddLookup"]
+            </div>
+            <div class="lk-create-header-note">
+                @L["Lookups_Create_Hint"]
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="NameEn" class="form-label">@L["NameEn"]</label>
-            <input asp-for="NameEn" class="form-control" />
-            <span asp-validation-for="NameEn" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="NameAr" class="form-label">@L["NameAr"]</label>
-            <input asp-for="NameAr" class="form-control" />
-            <span asp-validation-for="NameAr" class="text-danger"></span>
+        <a asp-action="Index" class="btn-pr btn-pr-soft">
+            <i class="bi bi-arrow-90deg-left me-1"></i>@L["Back"]
+        </a>
+    </div>
+
+    <!-- Form -->
+    <form asp-action="Create" method="post" class="mt-1">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+        <div class="lk-create-grid">
+            <!-- Code -->
+            <div>
+                <div class="pr-field">
+                    <input asp-for="Code" placeholder=" " />
+                    <label asp-for="Code">@L["Code"]</label>
+                    <span asp-validation-for="Code" class="text-danger small"></span>
+                </div>
+                <span class="field-hint">
+                    @L["Lookup_Code_Hint"]
+                </span>
+            </div>
+
+            <!-- NameEn -->
+            <div>
+                <div class="pr-field">
+                    <input asp-for="NameEn" placeholder=" " />
+                    <label asp-for="NameEn">@L["NameEn"]</label>
+                    <span asp-validation-for="NameEn" class="text-danger small"></span>
+                </div>
+                <span class="field-hint">
+                    @L["Lookup_NameEn_Hint"]
+                </span>
+            </div>
+
+            <!-- NameAr -->
+            <div>
+                <div class="pr-field">
+                    <input asp-for="NameAr" placeholder=" " />
+                    <label asp-for="NameAr">@L["NameAr"]</label>
+                    <span asp-validation-for="NameAr" class="text-danger small"></span>
+                </div>
+                <span class="field-hint">
+                    @L["Lookup_NameAr_Hint"]
+                </span>
+            </div>
+
+            <!-- TypeEn -->
+            <div>
+                <div class="pr-field">
+                    <input asp-for="TypeEn" placeholder=" " />
+                    <label asp-for="TypeEn">@L["TypeEn"]</label>
+                    <span asp-validation-for="TypeEn" class="text-danger small"></span>
+                </div>
+                <span class="field-hint">
+                    @L["Lookup_TypeEn_Hint"]
+                </span>
+            </div>
+
+            <!-- TypeAr -->
+            <div>
+                <div class="pr-field">
+                    <input asp-for="TypeAr" placeholder=" " />
+                    <label asp-for="TypeAr">@L["TypeAr"]</label>
+                    <span asp-validation-for="TypeAr" class="text-danger small"></span>
+                </div>
+                <span class="field-hint">
+                    @L["Lookup_TypeAr_Hint"]
+                </span>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="TypeAr" class="form-label">@L["TypeAr"]</label>
-            <input asp-for="TypeAr" class="form-control" />
-            <span asp-validation-for="TypeAr" class="text-danger"></span>
-        </div>
+        <!-- Actions -->
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button"
+                    class="btn-pr btn-pr-outline"
+                    onclick="window.location='@Url.Action("Index", "Lookups")'">
+                @L["Cancel"]
+            </button>
 
-        <div class="mb-3">
-            <label asp-for="TypeEn" class="form-label">@L["TypeEn"]</label>
-            <input asp-for="TypeEn" class="form-control" />
-            <span asp-validation-for="TypeEn" class="text-danger"></span>
+            <button type="submit" class="btn-pr btn-pr-primary">
+                <i class="bi bi-check2-circle me-1"></i>@L["Save"]
+            </button>
         </div>
-
-        <button type="submit" class="btn btn-primary">@L["Save"]</button>
-        <a asp-action="Index" class="btn btn-secondary">@L["Cancel"]</a>
     </form>
 </div>

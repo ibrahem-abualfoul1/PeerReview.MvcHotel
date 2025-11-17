@@ -1,22 +1,32 @@
 ﻿@model List<PeerReview.MvcHotel.Models.AnswerForScoringDto>
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+
 @{
     ViewData["Title"] = (L["UnscoredAnswers"] ?? "Unscored Answers");
+    var ci = System.Globalization.CultureInfo.CurrentUICulture;
+    var isRtl = ci.TwoLetterISOLanguageName == "ar";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">@ViewData["Title"]</h5>
-    <a class="btn btn-link" href="@Url.Action("Index", "AnswerScoring")">← @(L["Back"] ?? "Back")</a>
+    <a class="btn btn-link" href="@Url.Action("Index", "AnswerScoring")">
+        ← @(L["Back"] ?? "Back")
+    </a>
 </div>
 
 @if (Model?.Any() != true)
 {
-    <div class="alert alert-info">@("No unscored answers found.")</div>
+    <div class="alert alert-info">
+        @(L["NoUnscoredAnswers"] ?? "No unscored answers found.")
+    </div>
 }
 else
 {
-    <form method="post" action="@Url.Action("AddScore","AnswerScoring")" class="card shadow-sm">
+    <form method="post"
+          action="@Url.Action("AddScore", "AnswerScoring")"
+          class="card shadow-sm">
         @Html.AntiForgeryToken()
+
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-striped mb-0 align-middle">
@@ -35,27 +45,93 @@ else
                         {
                             var a = Model[i];
                             <tr>
+                                <!-- # -->
                                 <td>@(i + 1)</td>
+
+                                <!-- Question -->
                                 <td>
-                                    <div class="small text-muted">Q# @a.QuestionId</div>
-                                </td>
+                                    <div class="fw-semibold">
+                                        @{
+                                            var q = a.question;
+                                            string qText;
+                                            if (isRtl)
+                                            {
+                                                qText = q?.TitleAr
+                                                ?? q?.DescriptionAr
+                                                ?? $"Q#{a.QuestionId}";
+                                            }
+                                            else
+                                            {
+                                                qText = q?.TitleEn
+                                                ?? q?.DescriptionEn
+                                                ?? $"Q#{a.QuestionId}";
+                                            }
+                                        }
+                                    @qText
+                                </div>
+                                <div class="small text-muted">
+                                    Q# @a.QuestionId
+                                </div>
+                            </td>
+
+                            <!-- Item -->
+                            <td>
+                                <div>
+                                    @(
+                                                                    isRtl
+                                                                    ? (a.ItemTextAr ?? a.ItemTextEn)
+                                                                    : (a.ItemTextEn ?? a.ItemTextAr)
+                                                                    )
+                                </div>
+                                <div class="small text-muted">
+                                    ItemId: @a.QuestionItemId
+                                </div>
+                            </td>
+
+                                <!-- Answer -->
                                 <td>
-                                    <div>@(a.ItemTextAr ?? a.ItemTextEn)</div>
-                                    <div class="small text-muted">ItemId: @a.QuestionItemId</div>
-                                </td>
-                                <td>
-                                    <div style="white-space:pre-wrap">@a.Value</div>
-                                    <div class="small text-muted">@a.SubmittedAt</div>
+                            @if (a.questionItem?.Type == 7)  // File upload
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(a.Value))
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    onclick="openBase64File('@a.Value')">
+                                                <i class="bi bi-file-earmark-arrow-down"></i>
+                                                @L["ViewFile"]
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">@L["NoFile"]</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div style="white-space:pre-wrap;">
+                                            @a.Value
+                                        </div>
+                                    }
+
+                                    
                                 </td>
 
+                                <!-- Score -->
                                 <td>
-                                    <input type="hidden" name="Items[@i].AnswerId" value="@a.AnswerId" />
+                                    <input type="hidden"
+                                           name="Items[@i].AnswerId"
+                                           value="@a.AnswerId" />
+
                                     <input type="number"
                                            class="form-control"
                                            name="Items[@i].Score"
-                                           step="0.5" min="0" max="100"
+                                           step="0.5"
+                                           min="0"
+                                           max="100"
                                            required />
                                 </td>
+
+                                <!-- Notes -->
                                 <td>
                                     <input type="text"
                                            class="form-control"
@@ -68,6 +144,7 @@ else
                 </table>
             </div>
         </div>
+
         <div class="card-footer d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-primary">
                 @(L["Save"] ?? "Save")
@@ -75,3 +152,37 @@ else
         </div>
     </form>
 }
+
+<script>
+    function openBase64File(base64String) {
+        // إذا تحتوي على data:...;base64, نفصل الـ MIME عن الـ Data
+        let base64 = base64String;
+        let mime = "";
+
+        if (base64String.includes("base64,")) {
+            mime = base64String.substring(
+                base64String.indexOf(":") + 1,
+                base64String.indexOf(";")
+            );
+            base64 = base64String.split("base64,")[1];
+        } else {
+            // Unknown MIME → نخليه generic octet-stream
+            mime = "application/octet-stream";
+        }
+
+        // فك الـ Base64
+        const byteCharacters = atob(base64);
+        const byteNumbers = new Array(byteCharacters.length);
+
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: mime });
+
+        // افتح في تبويب جديد
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, "_blank");
+    }
+</script>
