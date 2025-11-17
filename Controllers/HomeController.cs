@@ -18,31 +18,41 @@ namespace PeerReview.MvcHotel.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var userName = HttpContext.Session.GetString("userName") ?? "";
+            var userId = HttpContext.Session.GetInt32("userId") ?? 0;
+            var role = HttpContext.Session.GetString("role") ?? "";
+
+            if (string.IsNullOrEmpty(userName) || userId == 0 || string.IsNullOrEmpty(role))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
             try
             {
                 var users = await _authService.List() ?? new();
+
                 ViewBag.UsersCount = users.Metrics.TotalUsers;
-                ViewBag.QuestionsCount            = users.Metrics.TotalQuestions;
-                ViewBag.AnswersCount              = users.Metrics.TotalAnswers;
-                ViewBag.AnsweredByMeCount         = users.Metrics.AnsweredByMe;
-                ViewBag.AssignedToMeCount         = users.Metrics.AssignedToMe;
-                ViewBag.MyPendingCount            = users.Metrics.MyPending;
-                ViewBag.TotalAssignmentsCount     = users.Metrics.TotalAssignments;
-
-
+                ViewBag.QuestionsCount = users.Metrics.TotalQuestions;
+                ViewBag.AnswersCount = users.Metrics.TotalAnswers;
+                ViewBag.AnsweredByMeCount = users.Metrics.AnsweredByMe;
+                ViewBag.AssignedToMeCount = users.Metrics.AssignedToMe;
+                ViewBag.MyPendingCount = users.Metrics.MyPending;
+                ViewBag.TotalAssignmentsCount = users.Metrics.TotalAssignments;
             }
             catch
             {
-                ViewBag.QuestionsCount           = 0;
-                ViewBag.AnswersCount             = 0;
-                ViewBag.AnsweredByMeCount        = 0;
-                ViewBag.AssignedToMeCount        = 0;
-                ViewBag.MyPendingCount           = 0;
+                ViewBag.UsersCount = 0;
+                ViewBag.QuestionsCount = 0;
+                ViewBag.AnswersCount = 0;
+                ViewBag.AnsweredByMeCount = 0;
+                ViewBag.AssignedToMeCount = 0;
+                ViewBag.MyPendingCount = 0;
                 ViewBag.TotalAssignmentsCount = 0;
             }
 
             return View();
         }
+
         public IActionResult GetData()
         {
             List<string> myStringList = new List<string>();
