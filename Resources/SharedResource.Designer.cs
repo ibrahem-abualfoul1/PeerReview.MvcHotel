@@ -61,6 +61,15 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Answers.
+        /// </summary>
+        public static string Answers {
+            get {
+                return ResourceManager.GetString("Answers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         public static string Answers_Action_Delete {
@@ -165,6 +174,15 @@ namespace PeerReview.MvcHotel.Resources {
         public static string AppTitle {
             get {
                 return ResourceManager.GetString("AppTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assignments.
+        /// </summary>
+        public static string Assignments {
+            get {
+                return ResourceManager.GetString("Assignments", resourceCulture);
             }
         }
         
@@ -340,6 +358,15 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dashboard.
+        /// </summary>
+        public static string Dashboard {
+            get {
+                return ResourceManager.GetString("Dashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Questions.
         /// </summary>
         public static string Dashboard_Questions {
@@ -354,6 +381,15 @@ namespace PeerReview.MvcHotel.Resources {
         public static string Dashboard_Users {
             get {
                 return ResourceManager.GetString("Dashboard_Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Evaluation &amp; Review System.
+        /// </summary>
+        public static string Evaluation___Review_System {
+            get {
+                return ResourceManager.GetString("Evaluation & Review System", resourceCulture);
             }
         }
         
@@ -430,6 +466,15 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logged in.
+        /// </summary>
+        public static string Logged_in {
+            get {
+                return ResourceManager.GetString("Logged in", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login failed.
         /// </summary>
         public static string Login_Failed {
@@ -471,6 +516,24 @@ namespace PeerReview.MvcHotel.Resources {
         public static string Login_UserName {
             get {
                 return ResourceManager.GetString("Login_UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logout.
+        /// </summary>
+        public static string Logout {
+            get {
+                return ResourceManager.GetString("Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lookups.
+        /// </summary>
+        public static string Lookups {
+            get {
+                return ResourceManager.GetString("Lookups", resourceCulture);
             }
         }
         
@@ -574,6 +637,15 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Msg_Saved {
+            get {
+                return ResourceManager.GetString("Msg_Saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Updated successfully..
         /// </summary>
         public static string Msg_Updated {
@@ -597,6 +669,15 @@ namespace PeerReview.MvcHotel.Resources {
         public static string Msg_Welcome {
             get {
                 return ResourceManager.GetString("Msg_Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Questions.
+        /// </summary>
+        public static string Questions {
+            get {
+                return ResourceManager.GetString("Questions", resourceCulture);
             }
         }
         
@@ -691,6 +772,15 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scoring.
+        /// </summary>
+        public static string Scoring {
+            get {
+                return ResourceManager.GetString("Scoring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
         public static string Status_Active {
@@ -732,6 +822,24 @@ namespace PeerReview.MvcHotel.Resources {
         public static string Upload_File_Title {
             get {
                 return ResourceManager.GetString("Upload_File_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Surveys.
+        /// </summary>
+        public static string user_questions {
+            get {
+                return ResourceManager.GetString("user-questions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users.
+        /// </summary>
+        public static string Users {
+            get {
+                return ResourceManager.GetString("Users", resourceCulture);
             }
         }
         

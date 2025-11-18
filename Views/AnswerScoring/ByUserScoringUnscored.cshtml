@@ -23,7 +23,7 @@
 else
 {
     <form method="post"
-          action="@Url.Action("AddScore", "AnswerScoring")"
+          action="@Url.Action("add", "AnswerScoring")"
           class="card shadow-sm">
         @Html.AntiForgeryToken()
 
@@ -122,7 +122,7 @@ else
                                            name="Items[@i].AnswerId"
                                            value="@a.AnswerId" />
 
-                                    <input type="number"
+                                    <input type="text"
                                            class="form-control"
                                            name="Items[@i].Score"
                                            step="0.5"

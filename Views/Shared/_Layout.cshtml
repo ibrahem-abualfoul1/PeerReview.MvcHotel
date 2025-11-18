@@ -118,14 +118,29 @@
                     <!-- Language toggle
                          NOTE: عدّل الروت حسب Controller اللغة عندك (Lang / Language / Culture...) -->
                     <div class="btn-group">
-                        <a class="btn-pr btn-pr-soft @(isRtl ? "active" : "")"
-                           href="~/Lang/Set?culture=ar-SA&returnUrl=@Context.Request.Path">
-                            ع
-                        </a>
-                        <a class="btn-pr btn-pr-soft @(!isRtl ? "active" : "")"
-                           href="~/Lang/Set?culture=en-US&returnUrl=@Context.Request.Path">
-                            EN
-                        </a>
+                        <div class="btn-group">
+                            <form method="post" asp-controller="Language" asp-action="Set" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="culture" value="ar-SA" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit"
+                                        class="btn-pr btn-pr-soft @(isRtl ? "active" : "")">
+                                    ع
+                                </button>
+                            </form>
+
+                            <form method="post" asp-controller="Language" asp-action="Set" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="culture" value="en-US" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit"
+                                        class="btn-pr btn-pr-soft @(!isRtl ? "active" : "")">
+                                    EN
+                                </button>
+                            </form>
+                        </div>
+
+
                     </div>
                 </div>
 

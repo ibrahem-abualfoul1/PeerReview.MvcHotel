@@ -375,10 +375,54 @@
   <data name="Lang_English" xml:space="preserve">
     <value>English</value>
   </data>
-  <data name="Welcome" xml:space="preserve">
-    <value>Welcome to Hotel Review</value>
-  </data>
   <data name="Msg_Saved" xml:space="preserve">
     <value>Save</value>
   </data>
+	<!-- ==== Layout / Sidebar Keys (English) ==== -->
+
+	<data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+
+	<data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+
+	<data name="Questions" xml:space="preserve">
+    <value>Questions</value>
+  </data>
+
+	<data name="Assignments" xml:space="preserve">
+    <value>Assignments</value>
+  </data>
+
+	<data name="Answers" xml:space="preserve">
+    <value>Answers</value>
+  </data>
+
+	<data name="Scoring" xml:space="preserve">
+    <value>Scoring</value>
+  </data>
+
+	<data name="Lookups" xml:space="preserve">
+    <value>Lookups</value>
+  </data>
+
+	<data name="user-questions" xml:space="preserve">
+    <value>My Surveys</value>
+  </data>
+
+	<data name="Logged in" xml:space="preserve">
+    <value>Logged in</value>
+  </data>
+
+	<data name="Evaluation &amp; Review System" xml:space="preserve">
+    <value>Evaluation &amp; Review System</value>
+  </data>
+
+	<!-- تطابق @L["Logout"] في الـ Layout -->
+	<data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+
 </root>

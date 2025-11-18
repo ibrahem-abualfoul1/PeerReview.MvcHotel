@@ -375,11 +375,55 @@
   <data name="Lang_English" xml:space="preserve">
     <value>الإنجليزية</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Welcome" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="Msg_Saved" xml:space="preserve">
     <value>حفظ</value>
   </data>
+	<!-- ==== Layout / Sidebar Keys (Arabic) ==== -->
+
+	<data name="Dashboard" xml:space="preserve">
+    <value>لوحة التحكم</value>
+  </data>
+
+	<data name="Users" xml:space="preserve">
+    <value>المستخدمون</value>
+  </data>
+
+	<data name="Questions" xml:space="preserve">
+    <value>الأسئلة</value>
+  </data>
+
+	<data name="Assignments" xml:space="preserve">
+    <value>التكليفات</value>
+  </data>
+
+	<data name="Answers" xml:space="preserve">
+    <value>الإجابات</value>
+  </data>
+
+	<data name="Scoring" xml:space="preserve">
+    <value>التقييم</value>
+  </data>
+
+	<data name="Lookups" xml:space="preserve">
+    <value>البيانات المرجعية</value>
+  </data>
+
+	<data name="user-questions" xml:space="preserve">
+    <value>استبياناتي</value>
+  </data>
+
+	<data name="Logged in" xml:space="preserve">
+    <value>مسجل الدخول</value>
+  </data>
+
+	<!-- نفس النص اللي حطيته في الواجهة -->
+	<data name="Evaluation &amp; Review System" xml:space="preserve">
+    <value>نظام التقييم والمراجعة</value>
+  </data>
+
+	<!-- لو حاب تستخدم @L["Logout"] بدل Menu_Logout -->
+	<data name="Logout" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+
 </root>
