@@ -81,6 +81,7 @@ body {
     display: flex;
     flex-direction: row;
     gap: var(--space-3);
+    padding: 12px;
 }
 
 .sidebar {
@@ -93,6 +94,10 @@ body {
     flex-direction: column;
     justify-content: space-between;
     box-shadow: var(--shadow-soft);
+    position: sticky;
+    top: 12px;
+    height: calc(100vh - 24px);
+    overflow: hidden;
 }
 
 [dir="rtl"] .sidebar {
@@ -105,6 +110,8 @@ body {
     flex-direction: column;
     padding: 18px 20px;
     gap: var(--space-3);
+    max-width: 1440px;
+    margin-inline: auto;
 }
 
 .app-header {
@@ -152,6 +159,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    overflow-y: auto;
+    padding-inline-end: 4px;
 }
 
 .sidebar-link {
@@ -411,20 +420,115 @@ body {
     font-size: 0.85rem;
 }
 
+.sidebar-backdrop {
+    display: none;
+}
+
+.sidebar-backdrop.show {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1040;
+    backdrop-filter: blur(2px);
+    display: block;
+}
+
+@media (max-width: 1199.98px) {
+    .sidebar {
+        width: 232px;
+    }
+
+    .app-main {
+        padding: 16px;
+    }
+}
+
 @media (max-width: 991.98px) {
     .app-shell {
         flex-direction: column;
     }
 
     .sidebar {
-        width: 100%;
-        flex-direction: row;
-        align-items: center;
-        border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+        position: fixed;
+        inset: 0 auto 0 0;
+        height: 100vh;
+        width: 280px;
+        max-width: 92%;
+        transform: translateX(-110%);
+        transition: transform 0.25s ease, opacity 0.2s ease;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1050;
+        border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+        overflow-y: auto;
+    }
+
+    [dir="rtl"] .sidebar {
+        inset: 0 0 0 auto;
+        transform: translateX(110%);
+    }
+
+    .sidebar.is-open {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .app-main {
         padding-inline: 12px;
+        width: 100%;
+    }
+
+    .app-header {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .app-shell {
+        padding: 10px;
+    }
+
+    .app-main {
+        padding: 14px 12px;
+    }
+
+    .app-header {
+        padding: 10px 12px;
+    }
+
+    .h-page-title {
+        font-size: 1.3rem;
+    }
+
+    .sidebar {
+        width: 260px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .sidebar {
+        width: 100%;
+        max-width: 340px;
+        border-radius: 0;
+    }
+
+    .app-shell {
+        padding: 8px;
+    }
+
+    .app-main {
+        padding: 12px 10px;
+    }
+
+    .btn-pr {
+        padding: 7px 12px;
+        font-size: 0.85rem;
+    }
+
+    .text-body {
+        font-size: 0.9rem;
     }
 }
 
