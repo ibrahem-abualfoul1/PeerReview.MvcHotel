@@ -5,8 +5,6 @@
     ViewData["Title"] = (L["ScoredAnswers"] ?? "Scored Answers");
     ViewBag.ActiveMenu = "Scoring";
 
-    var ci = System.Globalization.CultureInfo.CurrentUICulture;
-    var isRtl = ci.TwoLetterISOLanguageName == "ar";
 }
 
 @section Styles {
@@ -42,7 +40,7 @@
         </div>
     </div>
     <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
-        ← @(L["Back"] ?? "Back")
+        ← @L["Btn_Back"]
     </a>
 </div>
 
@@ -71,7 +69,7 @@ else
                         <th style="min-width:220px;">@(L["Question"] ?? "Question")</th>
                         <th style="min-width:180px;">@(L["Item"] ?? "Item")</th>
                         <th style="min-width:240px;">@(L["Answer"] ?? "Answer")</th>
-                        <th style="width:140px">@("Score")</th>
+                        <th style="width:140px">@L["Score"]</th>
                         <th style="min-width:180px;">@(L["Notes"] ?? "Notes")</th>
                     </tr>
                 </thead>
@@ -87,38 +85,25 @@ else
                                 <div class="score-question">
                                     @{
                                         var q = a.question;
-                                        string qText;
-                                        if (isRtl)
-                                        {
-                                            qText = q?.TitleAr
-                                            ?? q?.DescriptionAr
-                                            ?? $"Q#{a.QuestionId}";
-                                        }
-                                        else
-                                        {
-                                            qText = q?.TitleEn
-                                            ?? q?.DescriptionEn
-                                            ?? $"Q#{a.QuestionId}";
-                                        }
+                                        var qText = LocalizationExtensions.Localize(
+                                            q?.TitleAr ?? q?.DescriptionAr,
+                                            q?.TitleEn ?? q?.DescriptionEn,
+                                            $"Q#{a.QuestionId}");
                                     }
                                 @qText
                             </div>
                             <div class="score-meta text-muted">
-                                Q# @a.QuestionId
+                                @L["AnswerScoring_QuestionIdLabel"] @a.QuestionId
                             </div>
                         </td>
 
                         <!-- Item -->
                         <td>
                             <div>
-                                @(
-                                                            isRtl
-                                                            ? (a.ItemTextAr ?? a.ItemTextEn)
-                                                            : (a.ItemTextEn ?? a.ItemTextAr)
-                                                            )
+                                @LocalizationExtensions.Localize(a.ItemTextAr, a.ItemTextEn)
                             </div>
                             <div class="score-meta text-muted">
-                                ItemId: @a.QuestionItemId
+                                @L["AnswerScoring_ItemIdLabel"] @a.QuestionItemId
                             </div>
                         </td>
 
@@ -179,7 +164,7 @@ else
                 @(L["Update"] ?? "Update")
             </button>
             <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
-                @(L["Cancel"] ?? "Cancel")
+                @L["Cancel"]
             </a>
         </div>
     </form>
@@ -214,7 +199,7 @@ else
             const blobUrl = URL.createObjectURL(blob);
             window.open(blobUrl, "_blank");
         } catch {
-            alert('تعذر فتح الملف.');
+            alert('@L["FileOpen_Error"]');
         }
     }
 </script>

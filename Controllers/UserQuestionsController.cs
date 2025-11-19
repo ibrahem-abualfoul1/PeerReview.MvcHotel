@@ -33,16 +33,21 @@ namespace PeerReview.MvcHotel.Controllers
                 surveyVm.Groups.Add(new QuestionGroup
                 {
                     Id = item.question.Id,
-                    Title = item.question.TitleEn ?? "",
-                    Description = item.question.DescriptionEn ?? "",
+                    Title = LocalizationExtensions.Localize(
+                        item.question.TitleAr,
+                        item.question.TitleEn,
+                        item.question.TitleEn ?? item.question.TitleAr ?? string.Empty),
+                    Description = LocalizationExtensions.Localize(
+                        item.question.DescriptionAr,
+                        item.question.DescriptionEn),
                     CategoryId = item.question.CategoryId ?? 0,
                     Items = item.question.Items?.Select(qi => new QuestionItem
                     {
                         Id = qi.Id,
-                        Text = qi.TextEn ?? "",
+                        Text = LocalizationExtensions.Localize(qi.TextAr, qi.TextEn),
                         Type = qi.Type,
                         IsRequired = qi.IsRequired,
-                        OptionsCsv = qi.OptionsCsvEn
+                        OptionsCsv = string.Join(',', LocalizationExtensions.LocalizeOptions(qi.OptionsCsvAr, qi.OptionsCsvEn))
                     }).ToList() ?? new List<QuestionItem>()
                 });
             }

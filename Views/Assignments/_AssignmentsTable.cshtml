@@ -1,15 +1,16 @@
 ﻿@using PeerReview.MvcHotel.Models
 @model List<AssignmentDto>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 
 <table id="assignTable" class="pr-table align-middle">
     <thead>
         <tr>
             <th>#</th>
-            <th>السؤال</th>
-            <th>المستخدم</th>
-            <th>التاريخ</th>
-            <th>الحالة</th>
-            <th class="text-center">إجراءات</th>
+            <th>@L["Assignments_Table_Question"]</th>
+            <th>@L["Assignments_Table_User"]</th>
+            <th>@L["Assignments_Table_Date"]</th>
+            <th>@L["Assignments_Table_Status"]</th>
+            <th class="text-center">@L["Assignments_Table_Actions"]</th>
         </tr>
     </thead>
     <tbody>
@@ -18,7 +19,9 @@
             var i = 1;
             foreach (var a in Model)
             {
-                var title = a.question?.TitleEn ?? "";
+                var title = LocalizationExtensions.Localize(
+                    a.question?.TitleAr,
+                    a.question?.TitleEn);
                 <tr class="@(a.isActive ? "" : "row-inactive")">
                     <td>@i</td>
                     <td title="@title">
@@ -29,24 +32,24 @@
                     <td>
                         @if (a.isActive)
                         {
-                            <span class="badge-active">مفعل</span>
+                            <span class="badge-active">@L["Assignments_Table_StatusActive"]</span>
                         }
                         else
                         {
-                            <span class="badge-inactive">معطل</span>
+                            <span class="badge-inactive">@L["Assignments_Table_StatusInactive"]</span>
                         }
                     </td>
                     <td class="text-center">
                         @if (a.isActive)
                         {
                             <button class="btn-pr btn-pr-sm btn-pr-outline js-deactivate" data-id="@a.id">
-                                تعطيل
+                                @L["Assignments_Table_Deactivate"]
                             </button>
                         }
                         else
                         {
                             <button class="btn-pr btn-pr-sm btn-pr-soft js-activate" data-id="@a.id">
-                                تفعيل
+                                @L["Assignments_Table_Activate"]
                             </button>
                         }
                     </td>
@@ -57,7 +60,7 @@
         else
         {
             <tr>
-                <td colspan="6" class="text-center text-muted-soft">لا توجد بيانات</td>
+                <td colspan="6" class="text-center text-muted-soft">@L["NoData"]</td>
             </tr>
         }
     </tbody>

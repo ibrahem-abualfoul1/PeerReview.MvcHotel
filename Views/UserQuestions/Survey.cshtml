@@ -3,7 +3,7 @@
 @using System.Text.Encodings.Web
 
 @{
-    ViewData["Title"] = Model?.HeaderTitle ?? "استطلاع";
+    ViewData["Title"] = Model?.HeaderTitle ?? L["Survey_DefaultTitle"];
     var groups = Model?.Groups ?? new List<QuestionGroup>();
 
     var json = JsonSerializer.Serialize(
@@ -16,6 +16,32 @@
 
     var ci = System.Globalization.CultureInfo.CurrentUICulture;
     var isRtl = ci.TwoLetterISOLanguageName == "ar";
+    var totalGroups = Math.Max(1, groups.Count);
+    var progressTemplate = L["Survey_Progress_Template"].Value ?? "Page {current} of {total}";
+    var initialProgressText = progressTemplate
+        .Replace("{current}", "1")
+        .Replace("{total}", totalGroups.ToString());
+    var surveyTexts = new
+    {
+        Badge = L["Survey_Badge"].Value,
+        ProgressFormat = progressTemplate,
+        NoQuestions = L["Survey_NoQuestions"].Value,
+        ButtonPrevious = L["Survey_Button_Previous"].Value,
+        ButtonNext = L["Survey_Button_Next"].Value,
+        ButtonSubmit = L["Survey_Button_Submit"].Value,
+        TextareaPlaceholder = L["Survey_Textarea_Placeholder"].Value,
+        NumberPlaceholder = L["Survey_Number_Placeholder"].Value,
+        FileUploadPrompt = L["Survey_FileUpload_Prompt"].Value,
+        FileSelected = L["Survey_FileSelected"].Value,
+        RequiredError = L["Survey_Error_Required"].Value,
+        SubmitError = L["Survey_Submit_Error"].Value
+    };
+    var surveyTextsJson = JsonSerializer.Serialize(
+        surveyTexts,
+        new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
 }
 
 @section Styles {
@@ -374,22 +400,22 @@
     <div class="survey-card">
         <div class="survey-header header">
             <div>
-                <h1>@(Model?.HeaderTitle ?? "استطلاع")</h1>
+                <h1>@(Model?.HeaderTitle ?? L["Survey_DefaultTitle"])</h1>
                 <p id="headerDescription">
-                    @(Model?.HeaderDescription ?? "مساهمتك تساعدنا على تحسين الخدمات.")
+                    @(Model?.HeaderDescription ?? L["Survey_DefaultDescription"])
                 </p>
             </div>
 
             <div class="sv-header-badge">
                 <span>🧾</span>
-                <span>@(isRtl ? "استبيان" : "Survey")</span>
+                <span>@L["Survey_Badge"]</span>
             </div>
 
             <div class="progress-container mt-3">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
             <div class="progress-text" id="progressText">
-                صفحة 1 من 1
+                @initialProgressText
             </div>
         </div>
 
@@ -399,9 +425,9 @@
 
         <div class="success-screen" id="successScreen">
             <div class="success-icon">✓</div>
-            <h2 class="success-title">شكراً لك!</h2>
+            <h2 class="success-title">@L["Survey_Success_Title"]</h2>
             <p class="success-message">
-                تم إرسال إجاباتك بنجاح. نقدر وقتك ومساهمتك في تحسين خدماتنا.
+                @L["Survey_Success_Message"]
             </p>
         </div>
     </div>
@@ -411,6 +437,7 @@
     <script>
         // ===== بيانات من السيرفر =====
         const surveyData = @Html.Raw(json);
+        const surveyTexts = @Html.Raw(surveyTextsJson);
 
         // ===== الحالة العامة =====
         const antiForgeryToken =
@@ -419,6 +446,13 @@
         let currentGroupIndex = 0;
         // answers[itemId] = { questionId, type, value }
         let answers = {};
+
+        function formatProgress(current, total) {
+            const template = surveyTexts.progressFormat || 'Page {current} of {total}';
+            return template
+                .replace('{current}', current)
+                .replace('{total}', total);
+        }
 
         // ===== تخزين/تحميل محلي =====
         function loadAnswers() {
@@ -462,7 +496,7 @@
             if (bar) bar.style.width = progress + '%';
 
             const txt = document.getElementById('progressText');
-            if (txt) txt.textContent = `صفحة ${currentGroupIndex + 1} من ${total}`;
+            if (txt) txt.textContent = formatProgress(currentGroupIndex + 1, total);
         }
 
         // ===== الرسم =====
@@ -471,7 +505,7 @@
             const content = document.getElementById('surveyContent');
 
             if (!group) {
-                content.innerHTML = '<div class="group-description">لا توجد أسئلة متاحة.</div>';
+                content.innerHTML = `<div class="group-description">${surveyTexts.noQuestions}</div>`;
                 updateProgress();
                 return;
             }
@@ -488,14 +522,14 @@
                             class="btn-sv btn-sv-secondary"
                             id="prevBtn"
                             ${(currentGroupIndex === 0) ? 'disabled' : ''}>
-                        @(isRtl ? "السابق" : "Previous")
+                        ${surveyTexts.buttonPrevious}
                     </button>
                     <button type="button"
                             class="btn-sv btn-sv-primary"
                             id="nextBtn">
-                        ${currentGroupIndex === (surveyData?.length ?? 1) - 1
-                            ? '@(isRtl ? "إرسال" : "Submit")'
-                            : '@(isRtl ? "التالي" : "Next")'}
+                        ${currentGroupIndex === Math.max(1, (surveyData?.length ?? 1)) - 1
+                            ? surveyTexts.buttonSubmit
+                            : surveyTexts.buttonNext}
                     </button>
                 </div>`;
 
@@ -523,7 +557,7 @@
                 case 1: // نص
                     html += `<textarea class="input-field"
                                        data-id="${id}"
-                                       placeholder="اكتب إجابتك هنا...">${v ?? ''}</textarea>`;
+                                       placeholder="${surveyTexts.textareaPlaceholder}">${v ?? ''}</textarea>`;
                     break;
 
                 case 2: // نعم/لا
@@ -568,7 +602,7 @@
                     html += `<input type="number"
                                     class="input-field"
                                     data-id="${id}"
-                                    placeholder="أدخل رقماً..."
+                                    placeholder="${surveyTexts.numberPlaceholder}"
                                     value="${v ?? ''}">`;
                     break;
 
@@ -581,7 +615,7 @@
 
                 case 7: // ملف
                     const hasFile = !!v;
-                    const fileLabel = hasFile ? 'تم اختيار ملف' : '';
+                    const fileLabel = hasFile ? surveyTexts.fileSelected : '';
                     html += `
                         <div class="file-upload"
                              onclick="document.getElementById('file${id}').click()">
@@ -589,13 +623,13 @@
                                    id="file${id}"
                                    data-id="${id}"
                                    accept="image/*,application/pdf">
-                            <div class="file-upload-text">📁 اضغط لرفع ملف</div>
+                            <div class="file-upload-text">${surveyTexts.fileUploadPrompt}</div>
                             <div class="file-name" id="fileName${id}">${fileLabel}</div>
                         </div>`;
                     break;
             }
 
-            html += `<div class="error-message" id="error${id}">هذا الحقل مطلوب</div></div>`;
+            html += `<div class="error-message" id="error${id}">${surveyTexts.requiredError}</div></div>`;
             return html;
         }
 
@@ -645,7 +679,7 @@
                     reader.onload = (ev) => {
                         setAnswer(item, ev.target.result);
                         const nameEl = document.getElementById(`fileName${id}`);
-                        if (nameEl) nameEl.textContent = 'تم اختيار ملف';
+                        if (nameEl) nameEl.textContent = surveyTexts.fileSelected;
                     };
                     reader.readAsDataURL(file);
                 });
@@ -689,7 +723,7 @@
 
                 if (item.Type === 7 && v) {
                     const el = document.getElementById(`fileName${item.Id}`);
-                    if (el) el.textContent = 'تم اختيار ملف';
+                    if (el) el.textContent = surveyTexts.fileSelected;
                 }
             });
         }
@@ -751,7 +785,7 @@
                     },
                     body: JSON.stringify(payload)
                 });
-                if (!res.ok) throw new Error('Failed to submit');
+                if (!res.ok) throw new Error(surveyTexts.submitError || 'Failed to submit');
             } catch (e) {
                 console.error(e);
             }

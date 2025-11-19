@@ -5,8 +5,6 @@
     ViewData["Title"] = (L["UnscoredAnswers"] ?? "Unscored Answers");
     ViewBag.ActiveMenu = "Scoring";
 
-    var ci = System.Globalization.CultureInfo.CurrentUICulture;
-    var isRtl = ci.TwoLetterISOLanguageName == "ar";
 }
 
 @section Styles {
@@ -42,7 +40,7 @@
         </div>
     </div>
     <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
-        ← @(L["Back"] ?? "Back")
+        ← @L["Btn_Back"]
     </a>
 </div>
 
@@ -69,7 +67,7 @@ else
                         <th style="min-width:220px;">@(L["Question"] ?? "Question")</th>
                         <th style="min-width:180px;">@(L["Item"] ?? "Item")</th>
                         <th style="min-width:240px;">@(L["Answer"] ?? "Answer")</th>
-                        <th style="width:140px">@("Score")</th>
+                        <th style="width:140px">@L["Score"]</th>
                         <th style="min-width:180px;">@(L["Notes"] ?? "Notes")</th>
                     </tr>
                 </thead>
@@ -85,38 +83,25 @@ else
                                 <div class="score-question">
                                     @{
                                         var q = a.question;
-                                        string qText;
-                                        if (isRtl)
-                                        {
-                                            qText = q?.TitleAr
-                                            ?? q?.DescriptionAr
-                                            ?? $"Q#{a.QuestionId}";
-                                        }
-                                        else
-                                        {
-                                            qText = q?.TitleEn
-                                            ?? q?.DescriptionEn
-                                            ?? $"Q#{a.QuestionId}";
-                                        }
+                                        var qText = LocalizationExtensions.Localize(
+                                            q?.TitleAr ?? q?.DescriptionAr,
+                                            q?.TitleEn ?? q?.DescriptionEn,
+                                            $"Q#{a.QuestionId}");
                                     }
                                 @qText
                             </div>
                             <div class="score-meta text-muted">
-                                Q# @a.QuestionId
+                                @L["AnswerScoring_QuestionIdLabel"] @a.QuestionId
                             </div>
                         </td>
 
                         <!-- Item -->
                         <td>
-                            <div>
-                                @(
-                                                            isRtl
-                                                            ? (a.ItemTextAr ?? a.ItemTextEn)
-                                                            : (a.ItemTextEn ?? a.ItemTextAr)
-                                                            )
-                            </div>
+                                <div>
+                                    @LocalizationExtensions.Localize(a.ItemTextAr, a.ItemTextEn)
+                                </div>
                             <div class="score-meta text-muted">
-                                ItemId: @a.QuestionItemId
+                                @L["AnswerScoring_ItemIdLabel"] @a.QuestionItemId
                             </div>
                         </td>
 
@@ -174,10 +159,10 @@ else
 
         <div class="d-flex justify-content-end gap-2 mt-3">
             <button type="submit" class="btn-pr btn-pr-primary">
-                @(L["Save"] ?? "Save")
+                @L["Btn_Save"]
             </button>
             <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
-                @(L["Cancel"] ?? "Cancel")
+                @L["Cancel"]
             </a>
         </div>
     </form>
@@ -212,7 +197,7 @@ else
             const blobUrl = URL.createObjectURL(blob);
             window.open(blobUrl, "_blank");
         } catch {
-            alert('تعذر فتح الملف.');
+            alert('@L["FileOpen_Error"]');
         }
     }
 </script>

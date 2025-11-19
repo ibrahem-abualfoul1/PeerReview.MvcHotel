@@ -2,15 +2,24 @@
 @model PeerReview.MvcHotel.Models.QuestionDto
 
 @{
-    ViewData["Title"] = Model?.TitleEn ?? "Form";
+    var fallbackTitle = L["Answers_Form_DefaultTitle"].Value ?? "Form";
+    var localizedTitle = LocalizationExtensions.Localize(
+        Model?.TitleAr,
+        Model?.TitleEn,
+        Model?.TitleEn ?? Model?.TitleAr ?? fallbackTitle);
+    var localizedDescription = LocalizationExtensions.Localize(
+        Model?.DescriptionAr,
+        Model?.DescriptionEn);
+
+    ViewData["Title"] = localizedTitle;
     var qid = (int)(ViewBag.QuestionId ?? 0);
 }
 
-<h3 class="mb-3">@Model?.TitleEn</h3>
+<h3 class="mb-3">@localizedTitle</h3>
 
-@if (!string.IsNullOrWhiteSpace(Model?.DescriptionEn))
+@if (!string.IsNullOrWhiteSpace(localizedDescription))
 {
-    <p class="text-muted">@Model.DescriptionEn</p>
+    <p class="text-muted">@localizedDescription</p>
 }
 
 <form id="dynForm" class="card card-hotel p-3">
@@ -23,9 +32,10 @@
             var required = it.IsRequired ? "required" : "";
             @* var parentAttr = it.parentItemId.HasValue ? $"data-parent='{it.parentItemId.Value}' data-show='{it.showWhenValue}'" : ""; *@
 
+            @{ var itemLabel = LocalizationExtensions.Localize(it.TextAr, it.TextEn); }
             <div class="col-12 item" id="item-@it.Id" @* @Html.Raw(parentAttr) *@>
                 <label class="form-label fw-semibold">
-                    @it.TextEn
+                    @itemLabel
                     @if (it.IsRequired)
                     {
                         <span class="text-danger">*</span>
@@ -49,10 +59,9 @@
                 else if (it.Type == 4)
                 {
                     <select class="form-select" multiple name="i_@it.Id">
-                        @foreach (var opt in (it.OptionsCsvEn ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        @foreach (var opt in LocalizationExtensions.LocalizeOptions(it.OptionsCsvAr, it.OptionsCsvEn))
                         {
-                            var o = opt.Trim();
-                            <option value="@o">@o</option>
+                            <option value="@opt">@opt</option>
                         }
                     </select>
                 }
@@ -60,10 +69,9 @@
                 {
                     <select class="form-select" name="i_@it.Id" @required>
                         <option value="">—</option>
-                        @foreach (var opt in (it.OptionsCsvEn ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        @foreach (var opt in LocalizationExtensions.LocalizeOptions(it.OptionsCsvAr, it.OptionsCsvEn))
                         {
-                            var o = opt.Trim();
-                            <option value="@o">@o</option>
+                            <option value="@opt">@opt</option>
                         }
                     </select>
                 }
