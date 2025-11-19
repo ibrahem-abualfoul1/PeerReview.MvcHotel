@@ -11,80 +11,17 @@
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
     var categories = ViewBag.Categorys as SelectList
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
-    var questionItems = ViewBag.QuestionItems as SelectList
-                ?? new SelectList(Enumerable.Empty<SelectListItem>());
+    // var questionItems = ViewBag.QuestionItems as SelectList
+    //             ?? new SelectList(Enumerable.Empty<SelectListItem>());
     var selectedItems = Model?.Items ?? new List<int>();
+    var questionItems = ViewBag.QuestionItems as List<QuestionItemDto> ?? new();
 
     string url = isEdit
         ? Url.Action("Edit", "Questions", new { id = id!.Value })!
         : Url.Action("Create", "Questions")!;
 }
 
-<style>
-    /* تنسيق متناسق مع القالب العام */
-    #questionUpsertModal .modal-content {
-        background: var(--panel);
-        border: 1px solid var(--bs-border-color);
-        font-family: 'Segoe UI', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
-    }
 
-    #questionUpsertModal .modal-header,
-    #questionUpsertModal .modal-footer {
-        background: var(--panel);
-    }
-
-    #questionUpsertModal .pr-card {
-        background: var(--bs-body-bg);
-        border-radius: 14px;
-        border: 1px solid var(--bs-border-color);
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-    }
-
-    #questionUpsertModal .pr-field input,
-    #questionUpsertModal .pr-field textarea,
-    #questionUpsertModal .pr-field select {
-        background: var(--app-bg);
-        border-radius: 10px;
-        border: 1px solid var(--bs-border-color);
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    #questionUpsertModal .pr-field input:focus,
-    #questionUpsertModal .pr-field textarea:focus,
-    #questionUpsertModal .pr-field select:focus {
-        border-color: var(--bs-primary);
-        box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
-    }
-
-    #questionUpsertModal .dropdown-toggle {
-        background: var(--bs-body-bg);
-        border-radius: 10px;
-        border: 1px solid var(--bs-border-color);
-        padding: 0.75rem 1rem;
-        color: var(--bs-body-color);
-        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
-    }
-
-    #questionUpsertModal .dropdown-menu {
-        border-radius: 12px;
-        border: 1px solid var(--bs-border-color);
-        box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
-    }
-
-    #questionUpsertModal .badge-soft {
-        background: rgba(13, 110, 253, 0.08);
-        color: var(--bs-primary);
-        border: 1px solid rgba(13, 110, 253, 0.18);
-        padding: 0.45rem 0.65rem;
-        border-radius: 999px;
-        font-weight: 600;
-    }
-
-    #questionUpsertModal .muted-note {
-        color: var(--bs-secondary-color);
-        font-size: 0.9rem;
-    }
-</style>
 
 <div class="modal fade" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -184,56 +121,75 @@
                             *@
 
                             <!-- Items multi-select dropdown -->
-                            <div class="col-12">
-                                <label class="form-label fw-semibold text-body" asp-for="Items">
-                                    @L["Questions_Items"]
-                                </label>
+                            <div class="col-md-6">
+    <label class="form-label">@L["Field_UsersLabel"]</label>
 
-                                <div class="dropdown w-100">
-                                    <button class="btn dropdown-toggle w-100 d-flex justify-content-between align-items-center"
-                                            type="button"
-                                            id="itemsDropdownButton"
-                                            data-default-text='@L["Questions_Items_Select"]'
-                                            data-bs-toggle="dropdown"
-                                            data-bs-auto-close="outside"
-                                            aria-expanded="false">
-                                        <span id="itemsDropdownLabel">
-                                            @L["Questions_Items_Select"]
-                                        </span>
-                                        <i class="bi bi-chevron-down"></i>
-                                    </button>
-                                    <div class="dropdown-menu w-100 p-3 shadow" aria-labelledby="itemsDropdownButton" style="max-height: 360px; overflow-y: auto;">
-                                        <div class="d-flex align-items-center justify-content-between mb-3">
-                                            <div class="small text-muted">@L["Questions_Items_Help"]</div>
-                                            <div class="form-check mb-0">
-                                                <input class="form-check-input" type="checkbox" id="itemsSelectAll" />
-                                                <label class="form-check-label" for="itemsSelectAll">@L["Select_All"]</label>
-                                            </div>
-                                        </div>
-                                        @foreach (var option in questionItems)
-                                        {
-                                            var isChecked = int.TryParse(option.Value, out var itemId) && selectedItems.Contains(itemId);
-                                            var inputId = $"question-item-{option.Value}";
+    <div class="dropdown w-100">
+        <!-- زر الـ dropdown بشكل form-select -->
+        <button class="form-select d-flex justify-content-between align-items-center"
+                type="button"
+                id="itemsDropdownButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+            <span id="itemsDropdownText" class="flex-grow-1">
+                @L["Select_Items"]
+            </span>
+            <span class="ms-2 flex-shrink-0">
+                <i class="ti ti-chevron-down"></i>
+            </span>
+        </button>
 
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input"
-                                                       type="checkbox"
-                                                       name="Items"
-                                                       id="@inputId"
-                                                       value="@option.Value"
-                                                       @(isChecked ? "checked" : null) />
-                                                <label class="form-check-label text-body" for="@inputId">
-                                                    @option.Text
-                                                </label>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
+        <!-- القائمة المنسدلة -->
+        <div class="dropdown-menu w-100 p-3 mt-1"
+             aria-labelledby="itemsDropdownButton"
+             style="max-height: 280px; overflow-y: auto;">
 
-                                <div id="itemsSelectedPreview" class="d-flex flex-wrap gap-2 mt-2" aria-live="polite"></div>
+            <!-- Select All -->
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="itemsSelectAll" />
+                <label class="form-check-label" for="itemsSelectAll">
+                    @L["Select_All"]
+                </label>
+            </div>
 
-                                <span class="text-danger small d-block" asp-validation-for="Items"></span>
-                            </div>
+            <hr class="mt-1 mb-2" />
+
+            @foreach (var item in questionItems)
+            {
+                var isChecked = selectedItems.Contains(item.Id);
+                <div class="form-check">
+                    <input class="form-check-input item-checkbox"
+                           type="checkbox"
+                           value="@item.Id"
+                           id="item_@item.Id"
+                           @(isChecked ? "checked" : "") />
+                    <label class="form-check-label" for="item_@item.Id">
+                        @item.TextEn (@item.TextAr)
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- الـ select الحقيقي المخفي للموديل -->
+    
+    <select asp-for="Items"
+        id="Items"
+        class="d-none"
+        multiple="multiple">
+    @foreach (var item in questionItems)
+    {
+                                        var selected = selectedItems.Contains(item.Id) ? "selected" : null;
+                                        <option value="@item.Id" selected="@selected">
+                                            @item.TextEn (@item.TextAr)
+                                        </option>
+    }
+</select>
+
+    <div class="form-text">@L["Field_Users_Hint"]</div>
+    <span class="text-danger small" asp-validation-for="Items"></span>
+</div>
+
                         </div>
                     </div>
                 </div>
@@ -254,80 +210,5 @@
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        // لو حاب بعد الحفظ تستخدم AJAX وتغلق المودال وتعيد تحميل الجدول:
-        // يمكنك في الـ Controller إرجاع JSON success،
-        // وهنا تتعامل مع submit بالـ JS وتطلق event: question:upserted
-        // حالياً النموذج يشتغل Submit عادي حسب الـ action.
 
-        (() => {
-            const dropdownButton = document.getElementById('itemsDropdownButton');
-            if (!dropdownButton) return;
 
-            const dropdownLabel = document.getElementById('itemsDropdownLabel');
-            const defaultText = dropdownButton.dataset.defaultText?.trim() || dropdownLabel?.textContent?.trim() || '';
-            const dropdown = dropdownButton.closest('.dropdown');
-            const checkboxes = dropdown ? Array.from(dropdown.querySelectorAll('input[name="Items"]')) : [];
-            const previewContainer = document.getElementById('itemsSelectedPreview');
-            const selectAllCheckbox = document.getElementById('itemsSelectAll');
-
-            const refreshLabel = () => {
-                const selected = checkboxes.filter(cb => cb.checked);
-                if (!dropdownLabel) return;
-
-                const selectedNames = selected
-                    .map(cb => {
-                        const label = cb.closest('.form-check')?.querySelector('label');
-                        return label ? label.textContent?.trim() : cb.value;
-                    })
-                    .filter(Boolean);
-
-                if (selectedNames.length === 0) {
-                    dropdownLabel.textContent = defaultText;
-                }
-                else {
-                    const preview = selectedNames.slice(0, 3).join(', ');
-                    dropdownLabel.textContent = selectedNames.length > 3
-                        ? `${preview} +${selectedNames.length - 3}`
-                        : (preview || defaultText);
-                }
-
-                if (previewContainer) {
-                    previewContainer.innerHTML = '';
-                    selectedNames.forEach(name => {
-                        const badge = document.createElement('span');
-                        badge.className = 'badge-soft';
-                        badge.textContent = name;
-                        previewContainer.appendChild(badge);
-                    });
-
-                    if (selectedNames.length === 0) {
-                        const placeholder = document.createElement('span');
-                        placeholder.className = 'muted-note';
-                        placeholder.textContent = '@L["Questions_Items_Select"]';
-                        previewContainer.appendChild(placeholder);
-                    }
-                }
-
-                if (selectAllCheckbox) {
-                    selectAllCheckbox.checked = selected.length === checkboxes.length && checkboxes.length > 0;
-                    selectAllCheckbox.indeterminate = selected.length > 0 && selected.length < checkboxes.length;
-                }
-            };
-
-            if (selectAllCheckbox) {
-                selectAllCheckbox.addEventListener('change', (e) => {
-                    const isChecked = e.target.checked;
-                    checkboxes.forEach(cb => {
-                        cb.checked = isChecked;
-                    });
-                    refreshLabel();
-                });
-            }
-
-            checkboxes.forEach(cb => cb.addEventListener('change', refreshLabel));
-            refreshLabel();
-        })();
-    </script>
-}

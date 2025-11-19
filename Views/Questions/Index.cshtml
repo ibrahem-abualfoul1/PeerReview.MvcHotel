@@ -90,29 +90,28 @@
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
-    <!-- Buttons core + Bootstrap adapter -->
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
 
-    <!-- Export dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>          <!-- Excel -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>      <!-- PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>        <!-- PDF fonts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    @* <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script> *@
 
     <script>
         $(function () {
             $('#qustions').DataTable({
-                dom: 'Bftip', // Copy / Excel / PDF + filter + table + pager
+                dom: 'Bftip',
                 buttons: ['copy', 'excel', 'pdf'],
                 language: {
                     url: '@(System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
-                                                    ? "https://cdn.datatables.net/plug-ins/1.13.8/i18n/ar.json"
-                                                    : "https://cdn.datatables.net/plug-ins/1.13.8/i18n/en-GB.json")'
+                                            ? "https://cdn.datatables.net/plug-ins/1.13.8/i18n/ar.json"
+                                            : "https://cdn.datatables.net/plug-ins/1.13.8/i18n/en-GB.json")'
             }
         });
     });
+
+        // ========= JS الخاص بـ المودال و Select_All =========
 
         // فتح المودال (إنشاء / تعديل)
         function openQuestionModal(id) {
@@ -121,6 +120,9 @@
                 var modalEl = document.getElementById('questionUpsertModal');
                 var modal = new bootstrap.Modal(modalEl, { backdrop: 'static' });
                 modal.show();
+
+                // بعد ما يحمل المودال فعليًا
+                initQuestionItemsMultiSelect();
             });
         }
 
@@ -129,11 +131,74 @@
             openQuestionModal(null);
         });
 
-        // بعد الحفظ من المودال (تقدر تستخدم هذا الحدث من داخل UpsertPartial)
         $(document).on('question:upserted', function (e, res) {
-            // مثال: إعادة تحميل DataTable بدون إعادة تحميل الصفحة كاملة
             var tbl = $('#qustions').DataTable();
             tbl.ajax ? tbl.ajax.reload(null, false) : location.reload();
         });
+
+        // ======== من هنا كود Select_All (Vanilla JS + Event Delegation) ========
+
+        (function () {
+
+            function syncHiddenSelect() {
+                var selectedValues = [];
+                document.querySelectorAll('.item-checkbox:checked').forEach(function (cb) {
+                    selectedValues.push(cb.value);
+                });
+
+                var select = document.getElementById('Items');
+                if (!select) return;
+
+                Array.prototype.forEach.call(select.options, function (o) {
+                    o.selected = selectedValues.indexOf(o.value) !== -1;
+                });
+
+                var textSpan = document.getElementById('itemsDropdownText');
+                if (!textSpan) return;
+
+                if (selectedValues.length === 0) {
+                    textSpan.textContent = '@L["Select_Items"]';
+                } else if (selectedValues.length === 1) {
+                    var lbl = document.querySelector('.item-checkbox:checked + label');
+                    textSpan.textContent = lbl ? lbl.textContent.trim() : (selectedValues.length + ' @L["Selected"]');
+                } else {
+                    textSpan.textContent = selectedValues.length + ' @L["Selected"]';
+                }
+            }
+
+            function updateSelectAllCheckbox() {
+                var all = document.querySelectorAll('.item-checkbox').length;
+                var checked = document.querySelectorAll('.item-checkbox:checked').length;
+                var selectAll = document.getElementById('itemsSelectAll');
+                if (!selectAll) return;
+                selectAll.checked = (all > 0 && checked === all);
+            }
+
+            // event delegation عشان يشتغل حتى لو المودال انضاف بعدين
+            document.addEventListener('change', function (e) {
+                if (e.target && e.target.id === 'itemsSelectAll') {
+                    var isChecked = e.target.checked;
+                    document.querySelectorAll('.item-checkbox').forEach(function (cb) {
+                        cb.checked = isChecked;
+                    });
+                    syncHiddenSelect();
+                    return;
+                }
+
+                if (e.target && e.target.classList.contains('item-checkbox')) {
+                    updateSelectAllCheckbox();
+                    syncHiddenSelect();
+                    return;
+                }
+            });
+
+            // نستدعيها لما المودال يخلص تحميل
+            window.initQuestionItemsMultiSelect = function () {
+                updateSelectAllCheckbox();
+                syncHiddenSelect();
+            };
+
+        })();
     </script>
 }
+

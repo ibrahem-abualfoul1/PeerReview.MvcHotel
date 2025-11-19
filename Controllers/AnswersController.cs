@@ -35,7 +35,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Create(List<AnswerCreateDto> dto)
         {
             await _svc.Create(dto);
-            TempData["msg"] = _L["Msg_Added"];
+            TempData["msg"] = _L["Msg_Added"].Value;
             return RedirectToAction(nameof(Mine));
         }
 
@@ -46,7 +46,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Edit(int id, AnswerUpdateDto dto)
         {
             await _svc.Update(id, dto);
-            TempData["msg"] = _L["Msg_Updated"];
+            TempData["msg"] = _L["Msg_Updated"].Value;
             return RedirectToAction(nameof(Mine));
         }
 
@@ -55,7 +55,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             await _svc.Delete(id);
-            TempData["msg"] = _L["Msg_Deleted"];
+            TempData["msg"] = _L["Msg_Deleted"].Value;
             return RedirectToAction(nameof(Mine));
         }
 
@@ -74,7 +74,7 @@ namespace PeerReview.MvcHotel.Controllers
                 file.ContentType
             );
 
-            TempData["msg"] = _L["Msg_Uploaded"];
+            TempData["msg"] = _L["Msg_Uploaded"].Value;
             return RedirectToAction(nameof(Mine));
         }
 
