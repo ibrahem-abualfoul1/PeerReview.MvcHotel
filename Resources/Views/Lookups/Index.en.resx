@@ -76,9 +76,7 @@
   <data name="NameAr" xml:space="preserve">
     <value>Name (Arabic)</value>
   </data>
-  <data name="NameAR" xml:space="preserve">
-    <value>Name (Arabic)</value>
-  </data>
+ 
   <data name="TypeEn" xml:space="preserve">
     <value>Type (English)</value>
   </data>

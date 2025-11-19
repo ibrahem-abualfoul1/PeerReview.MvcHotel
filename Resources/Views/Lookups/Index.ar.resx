@@ -73,12 +73,8 @@
   <data name="NameEn" xml:space="preserve">
     <value>الاسم (بالإنجليزية)</value>
   </data>
-  <data name="NameAr" xml:space="preserve">
-    <value>الاسم (بالعربية)</value>
-  </data>
-  <data name="NameAR" xml:space="preserve">
-    <value>الاسم (بالعربية)</value>
-  </data>
+ 
+ 
   <data name="TypeEn" xml:space="preserve">
     <value>النوع (بالإنجليزية)</value>
   </data>

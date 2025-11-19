@@ -52,8 +52,8 @@ namespace PeerReview.MvcHotel.Controllers
 
                 var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, res.UserId?.ToString() ?? Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, res.userName ?? model.userName ?? "")
+            new Claim(ClaimTypes.NameIdentifier, res?.UserId?.ToString() ?? Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Name, res?.userName ?? model.userName ?? "")
         };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

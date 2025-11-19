@@ -274,7 +274,7 @@
             </div>
 
             <div id="assignTableWrap" class="mt-2">
-                @Html.Partial("_AssignmentsTable", Model)
+                <partial name="_AssignmentsTable" model="Model" />
             </div>
         </div>
     </div>
@@ -486,7 +486,7 @@
                 method: 'POST',
                 headers: { 'RequestVerificationToken': getAfToken() }
             })
-            .then(r => r.json())
+            .then r => r.json())
             .then(j => {
                 if (j.ok) {
                     reloadAssignmentsTable();

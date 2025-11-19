@@ -38,7 +38,7 @@ namespace PeerReview.MvcHotel.Services
         public async Task DeleteSub(int id)
             => (await _api.Delete($"/api/Lookups/sub/{id}")).EnsureSuccessStatusCode();
 
-        public Task<SubLookupUpdateDto> GetSubById(int id)
+        public Task<SubLookupUpdateDto?> GetSubById(int id)
             => _api.Get<SubLookupUpdateDto>($"/api/Lookups/{id}/getsub");
     }
 }

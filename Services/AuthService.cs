@@ -33,6 +33,6 @@ namespace PeerReview.MvcHotel.Services
             _ctx.HttpContext?.Session.Remove("role");
         }
 
-        public Task<DashboardMetricsDto> List() => _api.Get<DashboardMetricsDto>("/api/Dashboard");
+        public Task<DashboardMetricsDto?> List() => _api.Get<DashboardMetricsDto>("/api/Dashboard");
     }
 }

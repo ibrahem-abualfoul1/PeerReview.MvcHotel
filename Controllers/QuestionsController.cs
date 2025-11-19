@@ -73,7 +73,7 @@ namespace PeerReview.MvcHotel.Controllers
             var culture = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
 
             // أنواع السؤال (Multi-Select)
-            var types = await _svc.GetTypes(); // يرجع List<(int Id, string Name)>
+            var types = await _svc.GetTypes() ?? new List<QuestionTypeDto>();
             ViewBag.QuestionTypes = new SelectList(
                 (System.Collections.IEnumerable)types,
                 "Id",

@@ -20,7 +20,7 @@ namespace PeerReview.MvcHotel.Services
     => (await _api.Put("/api/AnswerScoring/by-user-scored/batch-update", req)).EnsureSuccessStatusCode();
 
 
-        public Task<ReviewerUsersOverviewDto> UsersScoredStatus()
+        public Task<ReviewerUsersOverviewDto?> UsersScoredStatus()
             => _api.Get<ReviewerUsersOverviewDto>("/api/AnswerScoring/users-scored-status");
     }
 }

@@ -101,7 +101,7 @@ namespace PeerReview.MvcHotel.Models
     //public class QuestionItemCreateDto { public string? text { get; set; } public int type { get; set; } public bool isRequired { get; set; } public string? optionsCsv { get; set; } public int? parentItemId { get; set; } public string? showWhenValue { get; set; } }
 
     public class AssignRequest { public List<int>? questionIds { get; set; } public List<int>? userIds { get; set; } }
-    public class AssignmentDto { public int id { get; set; } public int questionId { get; set; } public int userId { get; set; } public DateTime? assignedAt { get; set; } public bool isActive { get; set; } public QuestionDto question { get; set; } }
+    public class AssignmentDto { public int id { get; set; } public int questionId { get; set; } public int userId { get; set; } public DateTime? assignedAt { get; set; } public bool isActive { get; set; } public QuestionDto? question { get; set; } }
 
     public class Answer
     {
@@ -112,9 +112,9 @@ namespace PeerReview.MvcHotel.Models
         public string? value { get; set; }
         public int? fileId { get; set; }
         public DateTime? submittedAt { get; set; }
-        public QuestionDto question { get; set; }
-        public QuestionItemDto questionItem { get; set; }
-        public User user { get; set; }
+        public QuestionDto? question { get; set; }
+        public QuestionItemDto? questionItem { get; set; }
+        public User? user { get; set; }
         public int? FileId { get; set; }
         [JsonPropertyName("file")]
         public FileEntryDto? File { get; set; }
@@ -247,8 +247,8 @@ namespace PeerReview.MvcHotel.Models
 
         public string? Value { get; set; }           // نص/قيمة الإجابة (قد تكون Base64 للملفات)
         public DateTime? SubmittedAt { get; set; }
-        public QuestionItemDto questionItem { get; set; }
-        public QuestionDto question { get; set; }
+        public QuestionItemDto? questionItem { get; set; }
+        public QuestionDto? question { get; set; }
 
 
 

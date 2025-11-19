@@ -24,29 +24,31 @@ namespace PeerReview.MvcHotel.Controllers
         [HttpGet("survey/{userId:int}")]
         public async Task<IActionResult> Survey(int userId)
         {
-            List<AssignmentDto> vm =  await _assignmentsService.ByUser(userId);
+            List<AssignmentDto>? vm =  await _assignmentsService.ByUser(userId);
 
             SurveyViewModel surveyVm = new SurveyViewModel();
 
-            foreach (var item in vm)
+            if (vm != null)
             {
-                surveyVm.Groups.Add(new QuestionGroup
+                foreach (var item in vm)
                 {
-                    Id = item.question.Id,
-                    Title = item.question.TitleEn ?? "",
-                    Description = item.question.DescriptionEn ?? "",
-                    CategoryId = item.question.CategoryId ?? 0,
-                    Items = item.question.Items?.Select(qi => new QuestionItem
+                    surveyVm.Groups.Add(new QuestionGroup
                     {
-                        Id = qi.Id,
-                        Text = qi.TextEn ?? "",
-                        Type = qi.Type,
-                        IsRequired = qi.IsRequired,
-                        OptionsCsv = qi.OptionsCsvEn
-                    }).ToList() ?? new List<QuestionItem>()
-                });
+                        Id = item.question?.Id ?? 0,
+                        Title = item.question?.TitleEn ?? "",
+                        Description = item.question?.DescriptionEn ?? "",
+                        CategoryId = item.question?.CategoryId ?? 0,
+                        Items = item.question?.Items?.Select(qi => new QuestionItem
+                        {
+                            Id = qi.Id,
+                            Text = qi.TextEn ?? "",
+                            Type = qi.Type,
+                            IsRequired = qi.IsRequired,
+                            OptionsCsv = qi.OptionsCsvEn
+                        }).ToList() ?? new List<QuestionItem>()
+                    });
+                }
             }
-            
 
             return View("Survey", surveyVm); // Views/UserQuestions/My.cshtml
         }
