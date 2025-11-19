@@ -10,7 +10,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">@ViewData["Title"]</h5>
     <a class="btn btn-link" href="@Url.Action("Index", "AnswerScoring")">
-        ← @(L["Back"] ?? "Back")
+        ← @L["Btn_Back"]
     </a>
 </div>
 
@@ -36,7 +36,7 @@ else
                             <th>@(L["Question"] ?? "Question")</th>
                             <th>@(L["Item"] ?? "Item")</th>
                             <th>@(L["Answer"] ?? "Answer")</th>
-                            <th style="width:140px">@("Score")</th>
+                            <th style="width:140px">@L["Score"]</th>
                             <th>@(L["Notes"] ?? "Notes")</th>
                         </tr>
                     </thead>
@@ -70,7 +70,7 @@ else
                                     @qText
                                 </div>
                                 <div class="small text-muted">
-                                    Q# @a.QuestionId
+                                    @L["AnswerScoring_QuestionIdLabel"] @a.QuestionId
                                 </div>
                             </td>
 
@@ -84,7 +84,7 @@ else
                                                                     )
                                 </div>
                                 <div class="small text-muted">
-                                    ItemId: @a.QuestionItemId
+                                    @L["AnswerScoring_ItemIdLabel"] @a.QuestionItemId
                                 </div>
                             </td>
 
@@ -147,7 +147,7 @@ else
 
         <div class="card-footer d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-primary">
-                @(L["Save"] ?? "Save")
+                @L["Btn_Save"]
             </button>
         </div>
     </form>

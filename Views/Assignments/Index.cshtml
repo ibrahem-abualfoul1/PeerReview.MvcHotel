@@ -310,37 +310,37 @@
             const $tbl = $('#assignTable');
             if (!$tbl.length) return;
 
-            const isRtl = document.documentElement.dir === 'rtl';
-
             if ($.fn.dataTable.isDataTable($tbl)) {
                 $tbl.DataTable().destroy();
             }
+
+            const dtLanguage = {
+                search: "@L[\"DataTable_Search\"].Value",
+                lengthMenu: "@L[\"DataTable_LengthMenu\"].Value",
+                info: "@L[\"DataTable_Info\"].Value",
+                zeroRecords: "@L[\"DataTable_ZeroRecords\"].Value",
+                infoEmpty: "@L[\"DataTable_InfoEmpty\"].Value",
+                infoFiltered: "@L[\"DataTable_InfoFiltered\"].Value",
+                paginate: {
+                    first: "@L[\"DataTable_First\"].Value",
+                    last: "@L[\"DataTable_Last\"].Value",
+                    next: "@L[\"DataTable_Next\"].Value",
+                    previous: "@L[\"DataTable_Previous\"].Value"
+                }
+            };
 
             $tbl.DataTable({
                 dom: "<'row mb-2'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 text-md-end'B>>" +
                      "<'row'<'col-sm-12'tr>>" +
                      "<'row mt-2'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                 buttons: [
-                    { extend: 'copyHtml5',  text: '<i class="bi bi-clipboard"></i> Copy' },
-                    { extend: 'excelHtml5', text: '<i class="bi bi-filetype-xlsx"></i> Excel' },
-                    { extend: 'pdfHtml5',   text: '<i class="bi bi-filetype-pdf"></i> PDF', orientation: 'landscape', pageSize: 'A4' }
+                    { extend: 'copyHtml5',  text: '<i class="bi bi-clipboard"></i> @L["Export_Copy"].Value' },
+                    { extend: 'excelHtml5', text: '<i class="bi bi-filetype-xlsx"></i> @L["Export_Excel"].Value' },
+                    { extend: 'pdfHtml5',   text: '<i class="bi bi-filetype-pdf"></i> @L["Export_Pdf"].Value', orientation: 'landscape', pageSize: 'A4' }
                 ],
                 pageLength: 10,
                 order: [],
-                language: isRtl ? {
-                    search: "بحث:",
-                    lengthMenu: "إظهار _MENU_ سجل",
-                    info: "إظهار _START_ إلى _END_ من أصل _TOTAL_ سجل",
-                    paginate: {
-                        first: "الأولى",
-                        last: "الأخيرة",
-                        next: "التالي",
-                        previous: "السابق"
-                    },
-                    zeroRecords: "لا توجد بيانات",
-                    infoEmpty: "لا توجد سجلات",
-                    infoFiltered: "(تمت التصفية من إجمالي _MAX_ سجلات)"
-                } : {}
+                language: dtLanguage
             });
         }
 

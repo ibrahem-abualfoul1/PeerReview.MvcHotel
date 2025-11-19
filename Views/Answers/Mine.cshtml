@@ -137,7 +137,7 @@
                                 else
                                 {
                                     <span class="text-muted-soft" style="font-size:0.8rem;">
-                                        @L["Upload_File_File"]
+                                        @L["NoFile"]
                                     </span>
                                 }
                             </td>
@@ -149,7 +149,7 @@
                 {
                     <tr>
                         <td colspan="6" class="text-center text-muted-soft">
-                            @L["Upload_File_File"]
+                            @L["NoData"]
                         </td>
                     </tr>
                 }
@@ -166,25 +166,25 @@
 
     <script>
         $(function () {
-            const isRtl = document.documentElement.dir === 'rtl';
+            const dtLanguage = {
+                search: "@L[\"DataTable_Search\"].Value",
+                lengthMenu: "@L[\"DataTable_LengthMenu\"].Value",
+                info: "@L[\"DataTable_Info\"].Value",
+                zeroRecords: "@L[\"DataTable_ZeroRecords\"].Value",
+                infoEmpty: "@L[\"DataTable_InfoEmpty\"].Value",
+                infoFiltered: "@L[\"DataTable_InfoFiltered\"].Value",
+                paginate: {
+                    first: "@L[\"DataTable_First\"].Value",
+                    last: "@L[\"DataTable_Last\"].Value",
+                    next: "@L[\"DataTable_Next\"].Value",
+                    previous: "@L[\"DataTable_Previous\"].Value"
+                }
+            };
 
             $('#answersMineTable').DataTable({
-                order: [[4, 'desc']],   // ترتيب حسب التاريخ
+                order: [[4, 'desc']],
                 pageLength: 10,
-                language: isRtl ? {
-                    search: "بحث:",
-                    lengthMenu: "إظهار _MENU_ سجل",
-                    info: "إظهار _START_ إلى _END_ من أصل _TOTAL_ سجل",
-                    paginate: {
-                        first: "الأولى",
-                        last: "الأخيرة",
-                        next: "التالي",
-                        previous: "السابق"
-                    },
-                    zeroRecords: "لا توجد بيانات",
-                    infoEmpty: "لا توجد سجلات",
-                    infoFiltered: "(تمت التصفية من إجمالي _MAX_ سجلات)"
-                } : {}
+                language: dtLanguage
             });
         });
 
@@ -204,22 +204,22 @@
                 mime = "application/octet-stream";
             }
 
-            try {
-                const byteCharacters = atob(base64);
-                const byteNumbers = new Array(byteCharacters.length);
+        try {
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
 
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: mime });
-
-                const blobUrl = URL.createObjectURL(blob);
-                window.open(blobUrl, "_blank");
-            } catch {
-                alert('تعذر فتح الملف.');
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
+
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: mime });
+
+            const blobUrl = URL.createObjectURL(blob);
+            window.open(blobUrl, "_blank");
+        } catch {
+            alert('@L["FileOpen_Error"]');
         }
+    }
     </script>
 }
