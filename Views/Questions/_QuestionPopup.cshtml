@@ -21,68 +21,67 @@
 }
 
 <style>
-    /* تحسين المظهر العام للمودال */
+    /* تنسيق متناسق مع القالب العام */
     #questionUpsertModal .modal-content {
-        background: linear-gradient(135deg, rgba(244, 246, 248, 0.9), rgba(232, 236, 241, 0.95));
-        border: 1px solid rgba(0, 0, 0, 0.04);
+        background: var(--panel);
+        border: 1px solid var(--bs-border-color);
         font-family: 'Segoe UI', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
     }
 
     #questionUpsertModal .modal-header,
     #questionUpsertModal .modal-footer {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(6px);
+        background: var(--panel);
     }
 
     #questionUpsertModal .pr-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 18px;
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+        background: var(--bs-body-bg);
+        border-radius: 14px;
+        border: 1px solid var(--bs-border-color);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
     }
 
     #questionUpsertModal .pr-field input,
     #questionUpsertModal .pr-field textarea,
     #questionUpsertModal .pr-field select {
-        background: #f8fafc;
-        border-radius: 12px;
-        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: var(--app-bg);
+        border-radius: 10px;
+        border: 1px solid var(--bs-border-color);
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     #questionUpsertModal .pr-field input:focus,
     #questionUpsertModal .pr-field textarea:focus,
     #questionUpsertModal .pr-field select:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 0.15rem rgba(59, 130, 246, 0.15);
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
     }
 
     #questionUpsertModal .dropdown-toggle {
-        background: #fff;
-        border-radius: 12px;
-        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: var(--bs-body-bg);
+        border-radius: 10px;
+        border: 1px solid var(--bs-border-color);
         padding: 0.75rem 1rem;
-        color: #0f172a;
-        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+        color: var(--bs-body-color);
+        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
     }
 
     #questionUpsertModal .dropdown-menu {
-        border-radius: 14px;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+        border-radius: 12px;
+        border: 1px solid var(--bs-border-color);
+        box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
     }
 
     #questionUpsertModal .badge-soft {
-        background: #e0e7ff;
-        color: #1e3a8a;
-        border: 1px solid rgba(59, 130, 246, 0.16);
-        padding: 0.5rem 0.7rem;
+        background: rgba(13, 110, 253, 0.08);
+        color: var(--bs-primary);
+        border: 1px solid rgba(13, 110, 253, 0.18);
+        padding: 0.45rem 0.65rem;
         border-radius: 999px;
         font-weight: 600;
     }
 
     #questionUpsertModal .muted-note {
-        color: #6b7280;
+        color: var(--bs-secondary-color);
         font-size: 0.9rem;
     }
 </style>
@@ -269,12 +268,12 @@
             const dropdownLabel = document.getElementById('itemsDropdownLabel');
             const defaultText = dropdownButton.dataset.defaultText?.trim() || dropdownLabel?.textContent?.trim() || '';
             const dropdown = dropdownButton.closest('.dropdown');
-            const checkboxes = dropdown ? dropdown.querySelectorAll('input[name="Items"]') : [];
+            const checkboxes = dropdown ? Array.from(dropdown.querySelectorAll('input[name="Items"]')) : [];
             const previewContainer = document.getElementById('itemsSelectedPreview');
             const selectAllCheckbox = document.getElementById('itemsSelectAll');
 
             const refreshLabel = () => {
-                const selected = Array.from(checkboxes).filter(cb => cb.checked);
+                const selected = checkboxes.filter(cb => cb.checked);
                 if (!dropdownLabel) return;
 
                 const selectedNames = selected
@@ -288,10 +287,10 @@
                     dropdownLabel.textContent = defaultText;
                 }
                 else {
-                    const preview = selectedNames.slice(0, 2).join(', ');
-                    dropdownLabel.textContent = selectedNames.length > 2
-                        ? `${preview} +${selectedNames.length - 2}`
-                        : preview || defaultText;
+                    const preview = selectedNames.slice(0, 3).join(', ');
+                    dropdownLabel.textContent = selectedNames.length > 3
+                        ? `${preview} +${selectedNames.length - 3}`
+                        : (preview || defaultText);
                 }
 
                 if (previewContainer) {
