@@ -200,14 +200,23 @@
   </data>
 
 	<!-- Validation -->
-	<data name="RequiredField" xml:space="preserve">
+        <data name="RequiredField" xml:space="preserve">
     <value>This field is required.</value>
   </data>
-	<data name="InvalidValue" xml:space="preserve">
+        <data name="InvalidValue" xml:space="preserve">
     <value>The entered value is not valid.</value>
   </data>
-	<data name="ValidationSummaryTitle" xml:space="preserve">
+        <data name="ValidationSummaryTitle" xml:space="preserve">
     <value>Please review the following validation errors:</value>
+  </data>
+        <data name="Login_Failed" xml:space="preserve">
+    <value>Invalid username or password.</value>
+  </data>
+        <data name="Login_AttemptsExceeded" xml:space="preserve">
+    <value>Too many login attempts. Please try again later.</value>
+  </data>
+        <data name="Login_InvalidReturnUrl" xml:space="preserve">
+    <value>The return URL is not allowed.</value>
   </data>
 
 	<!-- Dashboard -->
