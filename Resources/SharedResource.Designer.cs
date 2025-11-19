@@ -61,6 +61,78 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access to this page is not authorized..
+        /// </summary>
+        public static string AccessDenied {
+            get {
+                return ResourceManager.GetString("AccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string Actions {
+            get {
+                return ResourceManager.GetString("Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        public static string Active {
+            get {
+                return ResourceManager.GetString("Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add lookup.
+        /// </summary>
+        public static string AddLookup {
+            get {
+                return ResourceManager.GetString("AddLookup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add new.
+        /// </summary>
+        public static string AddNew {
+            get {
+                return ResourceManager.GetString("AddNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add sub-lookup.
+        /// </summary>
+        public static string AddSubLookup {
+            get {
+                return ResourceManager.GetString("AddSubLookup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Answer.
+        /// </summary>
+        public static string Answer {
+            get {
+                return ResourceManager.GetString("Answer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Answered by me.
+        /// </summary>
+        public static string AnsweredByMe {
+            get {
+                return ResourceManager.GetString("AnsweredByMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Answers.
         /// </summary>
         public static string Answers {
@@ -70,110 +142,56 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete.
+        ///   Looks up a localized string similar to Overview of scored and unscored answers..
         /// </summary>
-        public static string Answers_Action_Delete {
+        public static string AnswerScoring_Overview_Hint {
             get {
-                return ResourceManager.GetString("Answers_Action_Delete", resourceCulture);
+                return ResourceManager.GetString("AnswerScoring_Overview_Hint", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit.
+        ///   Looks up a localized string similar to Scoring progress.
         /// </summary>
-        public static string Answers_Action_Edit {
+        public static string AnswerScoring_Progress {
             get {
-                return ResourceManager.GetString("Answers_Action_Edit", resourceCulture);
+                return ResourceManager.GetString("AnswerScoring_Progress", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to + Answer.
+        ///   Looks up a localized string similar to Answer scoring.
         /// </summary>
-        public static string Answers_Add {
+        public static string AnswerScoring_Title {
             get {
-                return ResourceManager.GetString("Answers_Add", resourceCulture);
+                return ResourceManager.GetString("AnswerScoring_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Date.
-        /// </summary>
-        public static string Answers_Col_Date {
-            get {
-                return ResourceManager.GetString("Answers_Col_Date", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ID.
-        /// </summary>
-        public static string Answers_Col_Id {
-            get {
-                return ResourceManager.GetString("Answers_Col_Id", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Item.
-        /// </summary>
-        public static string Answers_Col_Item {
-            get {
-                return ResourceManager.GetString("Answers_Col_Item", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Question.
-        /// </summary>
-        public static string Answers_Col_Question {
-            get {
-                return ResourceManager.GetString("Answers_Col_Question", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Value.
-        /// </summary>
-        public static string Answers_Col_Value {
-            get {
-                return ResourceManager.GetString("Answers_Col_Value", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to New Answer.
-        /// </summary>
-        public static string Answers_Create_Title {
-            get {
-                return ResourceManager.GetString("Answers_Create_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Edit Answer.
-        /// </summary>
-        public static string Answers_Edit_Title {
-            get {
-                return ResourceManager.GetString("Answers_Edit_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to My Answers.
-        /// </summary>
-        public static string Answers_Title {
-            get {
-                return ResourceManager.GetString("Answers_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PeerReview Hotel.
+        ///   Looks up a localized string similar to PeerReview Evaluation &amp; Review System.
         /// </summary>
         public static string AppTitle {
             get {
                 return ResourceManager.GetString("AppTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arabic.
+        /// </summary>
+        public static string Arabic {
+            get {
+                return ResourceManager.GetString("Arabic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assigned to me.
+        /// </summary>
+        public static string AssignedToMe {
+            get {
+                return ResourceManager.GetString("AssignedToMe", resourceCulture);
             }
         }
         
@@ -187,146 +205,56 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Activate.
-        /// </summary>
-        public static string Assignments_Action_Activate {
-            get {
-                return ResourceManager.GetString("Assignments_Action_Activate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Deactivate.
-        /// </summary>
-        public static string Assignments_Action_Deactivate {
-            get {
-                return ResourceManager.GetString("Assignments_Action_Deactivate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Execute.
-        /// </summary>
-        public static string Assignments_Bulk_Execute {
-            get {
-                return ResourceManager.GetString("Assignments_Bulk_Execute", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Question IDs (comma separated).
-        /// </summary>
-        public static string Assignments_Bulk_QuestionIds {
-            get {
-                return ResourceManager.GetString("Assignments_Bulk_QuestionIds", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Bulk Assign.
-        /// </summary>
-        public static string Assignments_Bulk_Title {
-            get {
-                return ResourceManager.GetString("Assignments_Bulk_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User IDs (comma separated).
-        /// </summary>
-        public static string Assignments_Bulk_UserIds {
-            get {
-                return ResourceManager.GetString("Assignments_Bulk_UserIds", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Active.
-        /// </summary>
-        public static string Assignments_Col_Active {
-            get {
-                return ResourceManager.GetString("Assignments_Col_Active", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ID.
-        /// </summary>
-        public static string Assignments_Col_Id {
-            get {
-                return ResourceManager.GetString("Assignments_Col_Id", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Question.
-        /// </summary>
-        public static string Assignments_Col_Question {
-            get {
-                return ResourceManager.GetString("Assignments_Col_Question", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User.
-        /// </summary>
-        public static string Assignments_Col_User {
-            get {
-                return ResourceManager.GetString("Assignments_Col_User", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to By question.
-        /// </summary>
-        public static string Assignments_Filter_ByQuestion {
-            get {
-                return ResourceManager.GetString("Assignments_Filter_ByQuestion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to By user.
-        /// </summary>
-        public static string Assignments_Filter_ByUser {
-            get {
-                return ResourceManager.GetString("Assignments_Filter_ByUser", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Show.
-        /// </summary>
-        public static string Assignments_Show {
-            get {
-                return ResourceManager.GetString("Assignments_Show", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Assignments.
-        /// </summary>
-        public static string Assignments_Title {
-            get {
-                return ResourceManager.GetString("Assignments_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
-        public static string Btn_Back {
+        public static string Back {
             get {
-                return ResourceManager.GetString("Btn_Back", resourceCulture);
+                return ResourceManager.GetString("Back", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save.
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        public static string Btn_Save {
+        public static string Cancel {
             get {
-                return ResourceManager.GetString("Btn_Save", resourceCulture);
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string Category {
+            get {
+                return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code.
+        /// </summary>
+        public static string Code {
+            get {
+                return ResourceManager.GetString("Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
             }
         }
         
@@ -358,6 +286,78 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset password?.
+        /// </summary>
+        public static string Confirm_ResetPassword {
+            get {
+                return ResourceManager.GetString("Confirm_ResetPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this record?.
+        /// </summary>
+        public static string ConfirmDelete {
+            get {
+                return ResourceManager.GetString("ConfirmDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this record?.
+        /// </summary>
+        public static string ConfirmDeleteMessage {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete confirmation.
+        /// </summary>
+        public static string ConfirmDeleteTitle {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create.
+        /// </summary>
+        public static string Create {
+            get {
+                return ResourceManager.GetString("Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Record has been created successfully..
+        /// </summary>
+        public static string CreatedSuccessfully {
+            get {
+                return ResourceManager.GetString("CreatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create new.
+        /// </summary>
+        public static string CreateNew {
+            get {
+                return ResourceManager.GetString("CreateNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create user.
+        /// </summary>
+        public static string CreateUser {
+            get {
+                return ResourceManager.GetString("CreateUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dashboard.
         /// </summary>
         public static string Dashboard {
@@ -367,20 +367,173 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Questions.
+        ///   Looks up a localized string similar to Activity details will appear here once data is available..
         /// </summary>
-        public static string Dashboard_Questions {
+        public static string Dashboard_Activity_PlaceholderText {
             get {
-                return ResourceManager.GetString("Dashboard_Questions", resourceCulture);
+                return ResourceManager.GetString("Dashboard_Activity_PlaceholderText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Users.
+        ///   Looks up a localized string similar to Activity overview.
         /// </summary>
-        public static string Dashboard_Users {
+        public static string Dashboard_Activity_PlaceholderTitle {
             get {
-                return ResourceManager.GetString("Dashboard_Users", resourceCulture);
+                return ResourceManager.GetString("Dashboard_Activity_PlaceholderTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Answered by me.
+        /// </summary>
+        public static string Dashboard_AnsweredByMe {
+            get {
+                return ResourceManager.GetString("Dashboard_AnsweredByMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assigned to me.
+        /// </summary>
+        public static string Dashboard_AssignedToMe {
+            get {
+                return ResourceManager.GetString("Dashboard_AssignedToMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Answered by me.
+        /// </summary>
+        public static string Dashboard_Card_AnsweredByMe {
+            get {
+                return ResourceManager.GetString("Dashboard_Card_AnsweredByMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assigned to me.
+        /// </summary>
+        public static string Dashboard_Card_AssignedToMe {
+            get {
+                return ResourceManager.GetString("Dashboard_Card_AssignedToMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My pending items.
+        /// </summary>
+        public static string Dashboard_Card_MyPending {
+            get {
+                return ResourceManager.GetString("Dashboard_Card_MyPending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total answers.
+        /// </summary>
+        public static string Dashboard_Card_TotalAnswers {
+            get {
+                return ResourceManager.GetString("Dashboard_Card_TotalAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total questions.
+        /// </summary>
+        public static string Dashboard_Card_TotalQuestions {
+            get {
+                return ResourceManager.GetString("Dashboard_Card_TotalQuestions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total users.
+        /// </summary>
+        public static string Dashboard_Card_TotalUsers {
+            get {
+                return ResourceManager.GetString("Dashboard_Card_TotalUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My pending.
+        /// </summary>
+        public static string Dashboard_MyPending {
+            get {
+                return ResourceManager.GetString("Dashboard_MyPending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Record has been deleted successfully..
+        /// </summary>
+        public static string DeletedSuccessfully {
+            get {
+                return ResourceManager.GetString("DeletedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string Details {
+            get {
+                return ResourceManager.GetString("Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string Download {
+            get {
+                return ResourceManager.GetString("Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string Edit {
+            get {
+                return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit user.
+        /// </summary>
+        public static string EditUser {
+            get {
+                return ResourceManager.GetString("EditUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected error occurred. Please try again later..
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         
@@ -394,74 +547,83 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Category.
+        ///   Looks up a localized string similar to File.
         /// </summary>
-        public static string Field_Category {
+        public static string File {
             get {
-                return ResourceManager.GetString("Field_Category", resourceCulture);
+                return ResourceManager.GetString("File", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Description.
+        ///   Looks up a localized string similar to File name.
         /// </summary>
-        public static string Field_Description {
+        public static string FileName {
             get {
-                return ResourceManager.GetString("Field_Description", resourceCulture);
+                return ResourceManager.GetString("FileName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to QuestionId.
+        ///   Looks up a localized string similar to Filter.
         /// </summary>
-        public static string Field_QuestionId {
+        public static string Filter {
             get {
-                return ResourceManager.GetString("Field_QuestionId", resourceCulture);
+                return ResourceManager.GetString("Filter", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to QuestionItemId.
+        ///   Looks up a localized string similar to Home.
         /// </summary>
-        public static string Field_QuestionItemId {
+        public static string Home {
             get {
-                return ResourceManager.GetString("Field_QuestionItemId", resourceCulture);
+                return ResourceManager.GetString("Home", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Title.
+        ///   Looks up a localized string similar to Inactive.
         /// </summary>
-        public static string Field_Title {
+        public static string Inactive {
             get {
-                return ResourceManager.GetString("Field_Title", resourceCulture);
+                return ResourceManager.GetString("Inactive", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Value.
+        ///   Looks up a localized string similar to The entered value is not valid..
         /// </summary>
-        public static string Field_Value {
+        public static string InvalidValue {
             get {
-                return ResourceManager.GetString("Field_Value", resourceCulture);
+                return ResourceManager.GetString("InvalidValue", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to العربية.
+        ///   Looks up a localized string similar to Active.
         /// </summary>
-        public static string Lang_Arabic {
+        public static string IsActive {
             get {
-                return ResourceManager.GetString("Lang_Arabic", resourceCulture);
+                return ResourceManager.GetString("IsActive", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to English.
+        ///   Looks up a localized string similar to Items.
         /// </summary>
-        public static string Lang_English {
+        public static string Items {
             get {
-                return ResourceManager.GetString("Lang_English", resourceCulture);
+                return ResourceManager.GetString("Items", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
             }
         }
         
@@ -475,47 +637,11 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login failed.
-        /// </summary>
-        public static string Login_Failed {
-            get {
-                return ResourceManager.GetString("Login_Failed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Password.
-        /// </summary>
-        public static string Login_Password {
-            get {
-                return ResourceManager.GetString("Login_Password", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
-        public static string Login_Submit {
+        public static string Login {
             get {
-                return ResourceManager.GetString("Login_Submit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sign in.
-        /// </summary>
-        public static string Login_Title {
-            get {
-                return ResourceManager.GetString("Login_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User name.
-        /// </summary>
-        public static string Login_UserName {
-            get {
-                return ResourceManager.GetString("Login_UserName", resourceCulture);
+                return ResourceManager.GetString("Login", resourceCulture);
             }
         }
         
@@ -529,6 +655,60 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lookup.
+        /// </summary>
+        public static string Lookup {
+            get {
+                return ResourceManager.GetString("Lookup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string Lookup_Col_Actions {
+            get {
+                return ResourceManager.GetString("Lookup_Col_Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code.
+        /// </summary>
+        public static string Lookup_Col_Code {
+            get {
+                return ResourceManager.GetString("Lookup_Col_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has children.
+        /// </summary>
+        public static string Lookup_Col_HasChildren {
+            get {
+                return ResourceManager.GetString("Lookup_Col_HasChildren", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arabic name.
+        /// </summary>
+        public static string Lookup_Col_NameAr {
+            get {
+                return ResourceManager.GetString("Lookup_Col_NameAr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English name.
+        /// </summary>
+        public static string Lookup_Col_NameEn {
+            get {
+                return ResourceManager.GetString("Lookup_Col_NameEn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lookups.
         /// </summary>
         public static string Lookups {
@@ -538,65 +718,20 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assignments.
+        ///   Looks up a localized string similar to No lookups found..
         /// </summary>
-        public static string Menu_Assignments {
+        public static string Lookups_Empty {
             get {
-                return ResourceManager.GetString("Menu_Assignments", resourceCulture);
+                return ResourceManager.GetString("Lookups_Empty", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dashboard.
+        ///   Looks up a localized string similar to Lookup type.
         /// </summary>
-        public static string Menu_Dashboard {
+        public static string LookupType {
             get {
-                return ResourceManager.GetString("Menu_Dashboard", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Login.
-        /// </summary>
-        public static string Menu_Login {
-            get {
-                return ResourceManager.GetString("Menu_Login", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Logout.
-        /// </summary>
-        public static string Menu_Logout {
-            get {
-                return ResourceManager.GetString("Menu_Logout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to My Answers.
-        /// </summary>
-        public static string Menu_MyAnswers {
-            get {
-                return ResourceManager.GetString("Menu_MyAnswers", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Questions.
-        /// </summary>
-        public static string Menu_Questions {
-            get {
-                return ResourceManager.GetString("Menu_Questions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Users.
-        /// </summary>
-        public static string Menu_Users {
-            get {
-                return ResourceManager.GetString("Menu_Users", resourceCulture);
+                return ResourceManager.GetString("LookupType", resourceCulture);
             }
         }
         
@@ -610,47 +745,11 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saved successfully..
-        /// </summary>
-        public static string Msg_Added {
-            get {
-                return ResourceManager.GetString("Msg_Added", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Deactivated successfully..
         /// </summary>
         public static string Msg_Deactivated {
             get {
                 return ResourceManager.GetString("Msg_Deactivated", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Deleted successfully..
-        /// </summary>
-        public static string Msg_Deleted {
-            get {
-                return ResourceManager.GetString("Msg_Deleted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Save.
-        /// </summary>
-        public static string Msg_Saved {
-            get {
-                return ResourceManager.GetString("Msg_Saved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Updated successfully..
-        /// </summary>
-        public static string Msg_Updated {
-            get {
-                return ResourceManager.GetString("Msg_Updated", resourceCulture);
             }
         }
         
@@ -669,6 +768,132 @@ namespace PeerReview.MvcHotel.Resources {
         public static string Msg_Welcome {
             get {
                 return ResourceManager.GetString("Msg_Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My answers.
+        /// </summary>
+        public static string MyAnswers {
+            get {
+                return ResourceManager.GetString("MyAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My assignments.
+        /// </summary>
+        public static string MyAssignments {
+            get {
+                return ResourceManager.GetString("MyAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My pending items.
+        /// </summary>
+        public static string MyPending {
+            get {
+                return ResourceManager.GetString("MyPending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name (Arabic).
+        /// </summary>
+        public static string NameAr {
+            get {
+                return ResourceManager.GetString("NameAr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name (English).
+        /// </summary>
+        public static string NameEn {
+            get {
+                return ResourceManager.GetString("NameEn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Next {
+            get {
+                return ResourceManager.GetString("Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        public static string No {
+            get {
+                return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data available..
+        /// </summary>
+        public static string NoData {
+            get {
+                return ResourceManager.GetString("NoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No file available..
+        /// </summary>
+        public static string NoFile {
+            get {
+                return ResourceManager.GetString("NoFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No records found..
+        /// </summary>
+        public static string NoRecordsFound {
+            get {
+                return ResourceManager.GetString("NoRecordsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested record was not found..
+        /// </summary>
+        public static string NotFound {
+            get {
+                return ResourceManager.GetString("NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        public static string Previous {
+            get {
+                return ResourceManager.GetString("Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Question.
+        /// </summary>
+        public static string Question {
+            get {
+                return ResourceManager.GetString("Question", resourceCulture);
             }
         }
         
@@ -700,7 +925,7 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to + Question.
+        ///   Looks up a localized string similar to Add question.
         /// </summary>
         public static string Questions_Add {
             get {
@@ -709,128 +934,308 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Description.
+        ///   Looks up a localized string similar to Question category.
         /// </summary>
-        public static string Questions_Col_Description {
+        public static string Questions_Category {
             get {
-                return ResourceManager.GetString("Questions_Col_Description", resourceCulture);
+                return ResourceManager.GetString("Questions_Category", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ID.
+        ///   Looks up a localized string similar to Select the appropriate category for this question..
         /// </summary>
-        public static string Questions_Col_Id {
+        public static string Questions_Category_Help {
             get {
-                return ResourceManager.GetString("Questions_Col_Id", resourceCulture);
+                return ResourceManager.GetString("Questions_Category_Help", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Items.
+        ///   Looks up a localized string similar to Question text.
         /// </summary>
-        public static string Questions_Col_Items {
+        public static string QuestionText {
             get {
-                return ResourceManager.GetString("Questions_Col_Items", resourceCulture);
+                return ResourceManager.GetString("QuestionText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Title.
+        ///   Looks up a localized string similar to Question type.
         /// </summary>
-        public static string Questions_Col_Title {
+        public static string QuestionType {
             get {
-                return ResourceManager.GetString("Questions_Col_Title", resourceCulture);
+                return ResourceManager.GetString("QuestionType", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New Question.
+        ///   Looks up a localized string similar to Remember me.
         /// </summary>
-        public static string Questions_Create_Title {
+        public static string RememberMe {
             get {
-                return ResourceManager.GetString("Questions_Create_Title", resourceCulture);
+                return ResourceManager.GetString("RememberMe", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Question.
+        ///   Looks up a localized string similar to This field is required..
         /// </summary>
-        public static string Questions_Edit_Title {
+        public static string RequiredField {
             get {
-                return ResourceManager.GetString("Questions_Edit_Title", resourceCulture);
+                return ResourceManager.GetString("RequiredField", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Questions.
+        ///   Looks up a localized string similar to Reset.
         /// </summary>
-        public static string Questions_Title {
+        public static string Reset {
             get {
-                return ResourceManager.GetString("Questions_Title", resourceCulture);
+                return ResourceManager.GetString("Reset", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Scoring.
+        ///   Looks up a localized string similar to Save.
         /// </summary>
-        public static string Scoring {
+        public static string Save {
             get {
-                return ResourceManager.GetString("Scoring", resourceCulture);
+                return ResourceManager.GetString("Save", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Active.
+        ///   Looks up a localized string similar to Score.
         /// </summary>
-        public static string Status_Active {
+        public static string Score {
             get {
-                return ResourceManager.GetString("Status_Active", resourceCulture);
+                return ResourceManager.GetString("Score", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inactive.
+        ///   Looks up a localized string similar to Scored answers.
         /// </summary>
-        public static string Status_Inactive {
+        public static string ScoredAnswers {
             get {
-                return ResourceManager.GetString("Status_Inactive", resourceCulture);
+                return ResourceManager.GetString("ScoredAnswers", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File.
+        ///   Looks up a localized string similar to Search.
         /// </summary>
-        public static string Upload_File_File {
+        public static string Search {
             get {
-                return ResourceManager.GetString("Upload_File_File", resourceCulture);
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string Status {
+            get {
+                return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submit answer.
+        /// </summary>
+        public static string SubmitAnswer {
+            get {
+                return ResourceManager.GetString("SubmitAnswer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation completed successfully..
+        /// </summary>
+        public static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total answers.
+        /// </summary>
+        public static string TotalAnswers {
+            get {
+                return ResourceManager.GetString("TotalAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total assignments.
+        /// </summary>
+        public static string TotalAssignments {
+            get {
+                return ResourceManager.GetString("TotalAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total questions.
+        /// </summary>
+        public static string TotalQuestions {
+            get {
+                return ResourceManager.GetString("TotalQuestions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total users.
+        /// </summary>
+        public static string TotalUsers {
+            get {
+                return ResourceManager.GetString("TotalUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arabic type.
+        /// </summary>
+        public static string TypeAr {
+            get {
+                return ResourceManager.GetString("TypeAr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English type.
+        /// </summary>
+        public static string TypeEn {
+            get {
+                return ResourceManager.GetString("TypeEn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unscored.
+        /// </summary>
+        public static string Unscored {
+            get {
+                return ResourceManager.GetString("Unscored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unscored answers.
+        /// </summary>
+        public static string UnscoredAnswers {
+            get {
+                return ResourceManager.GetString("UnscoredAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Answers that still need to be scored..
+        /// </summary>
+        public static string UnscoredAnswers_Hint {
+            get {
+                return ResourceManager.GetString("UnscoredAnswers_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users with unscored answers.
+        /// </summary>
+        public static string UnscoredUsers {
+            get {
+                return ResourceManager.GetString("UnscoredUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Record has been updated successfully..
+        /// </summary>
+        public static string UpdatedSuccessfully {
+            get {
+                return ResourceManager.GetString("UpdatedSuccessfully", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Upload.
         /// </summary>
-        public static string Upload_File_Submit {
+        public static string Upload {
             get {
-                return ResourceManager.GetString("Upload_File_Submit", resourceCulture);
+                return ResourceManager.GetString("Upload", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Upload a file.
+        ///   Looks up a localized string similar to Upload file.
         /// </summary>
-        public static string Upload_File_Title {
+        public static string UploadFile {
             get {
-                return ResourceManager.GetString("Upload_File_Title", resourceCulture);
+                return ResourceManager.GetString("UploadFile", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to My Surveys.
+        ///   Looks up a localized string similar to User.
         /// </summary>
-        public static string user_questions {
+        public static string User {
             get {
-                return ResourceManager.GetString("user-questions", resourceCulture);
+                return ResourceManager.GetString("User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string UserEmail {
+            get {
+                return ResourceManager.GetString("UserEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full name.
+        /// </summary>
+        public static string UserFullName {
+            get {
+                return ResourceManager.GetString("UserFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User management.
+        /// </summary>
+        public static string UserManagement {
+            get {
+                return ResourceManager.GetString("UserManagement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User name.
+        /// </summary>
+        public static string UserName {
+            get {
+                return ResourceManager.GetString("UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Role.
+        /// </summary>
+        public static string UserRole {
+            get {
+                return ResourceManager.GetString("UserRole", resourceCulture);
             }
         }
         
@@ -844,33 +1249,6 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Activate.
-        /// </summary>
-        public static string Users_Action_Activate {
-            get {
-                return ResourceManager.GetString("Users_Action_Activate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Deactivate.
-        /// </summary>
-        public static string Users_Action_Deactivate {
-            get {
-                return ResourceManager.GetString("Users_Action_Deactivate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Delete.
-        /// </summary>
-        public static string Users_Action_Delete {
-            get {
-                return ResourceManager.GetString("Users_Action_Delete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string Users_Action_Edit {
@@ -880,11 +1258,29 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to + User.
+        ///   Looks up a localized string similar to Add user.
         /// </summary>
         public static string Users_Add {
             get {
                 return ResourceManager.GetString("Users_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string Users_Col_Actions {
+            get {
+                return ResourceManager.GetString("Users_Col_Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string Users_Col_Email {
+            get {
+                return ResourceManager.GetString("Users_Col_Email", resourceCulture);
             }
         }
         
@@ -925,7 +1321,7 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Username.
+        ///   Looks up a localized string similar to User name.
         /// </summary>
         public static string Users_Col_UserName {
             get {
@@ -934,11 +1330,83 @@ namespace PeerReview.MvcHotel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Users.
+        ///   Looks up a localized string similar to Are you sure you want to delete this user?.
         /// </summary>
-        public static string Users_Title {
+        public static string Users_Confirm_Delete {
             get {
-                return ResourceManager.GetString("Users_Title", resourceCulture);
+                return ResourceManager.GetString("Users_Confirm_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No users found..
+        /// </summary>
+        public static string Users_Empty {
+            get {
+                return ResourceManager.GetString("Users_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All statuses.
+        /// </summary>
+        public static string Users_Filter_Status_All {
+            get {
+                return ResourceManager.GetString("Users_Filter_Status_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search users.
+        /// </summary>
+        public static string Users_Search {
+            get {
+                return ResourceManager.GetString("Users_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please review the following validation errors:.
+        /// </summary>
+        public static string ValidationSummaryTitle {
+            get {
+                return ResourceManager.GetString("ValidationSummaryTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        public static string View {
+            get {
+                return ResourceManager.GetString("View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View file.
+        /// </summary>
+        public static string ViewFile {
+            get {
+                return ResourceManager.GetString("ViewFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View scored answers.
+        /// </summary>
+        public static string ViewScored {
+            get {
+                return ResourceManager.GetString("ViewScored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        public static string Yes {
+            get {
+                return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
     }

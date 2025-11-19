@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using PeerReview.MvcHotel.Models;
 using PeerReview.MvcHotel.Resources;
@@ -12,37 +12,50 @@ namespace PeerReview.MvcHotel.Controllers
         private readonly QuestionsService _questions;
         private readonly IStringLocalizer<SharedResource> _L;
 
-        public AnswersController(AnswersService svc, IStringLocalizer<SharedResource> L, QuestionsService questions)
+        public AnswersController(
+            AnswersService svc,
+            IStringLocalizer<SharedResource> L,
+            QuestionsService questions)
         {
             _L = L;
-            _svc = svc; _questions = questions;
+            _svc = svc;
+            _questions = questions;
         }
 
-        public async Task<IActionResult> Mine() { 
-            var list = await _svc.Mine() ?? new(); 
-            return View(list); }
+        public async Task<IActionResult> Mine()
+        {
+            var list = await _svc.Mine() ?? new();
+            return View(list);
+        }
+
         public IActionResult Create() => View(new AnswerCreateDto());
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(List<AnswerCreateDto> dto)
         {
             await _svc.Create(dto);
-            TempData["msg"] = SharedResource.Msg_Added;
+            TempData["msg"] = _L["Msg_Added"];
             return RedirectToAction(nameof(Mine));
         }
+
         public IActionResult Edit(int id) => View(new AnswerUpdateDto());
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AnswerUpdateDto dto) {
+        public async Task<IActionResult> Edit(int id, AnswerUpdateDto dto)
+        {
             await _svc.Update(id, dto);
-            TempData["msg"] = SharedResource.Msg_Updated;
+            TempData["msg"] = _L["Msg_Updated"];
             return RedirectToAction(nameof(Mine));
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id) {
+        public async Task<IActionResult> Delete(int id)
+        {
             await _svc.Delete(id);
-            TempData["msg"] = SharedResource.Msg_Deleted;
+            TempData["msg"] = _L["Msg_Deleted"];
             return RedirectToAction(nameof(Mine));
         }
 
@@ -52,10 +65,20 @@ namespace PeerReview.MvcHotel.Controllers
         {
             using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
-            await _svc.Upload(questionId, questionItemId, file.FileName, ms.ToArray(), file.ContentType);
-            TempData["msg"] = SharedResource.Msg_Uploaded; return RedirectToAction(nameof(Mine));
+
+            await _svc.Upload(
+                questionId,
+                questionItemId,
+                file.FileName,
+                ms.ToArray(),
+                file.ContentType
+            );
+
+            TempData["msg"] = _L["Msg_Uploaded"];
+            return RedirectToAction(nameof(Mine));
         }
 
+        // لو حاب ترجع تشغل الشاشات اللي تحت، بس استبدل SharedResource بنفس الـ _L:
 
         //[HttpGet("/Answers/Screen/{id:int}")]
         //public async Task<IActionResult> Screen(int id, CancellationToken ct)
@@ -70,7 +93,7 @@ namespace PeerReview.MvcHotel.Controllers
         //{
         //    if (body == null || body.Values == null) return BadRequest();
         //    await _svc.BulkCreate(body.QuestionId, body.Values, ct);
-        //    TempData["msg"] = SharedResource.Msg_Added;
+        //    TempData["msg"] = _L["Msg_Added"];
         //    return Ok();
         //}
     }

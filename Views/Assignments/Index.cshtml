@@ -4,7 +4,7 @@
 @model List<AssignmentDto>
 
 @{
-    ViewData["Title"] = SharedResource.Assignments_Title;
+    ViewData["Title"] = L["Assignments_Title"];
     ViewBag.ActiveMenu = "Assignments";
 
     var users = ViewBag.Users as List<User> ?? new();
@@ -158,32 +158,36 @@
             <div class="d-flex justify-content-between align-items-center mb-1">
                 <div class="h-section-title mb-0">
                     <span class="me-1">⚡</span>
-                    @SharedResource.Assignments_Bulk_Title
+                    @L["Assignments_Bulk_Title"]
                 </div>
                 <span class="badge-pill badge-soft">
-                    @SharedResource.Assignments_Action_Activate
+                    @L["Assignments_Action_Activate"]
                 </span>
             </div>
 
             <p class="text-muted-soft mb-3" style="font-size:0.85rem;">
-                @SharedResource.Assignments_Action_Activate
+                @L["Assignments_Bulk_Hint"]
             </p>
 
             <form id="bulkForm" class="mt-1">
                 <!-- أسئلة -->
                 <div class="mb-3">
-                    <div class="assign-filter-label">@SharedResource.Assignments_Bulk_QuestionIds</div>
+                    <div class="assign-filter-label">@L["Assignments_Bulk_QuestionIds"]</div>
 
-                    <div class="pr-multi" data-placeholder="اختر الأسئلة" data-group="questions">
+                    <div class="pr-multi"
+                         data-placeholder="@L["Assignments_Bulk_Questions_Placeholder", "اختر الأسئلة"]"
+                         data-group="questions">
                         <button type="button" class="pr-multi-toggle">
-                            <span class="pr-multi-label pr-multi-placeholder">اختر الأسئلة</span>
+                            <span class="pr-multi-label pr-multi-placeholder">
+                                @L["Assignments_Bulk_Questions_Placeholder", "اختر الأسئلة"]
+                            </span>
                             <span class="pr-multi-count"></span>
                         </button>
                         <div class="pr-multi-menu">
                             <div class="pr-multi-header">
                                 <label>
                                     <input type="checkbox" class="pr-multi-selectall" data-group="questions" />
-                                    <span>تحديد الكل</span>
+                                    <span>@L["SelectAll", "تحديد الكل"]</span>
                                 </label>
                             </div>
                             <div class="pr-multi-list">
@@ -202,23 +206,27 @@
                         </div>
                     </div>
 
-                    <div class="form-text">@SharedResource.Answers_Add</div>
+                    <div class="form-text">@L["Assignments_Bulk_Questions_Hint", L["Answers_Add"].Value]</div>
                 </div>
 
                 <!-- مستخدمون -->
                 <div class="mb-3">
-                    <div class="assign-filter-label">@SharedResource.Assignments_Bulk_UserIds</div>
+                    <div class="assign-filter-label">@L["Assignments_Bulk_UserIds"]</div>
 
-                    <div class="pr-multi" data-placeholder="اختر المستخدمين" data-group="users">
+                    <div class="pr-multi"
+                         data-placeholder="@L["Assignments_Bulk_Users_Placeholder", "اختر المستخدمين"]"
+                         data-group="users">
                         <button type="button" class="pr-multi-toggle">
-                            <span class="pr-multi-label pr-multi-placeholder">اختر المستخدمين</span>
+                            <span class="pr-multi-label pr-multi-placeholder">
+                                @L["Assignments_Bulk_Users_Placeholder", "اختر المستخدمين"]
+                            </span>
                             <span class="pr-multi-count"></span>
                         </button>
                         <div class="pr-multi-menu">
                             <div class="pr-multi-header">
                                 <label>
                                     <input type="checkbox" class="pr-multi-selectall" data-group="users" />
-                                    <span>تحديد الكل</span>
+                                    <span>@L["SelectAll", "تحديد الكل"]</span>
                                 </label>
                             </div>
                             <div class="pr-multi-list">
@@ -236,17 +244,17 @@
                         </div>
                     </div>
 
-                    <div class="form-text">@SharedResource.Answers_Add</div>
+                    <div class="form-text">@L["Assignments_Bulk_Users_Hint", L["Answers_Add"].Value]</div>
                 </div>
 
                 <div class="mt-2 d-flex gap-2">
                     <button type="submit" class="btn-pr btn-pr-primary flex-grow-1">
                         <i class="bi bi-check2-circle me-1"></i>
-                        @SharedResource.Assignments_Bulk_Execute
+                        @L["Assignments_Bulk_Execute"]
                     </button>
                     <button type="reset" class="btn-pr btn-pr-outline">
                         <i class="bi bi-x-lg"></i>
-                        Reset
+                        @L["Btn_Reset", "Reset"]
                     </button>
                 </div>
             </form>
@@ -258,10 +266,10 @@
         <div class="pr-card mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <div class="h-section-title mb-0">
-                    @SharedResource.Assignments_Action_Activate
+                    @L["Assignments_Title_List", L["Assignments_Title"].Value]
                 </div>
                 <span class="text-muted-soft" style="font-size:0.8rem;">
-                    @SharedResource.Assignments_Action_Activate
+                    @L["Assignments_Subtitle", "إدارة الإسنادات الحالية"]
                 </span>
             </div>
 
@@ -369,7 +377,7 @@
                     } else {
                         labelEl.textContent = checked.length === 1
                             ? checked[0].nextElementSibling?.textContent.trim()
-                            : `${checked.length} محدد`;
+                            : `${checked.length} @L["Selected", "محدد"]`;
                         labelEl.classList.remove('pr-multi-placeholder');
                         countEl.textContent = checked.length > 1 ? '✓' : '';
                     }
@@ -419,8 +427,8 @@
             if (!qs.length || !us.length) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'تنبيه',
-                    text: 'يرجى اختيار الأسئلة والمستخدمين قبل التنفيذ'
+                    title: '@L["Swal_Warning_Title", "تنبيه"]',
+                    text: '@L["Assignments_Bulk_Validation_SelectBoth", "يرجى اختيار الأسئلة والمستخدمين قبل التنفيذ"]'
                 });
                 return;
             }
@@ -439,11 +447,11 @@
                     const msg = (typeof j.message === 'object'
                                     ? j.message.value
                                     : j.message)
-                                || 'تم توزيع الأسئلة على المستخدمين';
+                                || '@L["Assignments_Bulk_Success_Default", "تم توزيع الأسئلة على المستخدمين"]';
 
                     Swal.fire({
                         icon: 'success',
-                        title: 'تمت العملية بنجاح',
+                        title: '@L["Swal_Success_Title", "تمت العملية بنجاح"]',
                         text: msg,
                         timer: 2000,
                         showConfirmButton: false
@@ -453,16 +461,16 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'فشل التنفيذ',
-                        text: 'حدث خطأ أثناء الإسناد'
+                        title: '@L["Swal_Error_Title", "فشل التنفيذ"]',
+                        text: '@L["Assignments_Bulk_Error", "حدث خطأ أثناء الإسناد"]'
                     });
                 }
             })
             .catch(() =>
                 Swal.fire({
                     icon: 'error',
-                    title: 'خطأ',
-                    text: 'حدث خطأ في تنفيذ العملية'
+                    title: '@L["Swal_Error_Title", "خطأ"]',
+                    text: '@L["Assignments_Bulk_Error_Generic", "حدث خطأ في تنفيذ العملية"]'
                 })
             );
         });
@@ -483,10 +491,10 @@
                 if (j.ok) {
                     reloadAssignmentsTable();
                 } else {
-                    alert('فشل العملية');
+                    alert('@L["Assignments_Toggle_Failed", "فشل العملية"]');
                 }
             })
-            .catch(() => alert('خطأ أثناء التنفيذ'));
+            .catch(() => alert('@L["Assignments_Toggle_Error", "خطأ أثناء التنفيذ"]'));
         });
     </script>
 }

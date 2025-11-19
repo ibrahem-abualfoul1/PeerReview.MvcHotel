@@ -4,7 +4,7 @@
 @model List<PeerReview.MvcHotel.Models.Answer>
 
 @{
-    ViewData["Title"] = SharedResource.Answers_Title;
+    ViewData["Title"] = L["Answers_Title"];
     ViewBag.ActiveMenu = "Answers";
 }
 
@@ -63,14 +63,14 @@
     <div class="d-flex justify-content-between align-items-center mb-2">
         <div>
             <div class="h-section-title mb-1">
-                @SharedResource.Answers_Title
+                @L["Answers_Title"]
             </div>
             <div class="answers-header-note">
-                @SharedResource.Answers_Add
+                @L["Answers_Add"]
             </div>
         </div>
         <span class="answers-badge-type">
-            @SharedResource.Answers_Action_Delete
+            @L["Answers_Action_Delete"]
         </span>
     </div>
 
@@ -79,11 +79,11 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>@SharedResource.Answers_Col_Question</th>
-                    <th>@SharedResource.Answers_Col_Item</th>
-                    <th>@SharedResource.Answers_Col_Value</th>
-                    <th>@SharedResource.Answers_Col_Date</th>
-                    <th class="text-center">@SharedResource.Upload_File_File</th>
+                    <th>@L["Answers_Col_Question"]</th>
+                    <th>@L["Answers_Col_Item"]</th>
+                    <th>@L["Answers_Col_Value"]</th>
+                    <th>@L["Answers_Col_Date"]</th>
+                    <th class="text-center">@L["Upload_File_File"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,7 +110,7 @@
                             @if (a.questionItem?.Type == 7)   @* File Upload *@
                             {
                                 <td class="text-clip-wide text-muted" title="@val">
-                                    @SharedResource.Upload_File_File
+                                    @L["Upload_File_File"]
                                 </td>
                             }
                             else
@@ -131,13 +131,13 @@
                                             class="btn-pr btn-pr-sm btn-pr-soft answers-file-btn"
                                             onclick="openBase64File('@a.value')">
                                         <i class="bi bi-file-earmark-arrow-down me-1"></i>
-                                        @SharedResource.Upload_File_File
+                                        @L["Upload_File_File"]
                                     </button>
                                 }
                                 else
                                 {
                                     <span class="text-muted-soft" style="font-size:0.8rem;">
-                                        @SharedResource.Upload_File_File
+                                        @L["Upload_File_File"]
                                     </span>
                                 }
                             </td>
@@ -149,7 +149,7 @@
                 {
                     <tr>
                         <td colspan="6" class="text-center text-muted-soft">
-                            @SharedResource.Upload_File_File
+                            @L["Upload_File_File"]
                         </td>
                     </tr>
                 }

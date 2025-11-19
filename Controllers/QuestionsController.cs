@@ -11,12 +11,15 @@ namespace PeerReview.MvcHotel.Controllers
     {
         private readonly QuestionsService _svc;
         private readonly IStringLocalizer<SharedResource> _L;
-
         private readonly LookupsService _lookupsService;
 
-        public QuestionsController(QuestionsService svc, IStringLocalizer<SharedResource> L, LookupsService lookupsService)
+        public QuestionsController(
+            QuestionsService svc,
+            IStringLocalizer<SharedResource> L,
+            LookupsService lookupsService)
         {
-            _L = L; _svc = svc;
+            _L = L;
+            _svc = svc;
             _lookupsService = lookupsService;
         }
 
@@ -25,6 +28,8 @@ namespace PeerReview.MvcHotel.Controllers
             var list = await _svc.List() ?? new();
             return View(list);
         }
+
+        //[HttpGet]
         //public IActionResult Create() => View(new QuestionCreateDto());
 
         [HttpPost]
@@ -32,31 +37,36 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Create(QuestionCreateDto model)
         {
             await _svc.Create(model);
-            TempData["msg"] = SharedResource.Msg_Added;
+            TempData["msg"] = _L["Msg_Added"];
             return RedirectToAction(nameof(Index));
         }
 
+        // مثال لو رجعت تفعّل Edit لاحقاً:
+        //
+        //[HttpGet]
         //public async Task<IActionResult> Edit(int id)
         //{
-        //    var q = await _svc.Get(id); if (q == null) return NotFound();
+        //    var q = await _svc.Get(id);
+        //    if (q == null) return NotFound();
+        //
         //    ViewBag.QuestionId = id;
-        //    return View(new QuestionUpdateDto { title = q.TitleEn, description = q.description, categoryId = q.categoryId });
+        //    return View(new QuestionUpdateDto
+        //    {
+        //        TitleEn = q.TitleEn,
+        //        DescriptionEn = q.DescriptionEn,
+        //        CategoryId = q.CategoryId
+        //    });
         //}
 
         //[HttpPost]
+        //[ValidateAntiForgeryToken]
         //public async Task<IActionResult> Edit(int id, QuestionUpdateDto model)
         //{
         //    await _svc.Update(id, model);
-        //    TempData["msg"] = SharedResource.Msg_Updated;
+        //    TempData["msg"] = _L["Msg_Updated"];
         //    return RedirectToAction(nameof(Index));
         //}
-        //[HttpPost]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    await _svc.Delete(id);
-        //    TempData["msg"] = SharedResource.Msg_Deleted;
-        //    return RedirectToAction(nameof(Index));
-        //}
+
         [HttpGet]
         public async Task<IActionResult> UpsertPartial(int? id)
         {
@@ -64,16 +74,25 @@ namespace PeerReview.MvcHotel.Controllers
 
             // أنواع السؤال (Multi-Select)
             var types = await _svc.GetTypes(); // يرجع List<(int Id, string Name)>
-            ViewBag.QuestionTypes = new SelectList((System.Collections.IEnumerable)types, "Id", "Name");
+            ViewBag.QuestionTypes = new SelectList(
+                (System.Collections.IEnumerable)types,
+                "Id",
+                "Name"
+            );
 
-            var Category = await _lookupsService.List();
-            ViewBag.Categorys = new SelectList(Category, "Id", culture == "ar" ? "NameAr" : "NameEn");
+            var category = await _lookupsService.List();
+            ViewBag.Categorys = new SelectList(
+                category,
+                "Id",
+                culture == "ar" ? "NameAr" : "NameEn"
+            );
 
-            var QuestionItems = await _svc.ListQuestionItems();
-            ViewBag.QuestionItems = new SelectList(QuestionItems, "Id", culture == "ar" ? "TextAr" : "TextEn");
-
-
-
+            var questionItems = await _svc.ListQuestionItems();
+            ViewBag.QuestionItems = new SelectList(
+                questionItems,
+                "Id",
+                culture == "ar" ? "TextAr" : "TextEn"
+            );
 
             // تحضير الموديل
             var model = new QuestionCreateDto();
@@ -90,7 +109,7 @@ namespace PeerReview.MvcHotel.Controllers
                 model.DescriptionAr = existing.DescriptionAr;
                 model.CategoryId = existing.CategoryId;
                 model.Items = existing.Items?.Select(item => item.Id).ToList();
-                // items: ما منرجّعها هون (بس نهيئها للتحديث لاحقاً)
+
                 ViewBag.Id = id.Value;
             }
 
@@ -98,10 +117,11 @@ namespace PeerReview.MvcHotel.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             await _svc.Delete(id);
-            TempData["msg"] = SharedResource.Msg_Deleted;
+            TempData["msg"] = _L["Msg_Deleted"];
             return RedirectToAction(nameof(Index));
         }
     }

@@ -13,7 +13,10 @@ namespace PeerReview.MvcHotel.Controllers
         private readonly IStringLocalizer<SharedResource> _L;
         private readonly RolesService _svcRole;
 
-        public UsersController(UsersService svc, IStringLocalizer<SharedResource> L, RolesService svcRole)
+        public UsersController(
+            UsersService svc,
+            IStringLocalizer<SharedResource> L,
+            RolesService svcRole)
         {
             _L = L;
             _svc = svc;
@@ -25,6 +28,7 @@ namespace PeerReview.MvcHotel.Controllers
             var list = await _svc.List() ?? new();
             return View(list);
         }
+
         public async Task<IActionResult> Create()
         {
             var list = await _svcRole.List() ?? new();
@@ -46,8 +50,9 @@ namespace PeerReview.MvcHotel.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
+
             await _svc.Create(model);
-            TempData["msg"] = SharedResource.Msg_Added;
+            TempData["msg"] = _L["Msg_Added"];
             return RedirectToAction(nameof(Index));
         }
 
@@ -62,7 +67,7 @@ namespace PeerReview.MvcHotel.Controllers
                 {
                     Value = r.id.ToString(),
                     Text = r.name ?? $"Role #{r.id}",
-                    Selected = (r.id == u.roleId)   // يحدد الحالي تلقائياً
+                    Selected = (r.id == u.roleId)
                 })
                 .ToList();
 
@@ -86,29 +91,36 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Edit(int id, UserUpdateDto model)
         {
             await _svc.Update(id, model);
-            TempData["msg"] = SharedResource.Msg_Added;
+            TempData["msg"] = _L["Msg_Updated"];
             return RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             await _svc.Delete(id);
-            TempData["msg"] = SharedResource.Msg_Added;
+            TempData["msg"] = _L["Msg_Deleted"];
             return RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Activate(int id)
         {
             await _svc.Activate(id);
+            // ممكن تضيف:
+            // TempData["msg"] = _L["Msg_Activated"];
             return RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deactivate(int id)
         {
             await _svc.Deactivate(id);
+            // ممكن تضيف:
+            // TempData["msg"] = _L["Msg_Deactivated"];
             return RedirectToAction(nameof(Index));
         }
     }

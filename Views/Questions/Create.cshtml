@@ -1,14 +1,37 @@
-
 @inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 @model PeerReview.MvcHotel.Models.QuestionCreateDto
-@{ ViewData["Title"]=@SharedResource.Questions_Create_Title; }
-<h3>@SharedResource.Questions_Create_Title</h3>
+
+@{
+    ViewData["Title"] = L["Questions_Create_Title"];
+}
+
+<h3>@L["Questions_Create_Title"]</h3>
+
 <form method="post" class="card card-hotel p-3">
     @Html.AntiForgeryToken()
-  <div class="row g-2">
-    <div class="col-md-6"><label class="form-label">@SharedResource.Field_Title</label><input asp-for="TitleEn" class="form-control" /></div>
-    <div class="col-md-6"><label class="form-label">@SharedResource.Field_Description</label><input asp-for="DescriptionEn" class="form-control" /></div>
-    <div class="col-md-4"><label class="form-label">@SharedResource.Field_Category</label><input asp-for="CategoryId" type="number" class="form-control" /></div>
-  </div>
-  <button class="btn btn-gold mt-2">@SharedResource.Btn_Save</button> <a class="btn btn-secondary mt-2" href="/Questions">@SharedResource.Btn_Back</a>
+
+    <div class="row g-2">
+        <div class="col-md-6">
+            <label class="form-label">@L["Field_Title"]</label>
+            <input asp-for="TitleEn" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">@L["Field_Description"]</label>
+            <input asp-for="DescriptionEn" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">@L["Field_Category"]</label>
+            <input asp-for="CategoryId" type="number" class="form-control" />
+        </div>
+    </div>
+
+    <button class="btn btn-gold mt-2">
+        @L["Btn_Save"]
+    </button>
+
+    <a class="btn btn-secondary mt-2" href="/Questions">
+        @L["Btn_Back"]
+    </a>
 </form>
