@@ -1,6 +1,7 @@
-﻿@model QuestionCreateDto
+@model QuestionCreateDto
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.AspNetCore.Mvc.Rendering
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@inject IViewLocalizer L
 
 @{
     var id = ViewBag.Id as int?;

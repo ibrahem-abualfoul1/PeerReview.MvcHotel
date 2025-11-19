@@ -1,5 +1,6 @@
-﻿@model System.Collections.Generic.List<PeerReview.MvcHotel.Models.User>
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model System.Collections.Generic.List<PeerReview.MvcHotel.Models.User>
+@inject IViewLocalizer L
 
 @{
     ViewData["Title"] = L["Menu_Users"];

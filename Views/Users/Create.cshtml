@@ -1,13 +1,15 @@
+@using Microsoft.AspNetCore.Mvc.Localization
 @model UserCreateDto
+@inject IViewLocalizer L
 
 @{
-    ViewData["Title"] = "مستخدم جديد";
+    ViewData["Title"] = L["Users_Create_Title"];
     ViewBag.ActiveMenu = "Users";
 }
 
 @section HeaderActions {
     <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
-        ← رجوع
+        ← @L["Btn_Back"]
     </a>
 }
 
@@ -15,7 +17,7 @@
     <div class="col-lg-7 col-xl-6">
         <div class="pr-card">
             <div class="h-section-title mb-3">
-                مستخدم جديد
+                @L["Users_Create_Title"]
             </div>
 
             <form asp-action="Create" asp-controller="Users" method="post">
@@ -23,25 +25,25 @@
 
                 <div class="pr-field">
                     <input asp-for="userName" placeholder=" " required />
-                    <label>اسم المستخدم</label>
+                    <label>@L["Field_UserName"]</label>
                     @Html.ValidationMessageFor(m => m.userName, "", new { @class = "text-danger small" })
                 </div>
 
                 <div class="pr-field">
                     <input asp-for="fullName" placeholder=" " />
-                    <label>الاسم الكامل</label>
+                    <label>@L["Field_FullName"]</label>
                     @Html.ValidationMessageFor(m => m.fullName, "", new { @class = "text-danger small" })
                 </div>
 
                 <div class="pr-field">
                     <input asp-for="email" placeholder=" " type="email" />
-                    <label>البريد الإلكتروني</label>
+                    <label>@L["Field_Email"]</label>
                     @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger small" })
                 </div>
 
                 <div class="pr-field">
                     <input asp-for="password" placeholder=" " type="password" />
-                    <label>كلمة المرور</label>
+                    <label>@L["Field_Password"]</label>
                     @Html.ValidationMessageFor(m => m.password, "", new { @class = "text-danger small" })
                 </div>
 
@@ -49,18 +51,18 @@
                     <select asp-for="roleId"
                             class="form-select"
                             asp-items="@(new SelectList(ViewBag.Roles, "Value", "Text"))">
-                        <option value="">-- اختر الدور --</option>
+                        <option value="">@L["Field_RolePlaceholder"]</option>
                     </select>
-                    <label>الدور</label>
+                    <label>@L["Field_Role"]</label>
                     @Html.ValidationMessageFor(m => m.roleId, "", new { @class = "text-danger small" })
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-3">
                     <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
-                        رجوع
+                        @L["Btn_Back"]
                     </a>
                     <button type="submit" class="btn-pr btn-pr-primary">
-                        حفظ
+                        @L["Btn_Save"]
                     </button>
                 </div>
             </form>

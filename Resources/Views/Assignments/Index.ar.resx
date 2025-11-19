@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Assignments_Title" xml:space="preserve">
+    <value>الإسنادات</value>
+  </data>
+  <data name="Assignments_Bulk_Title" xml:space="preserve">
+    <value>إسناد جماعي</value>
+  </data>
+  <data name="Assignments_Action_Activate" xml:space="preserve">
+    <value>تفعيل</value>
+  </data>
+  <data name="Assignments_Bulk_Hint" xml:space="preserve">
+    <value>اختر الأسئلة والمراجعين ثم قم بتوزيعها دفعة واحدة.</value>
+  </data>
+  <data name="Assignments_Bulk_QuestionIds" xml:space="preserve">
+    <value>الأسئلة</value>
+  </data>
+  <data name="Assignments_Bulk_Questions_Placeholder" xml:space="preserve">
+    <value>اختر الأسئلة</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>تحديد الكل</value>
+  </data>
+  <data name="Assignments_Bulk_Questions_Hint" xml:space="preserve">
+    <value>اختر سؤالاً واحداً أو أكثر للتوزيع.</value>
+  </data>
+  <data name="Assignments_Bulk_UserIds" xml:space="preserve">
+    <value>المراجعون</value>
+  </data>
+  <data name="Assignments_Bulk_Users_Placeholder" xml:space="preserve">
+    <value>اختر المراجعين</value>
+  </data>
+  <data name="Assignments_Bulk_Users_Hint" xml:space="preserve">
+    <value>حدد المراجعين الذين ينبغي أن يستقبلوا هذه الأسئلة.</value>
+  </data>
+  <data name="Assignments_Bulk_Execute" xml:space="preserve">
+    <value>تنفيذ الإسناد</value>
+  </data>
+  <data name="Btn_Reset" xml:space="preserve">
+    <value>إعادة تعيين</value>
+  </data>
+  <data name="Assignments_Title_List" xml:space="preserve">
+    <value>قائمة {0}</value>
+  </data>
+  <data name="Assignments_Subtitle" xml:space="preserve">
+    <value>إدارة الإسنادات الحالية.</value>
+  </data>
+  <data name="Btn_Copy" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+  <data name="Btn_Excel" xml:space="preserve">
+    <value>إكسل</value>
+  </data>
+  <data name="Btn_Pdf" xml:space="preserve">
+    <value>PDF</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>محدد</value>
+  </data>
+  <data name="Swal_Warning_Title" xml:space="preserve">
+    <value>تنبيه</value>
+  </data>
+  <data name="Assignments_Bulk_Validation_SelectBoth" xml:space="preserve">
+    <value>يرجى اختيار سؤال واحد على الأقل ومراجع واحد قبل المتابعة.</value>
+  </data>
+  <data name="Assignments_Bulk_Success_Default" xml:space="preserve">
+    <value>تم توزيع الأسئلة على المراجعين المحددين.</value>
+  </data>
+  <data name="Swal_Success_Title" xml:space="preserve">
+    <value>تم بنجاح</value>
+  </data>
+  <data name="Swal_Error_Title" xml:space="preserve">
+    <value>حدث خطأ</value>
+  </data>
+  <data name="Assignments_Bulk_Error" xml:space="preserve">
+    <value>تعذر إتمام عملية الإسناد.</value>
+  </data>
+  <data name="Assignments_Bulk_Error_Generic" xml:space="preserve">
+    <value>حدث خطأ غير متوقع أثناء تنفيذ الطلب.</value>
+  </data>
+  <data name="Assignments_Toggle_Failed" xml:space="preserve">
+    <value>تعذر تحديث الإسناد.</value>
+  </data>
+  <data name="Assignments_Toggle_Error" xml:space="preserve">
+    <value>حدث خطأ أثناء تحديث الإسناد.</value>
+  </data>
+</root>

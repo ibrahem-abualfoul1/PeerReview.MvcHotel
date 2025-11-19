@@ -1,4 +1,6 @@
-﻿@using Microsoft.AspNetCore.Mvc.Rendering
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Mvc.Rendering
+@inject IViewLocalizer L
 @{
     
     var users = ViewBag.Users as List<User> ?? new();
@@ -13,33 +15,33 @@
                 @Html.AntiForgeryToken()
 
                 <div class="modal-header">
-                    <h5 class="modal-title">إسناد جماعي (أسئلة ← مستخدمين)</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="x"></button>
+                    <h5 class="modal-title">@L["Modal_Title"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@L["Btn_Close"]"></button>
                 </div>
 
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">الأسئلة (متعدد)</label>
-                            
-                            <select name="questionIds" class="form-select" multiple size="8">
+                            <label class="form-label">@L["Field_QuestionsLabel"]</label>
+
+                            <select id="questionIds" name="questionIds" class="form-select" multiple size="8">
                                 @foreach (var q in qs)
                                 {
                                     <option value="@q.Id">@( q.TitleEn)</option>
                                 }
                             </select>
-                            <div class="form-text">اختر سؤالًا واحدًا أو أكثر.</div>
+                            <div class="form-text">@L["Field_Questions_Hint"]</div>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">المستخدمون (متعدد)</label>
-                            <select name="userIds" class="form-select" multiple size="8">
+                            <label class="form-label">@L["Field_UsersLabel"]</label>
+                            <select id="userIds" name="userIds" class="form-select" multiple size="8">
                                 @foreach (var u in users)
                                 {
                                     <option value="@u.id">@u.fullName (@u.userName)</option>
                                 }
                             </select>
-                            <div class="form-text">اختر مستخدمًا واحدًا أو أكثر.</div>
+                            <div class="form-text">@L["Field_Users_Hint"]</div>
                         </div>
                     </div>
 
@@ -47,8 +49,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn btn-primary">حفظ</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@L["Btn_Cancel"]</button>
+                    <button type="submit" class="btn btn-primary">@L["Btn_Save"]</button>
                 </div>
             </form>
         </div>
@@ -57,7 +59,6 @@
 
 @section Scripts {
     <script>
-    debugger
         (function(){
           $(document).off('submit', '#assignmentUpsertForm').on('submit', '#assignmentUpsertForm', function(e){
             e.preventDefault();
@@ -68,13 +69,12 @@
             const alertBox = document.getElementById('upsertAlert');
             const showErr = (msg)=>{ alertBox.textContent = msg; alertBox.classList.remove('d-none'); };
 
-            if (!qSel.length){ return showErr('الرجاء اختيار سؤال/أسئلة.'); }
-            if (!uSel.length){ return showErr('الرجاء اختيار مستخدم/مستخدمين.'); }
+            if (!qSel.length){ return showErr('@L["Alert_SelectQuestions"]'); }
+            if (!uSel.length){ return showErr('@L["Alert_SelectUsers"]'); }
             alertBox.classList.add('d-none');
 
             const af = document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]')?.value
                     || document.querySelector('#assignmentUpsertForm input[name="__RequestVerificationToken"]')?.value;
-            debugger
             fetch('/Assignments/Upsert', {
               method: 'POST',
               headers: {
@@ -89,10 +89,10 @@
                 bootstrap.Modal.getInstance(document.getElementById('assignmentUpsertModal')).hide();
                 if (window.reloadAssignmentsTable) window.reloadAssignmentsTable(); // إعادة تحميل الجدول فقط
               } else {
-                showErr(j?.message || 'تعذّر الحفظ.');
+                showErr(j?.message || '@L["Alert_SaveFailed"]');
               }
             })
-            .catch(() => showErr('حدث خطأ أثناء الحفظ.'));
+            .catch(() => showErr('@L["Alert_SaveError"]'));
           });
         })();
     </script>

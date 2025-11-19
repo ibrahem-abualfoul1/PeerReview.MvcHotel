@@ -1,9 +1,10 @@
 ﻿@model PeerReview.MvcHotel.Models.ReviewerUsersOverviewDto
+@using Microsoft.AspNetCore.Mvc.Localization
 @using System.Globalization
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@inject IViewLocalizer L
 
 @{
-    ViewData["Title"] = L["AnswerScoring_Title"] ?? "Answer Scoring";
+    ViewData["Title"] = L["AnswerScoring_Title"];
     ViewBag.ActiveMenu = "Scoring";
 
     var scored = Model?.Scored ?? new List<PeerReview.MvcHotel.Models.ReviewerUserRowDto>();
@@ -149,7 +150,7 @@
                 @L["TotalReviewUsers"]: @totalUsers
             </span>
             <span class="score-pill-small">
-                ReviewerId: @Model?.ReviewerId
+                @L["ReviewerId_Label"]: @Model?.ReviewerId
             </span>
         </div>
     </div>
@@ -214,13 +215,13 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>@(L["UserName"] ?? "User Name")</th>
-                            <th>@(L["FullName"] ?? "Full Name")</th>
-                            <th class="text-center">@L["TotalAnswers"]</th>
-                            <th class="text-center">@L["Unscored"]</th>
-                            <th class="text-center">@L["Scored"]</th>
-                            <th>@(L["LastUpdated"] ?? "Last Scored At")</th>
-                            <th class="text-center">@L["Actions"]</th>
+                            <th>@L["Column_UserName"]</th>
+                            <th>@L["Column_FullName"]</th>
+                            <th class="text-center">@L["Column_TotalAnswers"]</th>
+                            <th class="text-center">@L["Column_Unscored"]</th>
+                            <th class="text-center">@L["Column_Scored"]</th>
+                            <th>@L["Column_LastUpdated"]</th>
+                            <th class="text-center">@L["Column_Actions"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -265,7 +266,7 @@
                         {
                             <tr class="score-empty-row">
                                 <td colspan="8" class="text-center text-muted-soft">
-                                    @(L["NoData"] ?? "No data to display.")
+                                    @L["NoData"]
                                 </td>
                             </tr>
                         }
@@ -281,13 +282,13 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>@(L["UserName"] ?? "User Name")</th>
-                            <th>@(L["FullName"] ?? "Full Name")</th>
-                            <th class="text-center">@L["TotalAnswers"]</th>
-                            <th class="text-center">@L["Scored"]</th>
-                            <th class="text-center">@L["Unscored"]</th>
-                            <th>@(L["LastUpdated"] ?? "Last Scored At")</th>
-                            <th class="text-center">@L["Actions"]</th>
+                            <th>@L["Column_UserName"]</th>
+                            <th>@L["Column_FullName"]</th>
+                            <th class="text-center">@L["Column_TotalAnswers"]</th>
+                            <th class="text-center">@L["Column_Scored"]</th>
+                            <th class="text-center">@L["Column_Unscored"]</th>
+                            <th>@L["Column_LastUpdated"]</th>
+                            <th class="text-center">@L["Column_Actions"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -332,7 +333,7 @@
                         {
                             <tr class="score-empty-row">
                                 <td colspan="8" class="text-center text-muted-soft">
-                                    @(L["NoData"] ?? "No data to display.")
+                                    @L["NoData"]
                                 </td>
                             </tr>
                         }

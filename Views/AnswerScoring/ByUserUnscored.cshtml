@@ -1,8 +1,9 @@
 ﻿@model List<PeerReview.MvcHotel.Models.AnswerForScoringDto>
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
 
 @{
-    ViewData["Title"] = (L["UnscoredAnswers"] ?? "Unscored Answers");
+    ViewData["Title"] = L["UnscoredAnswers_Title"];
     ViewBag.ActiveMenu = "Scoring";
 
     var ci = System.Globalization.CultureInfo.CurrentUICulture;
@@ -42,7 +43,7 @@
         </div>
     </div>
     <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
-        ← @(L["Back"] ?? "Back")
+        ← @L["Btn_Back"]
     </a>
 </div>
 
@@ -50,7 +51,7 @@
 {
     <div class="pr-card">
         <div class="text-center text-muted-soft py-4">
-            @(L["NoUnscoredAnswers"] ?? "No unscored answers found.")
+            @L["NoUnscoredAnswers"]
         </div>
     </div>
 }
@@ -62,17 +63,17 @@ else
         @Html.AntiForgeryToken()
 
         <div class="table-responsive mt-1">
-            <table class="pr-table align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th style="width:50px;">#</th>
-                        <th style="min-width:220px;">@(L["Question"] ?? "Question")</th>
-                        <th style="min-width:180px;">@(L["Item"] ?? "Item")</th>
-                        <th style="min-width:240px;">@(L["Answer"] ?? "Answer")</th>
-                        <th style="width:140px">@("Score")</th>
-                        <th style="min-width:180px;">@(L["Notes"] ?? "Notes")</th>
-                    </tr>
-                </thead>
+                <table class="pr-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">#</th>
+                            <th style="min-width:220px;">@L["Column_Question"]</th>
+                            <th style="min-width:180px;">@L["Column_Item"]</th>
+                            <th style="min-width:240px;">@L["Column_Answer"]</th>
+                            <th style="width:140px">@L["Column_Score"]</th>
+                            <th style="min-width:180px;">@L["Column_Notes"]</th>
+                        </tr>
+                    </thead>
                 <tbody>
                     @for (var i = 0; i < Model.Count; i++)
                     {
@@ -102,7 +103,7 @@ else
                                 @qText
                             </div>
                             <div class="score-meta text-muted">
-                                Q# @a.QuestionId
+                                @string.Format(L["QuestionId_Label"].Value, a.QuestionId)
                             </div>
                         </td>
 
@@ -116,7 +117,7 @@ else
                                                             )
                             </div>
                             <div class="score-meta text-muted">
-                                ItemId: @a.QuestionItemId
+                                @string.Format(L["ItemId_Label"].Value, a.QuestionItemId)
                             </div>
                         </td>
 
@@ -174,10 +175,10 @@ else
 
         <div class="d-flex justify-content-end gap-2 mt-3">
             <button type="submit" class="btn-pr btn-pr-primary">
-                @(L["Save"] ?? "Save")
+                @L["Btn_Save"]
             </button>
             <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
-                @(L["Cancel"] ?? "Cancel")
+                @L["Btn_Cancel"]
             </a>
         </div>
     </form>
@@ -212,7 +213,7 @@ else
             const blobUrl = URL.createObjectURL(blob);
             window.open(blobUrl, "_blank");
         } catch {
-            alert('تعذر فتح الملف.');
+            alert('@L["FileOpenError"]');
         }
     }
 </script>
