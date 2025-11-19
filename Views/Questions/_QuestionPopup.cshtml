@@ -20,6 +20,73 @@
         : Url.Action("Create", "Questions")!;
 }
 
+<style>
+    /* تحسين المظهر العام للمودال */
+    #questionUpsertModal .modal-content {
+        background: linear-gradient(135deg, rgba(244, 246, 248, 0.9), rgba(232, 236, 241, 0.95));
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        font-family: 'Segoe UI', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
+    }
+
+    #questionUpsertModal .modal-header,
+    #questionUpsertModal .modal-footer {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(6px);
+    }
+
+    #questionUpsertModal .pr-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 18px;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    #questionUpsertModal .pr-field input,
+    #questionUpsertModal .pr-field textarea,
+    #questionUpsertModal .pr-field select {
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #questionUpsertModal .pr-field input:focus,
+    #questionUpsertModal .pr-field textarea:focus,
+    #questionUpsertModal .pr-field select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 0.15rem rgba(59, 130, 246, 0.15);
+    }
+
+    #questionUpsertModal .dropdown-toggle {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        padding: 0.75rem 1rem;
+        color: #0f172a;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+
+    #questionUpsertModal .dropdown-menu {
+        border-radius: 14px;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    #questionUpsertModal .badge-soft {
+        background: #e0e7ff;
+        color: #1e3a8a;
+        border: 1px solid rgba(59, 130, 246, 0.16);
+        padding: 0.5rem 0.7rem;
+        border-radius: 999px;
+        font-weight: 600;
+    }
+
+    #questionUpsertModal .muted-note {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+</style>
+
 <div class="modal fade" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content shadow-lg" style="border-radius:1rem; overflow:hidden;">
@@ -124,7 +191,7 @@
                                 </label>
 
                                 <div class="dropdown w-100">
-                                    <button class="btn btn-light border w-100 d-flex justify-content-between align-items-center"
+                                    <button class="btn dropdown-toggle w-100 d-flex justify-content-between align-items-center"
                                             type="button"
                                             id="itemsDropdownButton"
                                             data-default-text='@L["Questions_Items_Select"]'
@@ -136,8 +203,14 @@
                                         </span>
                                         <i class="bi bi-chevron-down"></i>
                                     </button>
-                                    <div class="dropdown-menu w-100 p-3 shadow" aria-labelledby="itemsDropdownButton" style="max-height: 320px; overflow-y: auto;">
-                                        <div class="small text-muted mb-2">@L["Questions_Items_Help"]</div>
+                                    <div class="dropdown-menu w-100 p-3 shadow" aria-labelledby="itemsDropdownButton" style="max-height: 360px; overflow-y: auto;">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <div class="small text-muted">@L["Questions_Items_Help"]</div>
+                                            <div class="form-check mb-0">
+                                                <input class="form-check-input" type="checkbox" id="itemsSelectAll" />
+                                                <label class="form-check-label" for="itemsSelectAll">@L["Select_All"]</label>
+                                            </div>
+                                        </div>
                                         @foreach (var option in questionItems)
                                         {
                                             var isChecked = int.TryParse(option.Value, out var itemId) && selectedItems.Contains(itemId);
@@ -157,6 +230,8 @@
                                         }
                                     </div>
                                 </div>
+
+                                <div id="itemsSelectedPreview" class="d-flex flex-wrap gap-2 mt-2" aria-live="polite"></div>
 
                                 <span class="text-danger small d-block" asp-validation-for="Items"></span>
                             </div>
@@ -195,15 +270,12 @@
             const defaultText = dropdownButton.dataset.defaultText?.trim() || dropdownLabel?.textContent?.trim() || '';
             const dropdown = dropdownButton.closest('.dropdown');
             const checkboxes = dropdown ? dropdown.querySelectorAll('input[name="Items"]') : [];
+            const previewContainer = document.getElementById('itemsSelectedPreview');
+            const selectAllCheckbox = document.getElementById('itemsSelectAll');
 
             const refreshLabel = () => {
                 const selected = Array.from(checkboxes).filter(cb => cb.checked);
                 if (!dropdownLabel) return;
-
-                if (selected.length === 0) {
-                    dropdownLabel.textContent = defaultText;
-                    return;
-                }
 
                 const selectedNames = selected
                     .map(cb => {
@@ -212,11 +284,48 @@
                     })
                     .filter(Boolean);
 
-                const preview = selectedNames.slice(0, 2).join(', ');
-                dropdownLabel.textContent = selectedNames.length > 2
-                    ? `${preview} +${selectedNames.length - 2}`
-                    : preview || defaultText;
+                if (selectedNames.length === 0) {
+                    dropdownLabel.textContent = defaultText;
+                }
+                else {
+                    const preview = selectedNames.slice(0, 2).join(', ');
+                    dropdownLabel.textContent = selectedNames.length > 2
+                        ? `${preview} +${selectedNames.length - 2}`
+                        : preview || defaultText;
+                }
+
+                if (previewContainer) {
+                    previewContainer.innerHTML = '';
+                    selectedNames.forEach(name => {
+                        const badge = document.createElement('span');
+                        badge.className = 'badge-soft';
+                        badge.textContent = name;
+                        previewContainer.appendChild(badge);
+                    });
+
+                    if (selectedNames.length === 0) {
+                        const placeholder = document.createElement('span');
+                        placeholder.className = 'muted-note';
+                        placeholder.textContent = '@L["Questions_Items_Select"]';
+                        previewContainer.appendChild(placeholder);
+                    }
+                }
+
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.checked = selected.length === checkboxes.length && checkboxes.length > 0;
+                    selectAllCheckbox.indeterminate = selected.length > 0 && selected.length < checkboxes.length;
+                }
             };
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', (e) => {
+                    const isChecked = e.target.checked;
+                    checkboxes.forEach(cb => {
+                        cb.checked = isChecked;
+                    });
+                    refreshLabel();
+                });
+            }
 
             checkboxes.forEach(cb => cb.addEventListener('change', refreshLabel));
             refreshLabel();
