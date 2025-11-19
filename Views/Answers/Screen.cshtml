@@ -5,91 +5,100 @@
 @{
     ViewData["Title"] = Model?.TitleEn ?? "Form";
     var qid = (int)(ViewBag.QuestionId ?? 0);
+    ViewBag.ActiveMenu = "Answers";
 }
 
-<h3 class="mb-3">@Model?.TitleEn</h3>
-
-@if (!string.IsNullOrWhiteSpace(Model?.DescriptionEn))
-{
-    <p class="text-muted">@Model.DescriptionEn</p>
-}
-
-<form id="dynForm" class="card card-hotel p-3">
-    @Html.AntiForgeryToken()
-    <input type="hidden" id="questionId" value="@qid" />
-
-    <div class="row g-3">
-        @foreach (var it in Model?.Items ?? new List<PeerReview.MvcHotel.Models.QuestionItemDto>())
-        {
-            var required = it.IsRequired ? "required" : "";
-            @* var parentAttr = it.parentItemId.HasValue ? $"data-parent='{it.parentItemId.Value}' data-show='{it.showWhenValue}'" : ""; *@
-
-            <div class="col-12 item" id="item-@it.Id" @* @Html.Raw(parentAttr) *@>
-                <label class="form-label fw-semibold">
-                    @it.TextEn
-                    @if (it.IsRequired)
+<div class="row justify-content-center">
+    <div class="col-xxl-10 col-xl-10">
+        <div class="pr-card">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                    <div class="h-section-title mb-1">@Model?.TitleEn</div>
+                    @if (!string.IsNullOrWhiteSpace(Model?.DescriptionEn))
                     {
-                        <span class="text-danger">*</span>
+                        <p class="text-muted-soft mb-0">@Model.DescriptionEn</p>
                     }
-                </label>
-
-                @* Enum mapping from PeerReview.Domain.Enums.QuestionType:
-                   1=Text, 2=YesNo, 3=SingleChoice, 4=MultiChoice, 5=Number, 6=Date, 7=File *@
-                @if (it.Type == 7)
-                {
-                    <input class="form-control" type="file" name="file_@it.Id" />
-                }
-                else if (it.Type == 6)
-                {
-                    <input class="form-control" type="date" name="i_@it.Id" @required />
-                }
-                else if (it.Type == 5)
-                {
-                    <input class="form-control" type="number" step="any" name="i_@it.Id" @required />
-                }
-                else if (it.Type == 4)
-                {
-                    <select class="form-select" multiple name="i_@it.Id">
-                        @foreach (var opt in (it.OptionsCsvEn ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
-                        {
-                            var o = opt.Trim();
-                            <option value="@o">@o</option>
-                        }
-                    </select>
-                }
-                else if (it.Type == 3)
-                {
-                    <select class="form-select" name="i_@it.Id" @required>
-                        <option value="">—</option>
-                        @foreach (var opt in (it.OptionsCsvEn ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
-                        {
-                            var o = opt.Trim();
-                            <option value="@o">@o</option>
-                        }
-                    </select>
-                }
-                else if (it.Type == 2)
-                {
-                    <select class="form-select" name="i_@it.Id" @required>
-                        <option value="">—</option>
-                        <option value="Yes">@L["Yes"]</option>
-                        <option value="No">@L["No"]</option>
-                    </select>
-                }
-                else
-                {
-           @* default to Text (1) *@
-                    <input class="form-control" type="text" name="i_@it.Id" @required />
-                }
+                </div>
+                <a class="btn-pr btn-pr-outline" href="/Answers/Mine">@L["Btn_Back"]</a>
             </div>
-        }
-    </div>
 
-    <div class="mt-3">
-        <button class="btn btn-gold">@L["Btn_Save"]</button>
-        <a class="btn btn-secondary" href="/Answers/Mine">@L["Btn_Back"]</a>
+            <form id="dynForm" class="pr-form-grid mt-3">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="questionId" value="@qid" />
+
+                <div class="row g-3">
+                    @foreach (var it in Model?.Items ?? new List<PeerReview.MvcHotel.Models.QuestionItemDto>())
+                    {
+                        var required = it.IsRequired ? "required" : "";
+
+                        <div class="col-12 item" id="item-@it.Id">
+                            <div class="pr-field-block">
+                                <label>
+                                    @it.TextEn
+                                    @if (it.IsRequired)
+                                    {
+                                        <span class="text-danger">*</span>
+                                    }
+                                </label>
+
+                                @if (it.Type == 7)
+                                {
+                                    <input class="pr-form-control" type="file" name="file_@it.Id" />
+                                }
+                                else if (it.Type == 6)
+                                {
+                                    <input class="pr-form-control" type="date" name="i_@it.Id" @required />
+                                }
+                                else if (it.Type == 5)
+                                {
+                                    <input class="pr-form-control" type="number" step="any" name="i_@it.Id" @required />
+                                }
+                                else if (it.Type == 4)
+                                {
+                                    <select class="pr-form-control" multiple name="i_@it.Id">
+                                        @foreach (var opt in (it.OptionsCsvEn ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
+                                        {
+                                            var o = opt.Trim();
+                                            <option value="@o">@o</option>
+                                        }
+                                    </select>
+                                }
+                                else if (it.Type == 3)
+                                {
+                                    <select class="pr-form-control" name="i_@it.Id" @required>
+                                        <option value="">—</option>
+                                        @foreach (var opt in (it.OptionsCsvEn ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
+                                        {
+                                            var o = opt.Trim();
+                                            <option value="@o">@o</option>
+                                        }
+                                    </select>
+                                }
+                                else if (it.Type == 2)
+                                {
+                                    <select class="pr-form-control" name="i_@it.Id" @required>
+                                        <option value="">—</option>
+                                        <option value="Yes">@L["Yes"]</option>
+                                        <option value="No">@L["No"]</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <input class="pr-form-control" type="text" name="i_@it.Id" @required />
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="pr-form-actions mt-2">
+                    <a class="btn-pr btn-pr-outline" href="/Answers/Mine">@L["Btn_Back"]</a>
+                    <button class="btn-pr btn-pr-primary" type="submit">@L["Btn_Save"]</button>
+                </div>
+            </form>
+        </div>
     </div>
-</form>
+</div>
 
 @section Scripts {
     <script>
