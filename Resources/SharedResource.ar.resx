@@ -505,4 +505,568 @@
     <value>لا توجد سجلات مطابقة.</value>
   </data>
 
+
+        <data name="Answers_Action_Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+
+        <data name="Answers_Add" xml:space="preserve">
+    <value>إضافة إجابة</value>
+  </data>
+
+        <data name="Answers_Col_Date" xml:space="preserve">
+    <value>التاريخ</value>
+  </data>
+
+        <data name="Answers_Col_Item" xml:space="preserve">
+    <value>العنصر</value>
+  </data>
+
+        <data name="Answers_Col_Question" xml:space="preserve">
+    <value>السؤال</value>
+  </data>
+
+        <data name="Answers_Col_Value" xml:space="preserve">
+    <value>القيمة</value>
+  </data>
+
+        <data name="Answers_Create_Title" xml:space="preserve">
+    <value>إضافة إجابة</value>
+  </data>
+
+        <data name="Answers_Edit_Title" xml:space="preserve">
+    <value>تعديل الإجابة</value>
+  </data>
+
+        <data name="Answers_Title" xml:space="preserve">
+    <value>إجاباتي</value>
+  </data>
+
+        <data name="Assignments_Action_Activate" xml:space="preserve">
+    <value>إسناد جماعي</value>
+  </data>
+
+        <data name="Assignments_Bulk_Error" xml:space="preserve">
+    <value>حدث خطأ أثناء تنفيذ الإسناد.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Error_Generic" xml:space="preserve">
+    <value>تعذر إكمال عملية الإسناد الجماعي.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Execute" xml:space="preserve">
+    <value>تنفيذ الإسناد</value>
+  </data>
+
+        <data name="Assignments_Bulk_Hint" xml:space="preserve">
+    <value>اختر الأسئلة والمستخدمين الذين تريد ربطهم ثم نفّذ عملية الإسناد.</value>
+  </data>
+
+        <data name="Assignments_Bulk_QuestionIds" xml:space="preserve">
+    <value>الأسئلة</value>
+  </data>
+
+        <data name="Assignments_Bulk_Questions_Hint" xml:space="preserve">
+    <value>لا تجد السؤال المطلوب؟ استخدم زر {0} لإضافته أولاً.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Questions_Placeholder" xml:space="preserve">
+    <value>اختر الأسئلة</value>
+  </data>
+
+        <data name="Assignments_Bulk_Success_Default" xml:space="preserve">
+    <value>تم توزيع الأسئلة على المستخدمين المحددين.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Title" xml:space="preserve">
+    <value>إسناد جماعي</value>
+  </data>
+
+        <data name="Assignments_Bulk_UserIds" xml:space="preserve">
+    <value>المستخدمون</value>
+  </data>
+
+        <data name="Assignments_Bulk_Users_Hint" xml:space="preserve">
+    <value>تحتاج إلى مراجعين إضافيين؟ استخدم زر {0} لإضافتهم قبل الإسناد.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Users_Placeholder" xml:space="preserve">
+    <value>اختر المستخدمين</value>
+  </data>
+
+        <data name="Assignments_Bulk_Validation_SelectBoth" xml:space="preserve">
+    <value>يرجى اختيار سؤال واحد ومستخدم واحد على الأقل قبل تنفيذ الإسناد.</value>
+  </data>
+
+        <data name="Assignments_Subtitle" xml:space="preserve">
+    <value>إدارة الإسنادات الحالية للمراجعين.</value>
+  </data>
+
+        <data name="Assignments_Title" xml:space="preserve">
+    <value>الإسنادات</value>
+  </data>
+
+        <data name="Assignments_Title_List" xml:space="preserve">
+    <value>قائمة {0}</value>
+  </data>
+
+        <data name="Assignments_Toggle_Error" xml:space="preserve">
+    <value>حدث خطأ أثناء تغيير حالة الإسناد.</value>
+  </data>
+
+        <data name="Assignments_Toggle_Failed" xml:space="preserve">
+    <value>تعذر تحديث حالة الإسناد.</value>
+  </data>
+
+        <data name="Btn_Back" xml:space="preserve">
+    <value>رجوع</value>
+  </data>
+
+        <data name="Btn_Reset" xml:space="preserve">
+    <value>إعادة تعيين</value>
+  </data>
+
+        <data name="Btn_Save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+
+        <data name="Field_Category" xml:space="preserve">
+    <value>التصنيف</value>
+  </data>
+
+        <data name="Field_Description" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+
+        <data name="Field_QuestionId" xml:space="preserve">
+    <value>السؤال</value>
+  </data>
+
+        <data name="Field_QuestionItemId" xml:space="preserve">
+    <value>عنصر السؤال</value>
+  </data>
+
+        <data name="Field_Title" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+
+        <data name="Field_Value" xml:space="preserve">
+    <value>القيمة</value>
+  </data>
+
+        <data name="Filter_Button" xml:space="preserve">
+    <value>تصفية</value>
+  </data>
+
+        <data name="ForgotPassword" xml:space="preserve">
+    <value>هل نسيت كلمة المرور؟</value>
+  </data>
+
+        <data name="FullName" xml:space="preserve">
+    <value>الاسم الكامل</value>
+  </data>
+
+        <data name="HotelImageAlt" xml:space="preserve">
+    <value>صورة ترحيبية</value>
+  </data>
+
+        <data name="Item" xml:space="preserve">
+    <value>العنصر</value>
+  </data>
+
+        <data name="LastUpdated" xml:space="preserve">
+    <value>آخر تحديث</value>
+  </data>
+
+        <data name="Login_Failed" xml:space="preserve">
+    <value>اسم المستخدم أو كلمة المرور غير صحيحة.</value>
+  </data>
+
+        <data name="Login_Header" xml:space="preserve">
+    <value>نظام التقييم والمراجعة</value>
+  </data>
+
+        <data name="Login_Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+
+        <data name="Login_Submit" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+
+        <data name="Login_Title" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+
+        <data name="Login_UserName" xml:space="preserve">
+    <value>اسم المستخدم أو البريد</value>
+  </data>
+
+        <data name="Manage your questions, categories and items." xml:space="preserve">
+    <value>إدارة الأسئلة والتصنيفات والعناصر.</value>
+  </data>
+
+        <data name="Menu_Users" xml:space="preserve">
+    <value>المستخدمون</value>
+  </data>
+
+        <data name="NoScoredAnswers" xml:space="preserve">
+    <value>لا توجد إجابات مقيمة.</value>
+  </data>
+
+        <data name="NoUnscoredAnswers" xml:space="preserve">
+    <value>لا توجد إجابات بحاجة إلى تقييم.</value>
+  </data>
+
+        <data name="Notes" xml:space="preserve">
+    <value>ملاحظات</value>
+  </data>
+
+        <data name="PeerReview" xml:space="preserve">
+    <value>PeerReview</value>
+  </data>
+
+        <data name="Questions_Col_Description" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+
+        <data name="Questions_Col_Items" xml:space="preserve">
+    <value>العناصر</value>
+  </data>
+
+        <data name="Questions_Col_Title" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+
+        <data name="Questions_Create_Title" xml:space="preserve">
+    <value>إضافة سؤال</value>
+  </data>
+
+        <data name="Questions_DescAr" xml:space="preserve">
+    <value>الوصف بالعربية</value>
+  </data>
+
+        <data name="Questions_DescEn" xml:space="preserve">
+    <value>الوصف بالإنجليزية</value>
+  </data>
+
+        <data name="Questions_Details" xml:space="preserve">
+    <value>تفاصيل السؤال</value>
+  </data>
+
+        <data name="Questions_Edit" xml:space="preserve">
+    <value>تعديل السؤال</value>
+  </data>
+
+        <data name="Questions_Edit_Title" xml:space="preserve">
+    <value>تعديل السؤال</value>
+  </data>
+
+        <data name="Questions_Items" xml:space="preserve">
+    <value>عناصر الإجابة</value>
+  </data>
+
+        <data name="Questions_Items_Help" xml:space="preserve">
+    <value>اختر خيارات الإجابة التي تنطبق على هذا السؤال.</value>
+  </data>
+
+        <data name="Questions_SubCategory" xml:space="preserve">
+    <value>التصنيف الفرعي</value>
+  </data>
+
+        <data name="Questions_Title" xml:space="preserve">
+    <value>الأسئلة</value>
+  </data>
+
+        <data name="Questions_TitleAr" xml:space="preserve">
+    <value>العنوان بالعربية</value>
+  </data>
+
+        <data name="Questions_TitleEn" xml:space="preserve">
+    <value>العنوان بالإنجليزية</value>
+  </data>
+
+        <data name="ReviewUnscored" xml:space="preserve">
+    <value>مراجعة</value>
+  </data>
+
+        <data name="Scored" xml:space="preserve">
+    <value>مقيمة</value>
+  </data>
+
+        <data name="ScoredAnswers_Hint" xml:space="preserve">
+    <value>سجل بالإجابات التي قمت بتقييمها.</value>
+  </data>
+
+        <data name="ScoredUsers" xml:space="preserve">
+    <value>مستخدمون تم تقييمهم</value>
+  </data>
+
+        <data name="Scoring" xml:space="preserve">
+    <value>التقييم</value>
+  </data>
+
+        <data name="SelectAll" xml:space="preserve">
+    <value>تحديد الكل</value>
+  </data>
+
+        <data name="Select_Category" xml:space="preserve">
+    <value>اختر التصنيف</value>
+  </data>
+
+        <data name="Select_SubCategory" xml:space="preserve">
+    <value>اختر التصنيف الفرعي</value>
+  </data>
+
+        <data name="Selected" xml:space="preserve">
+    <value>محدد</value>
+  </data>
+
+        <data name="Status_Active" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+
+        <data name="Status_Inactive" xml:space="preserve">
+    <value>غير نشط</value>
+  </data>
+
+        <data name="Swal_Error_Title" xml:space="preserve">
+    <value>خطأ</value>
+  </data>
+
+        <data name="Swal_Success_Title" xml:space="preserve">
+    <value>تم بنجاح</value>
+  </data>
+
+        <data name="Swal_Warning_Title" xml:space="preserve">
+    <value>تحذير</value>
+  </data>
+
+        <data name="TotalReviewUsers" xml:space="preserve">
+    <value>مستخدمو المراجعة</value>
+  </data>
+
+        <data name="Upload_File_File" xml:space="preserve">
+    <value>ملف</value>
+  </data>
+
+        <data name="Users_Action_Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+
+        <data name="user-questions" xml:space="preserve">
+    <value>أسئلة المستخدمين</value>
+  </data>
+
+        <!-- Survey -->
+        <data name="Survey_DefaultTitle" xml:space="preserve">
+    <value>استطلاع</value>
+  </data>
+        <data name="Survey_DefaultDescription" xml:space="preserve">
+    <value>مساهمتك تساعدنا على تحسين الخدمات.</value>
+  </data>
+        <data name="Survey_Badge" xml:space="preserve">
+    <value>استبيان</value>
+  </data>
+        <data name="Survey_Progress_Template" xml:space="preserve">
+    <value>صفحة {current} من {total}</value>
+  </data>
+        <data name="Survey_NoQuestions" xml:space="preserve">
+    <value>لا توجد أسئلة متاحة.</value>
+  </data>
+        <data name="Survey_Button_Previous" xml:space="preserve">
+    <value>السابق</value>
+  </data>
+        <data name="Survey_Button_Next" xml:space="preserve">
+    <value>التالي</value>
+  </data>
+        <data name="Survey_Button_Submit" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+        <data name="Survey_Textarea_Placeholder" xml:space="preserve">
+    <value>اكتب إجابتك هنا...</value>
+  </data>
+        <data name="Survey_Number_Placeholder" xml:space="preserve">
+    <value>أدخل رقماً...</value>
+  </data>
+        <data name="Survey_FileUpload_Prompt" xml:space="preserve">
+    <value>📁 اضغط لرفع ملف</value>
+  </data>
+        <data name="Survey_FileSelected" xml:space="preserve">
+    <value>تم اختيار ملف</value>
+  </data>
+        <data name="Survey_Error_Required" xml:space="preserve">
+    <value>هذا الحقل مطلوب</value>
+  </data>
+        <data name="Survey_Submit_Error" xml:space="preserve">
+    <value>فشل إرسال الاستطلاع. يرجى المحاولة مرة أخرى.</value>
+  </data>
+        <data name="Survey_Success_Title" xml:space="preserve">
+    <value>شكراً لك!</value>
+  </data>
+        <data name="Survey_Success_Message" xml:space="preserve">
+    <value>تم إرسال إجاباتك بنجاح. نقدر وقتك ومساهمتك في تحسين خدماتنا.</value>
+  </data>
+
+        <!-- Global localization additions -->
+        <data name="AppTitle_Short" xml:space="preserve">
+    <value>منصة PeerReview</value>
+  </data>
+        <data name="LogoAlt" xml:space="preserve">
+    <value>شعار منصة PeerReview</value>
+  </data>
+        <data name="Layout_Theme_Button" xml:space="preserve">
+    <value>تبديل النمط</value>
+  </data>
+        <data name="Layout_Footer" xml:space="preserve">
+    <value>© {0} منصة PeerReview</value>
+  </data>
+
+        <!-- DataTables -->
+        <data name="DataTable_Search" xml:space="preserve">
+    <value>بحث:</value>
+  </data>
+        <data name="DataTable_LengthMenu" xml:space="preserve">
+    <value>إظهار _MENU_ سجل</value>
+  </data>
+        <data name="DataTable_Info" xml:space="preserve">
+    <value>إظهار _START_ إلى _END_ من أصل _TOTAL_ سجل</value>
+  </data>
+        <data name="DataTable_First" xml:space="preserve">
+    <value>الأولى</value>
+  </data>
+        <data name="DataTable_Last" xml:space="preserve">
+    <value>الأخيرة</value>
+  </data>
+        <data name="DataTable_Next" xml:space="preserve">
+    <value>التالي</value>
+  </data>
+        <data name="DataTable_Previous" xml:space="preserve">
+    <value>السابق</value>
+  </data>
+        <data name="DataTable_ZeroRecords" xml:space="preserve">
+    <value>لا توجد بيانات مطابقة</value>
+  </data>
+        <data name="DataTable_InfoEmpty" xml:space="preserve">
+    <value>لا توجد سجلات للعرض</value>
+  </data>
+        <data name="DataTable_InfoFiltered" xml:space="preserve">
+    <value>(تمت التصفية من إجمالي _MAX_ سجلات)</value>
+  </data>
+
+        <!-- Export -->
+        <data name="Export_Copy" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+        <data name="Export_Excel" xml:space="preserve">
+    <value>اكسل</value>
+  </data>
+        <data name="Export_Pdf" xml:space="preserve">
+    <value>بي دي إف</value>
+  </data>
+
+        <!-- Assignments -->
+        <data name="Assignments_Table_Question" xml:space="preserve">
+    <value>السؤال</value>
+  </data>
+        <data name="Assignments_Table_User" xml:space="preserve">
+    <value>المستخدم</value>
+  </data>
+        <data name="Assignments_Table_Date" xml:space="preserve">
+    <value>تاريخ الإسناد</value>
+  </data>
+        <data name="Assignments_Table_Status" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+        <data name="Assignments_Table_Actions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+        <data name="Assignments_Table_StatusActive" xml:space="preserve">
+    <value>مفعل</value>
+  </data>
+        <data name="Assignments_Table_StatusInactive" xml:space="preserve">
+    <value>معطل</value>
+  </data>
+        <data name="Assignments_Table_Deactivate" xml:space="preserve">
+    <value>تعطيل</value>
+  </data>
+        <data name="Assignments_Table_Activate" xml:space="preserve">
+    <value>تفعيل</value>
+  </data>
+        <data name="Assignments_Modal_Title" xml:space="preserve">
+    <value>إسناد جماعي (أسئلة → مستخدمون)</value>
+  </data>
+        <data name="Assignments_Modal_Questions_Label" xml:space="preserve">
+    <value>الأسئلة (متعدد)</value>
+  </data>
+        <data name="Assignments_Modal_Questions_Hint" xml:space="preserve">
+    <value>اختر سؤالاً واحداً أو أكثر.</value>
+  </data>
+        <data name="Assignments_Modal_Users_Label" xml:space="preserve">
+    <value>المستخدمون (متعدد)</value>
+  </data>
+        <data name="Assignments_Modal_Users_Hint" xml:space="preserve">
+    <value>اختر مستخدماً واحداً أو أكثر.</value>
+  </data>
+        <data name="Assignments_Modal_Validation_SelectQuestions" xml:space="preserve">
+    <value>يرجى اختيار سؤال واحد على الأقل.</value>
+  </data>
+        <data name="Assignments_Modal_Validation_SelectUsers" xml:space="preserve">
+    <value>يرجى اختيار مستخدم واحد على الأقل.</value>
+  </data>
+        <data name="Assignments_Modal_SaveError" xml:space="preserve">
+    <value>تعذر حفظ الإسناد.</value>
+  </data>
+        <data name="Assignments_Modal_SaveException" xml:space="preserve">
+    <value>حدث خطأ أثناء الحفظ.</value>
+  </data>
+
+        <!-- Users -->
+        <data name="Users_Create_Title" xml:space="preserve">
+    <value>مستخدم جديد</value>
+  </data>
+        <data name="Users_Create_Header" xml:space="preserve">
+    <value>إضافة مستخدم</value>
+  </data>
+        <data name="Users_Edit_Title" xml:space="preserve">
+    <value>تعديل مستخدم</value>
+  </data>
+        <data name="Users_Edit_Header" xml:space="preserve">
+    <value>تعديل مستخدم</value>
+  </data>
+        <data name="Users_Field_UserName" xml:space="preserve">
+    <value>اسم المستخدم</value>
+  </data>
+        <data name="Users_Field_FullName" xml:space="preserve">
+    <value>الاسم الكامل</value>
+  </data>
+        <data name="Users_Field_Email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+        <data name="Users_Field_Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+        <data name="Users_Field_Role" xml:space="preserve">
+    <value>الدور</value>
+  </data>
+        <data name="Users_Field_SelectRole" xml:space="preserve">
+    <value>اختر الدور</value>
+  </data>
+
+        <!-- Answer scoring -->
+        <data name="AnswerScoring_QuestionIdLabel" xml:space="preserve">
+    <value>سؤال رقم</value>
+  </data>
+        <data name="AnswerScoring_ItemIdLabel" xml:space="preserve">
+    <value>معرّف العنصر:</value>
+  </data>
+        <data name="AnswerScoring_ReviewerId" xml:space="preserve">
+    <value>معرّف المقيم:</value>
+  </data>
+
+        <!-- Files -->
+        <data name="FileOpen_Error" xml:space="preserve">
+    <value>تعذر فتح الملف.</value>
+  </data>
+
 </root>

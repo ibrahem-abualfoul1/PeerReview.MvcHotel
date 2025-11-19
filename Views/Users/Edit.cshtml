@@ -1,13 +1,14 @@
 @model UserUpdateDto
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
 
 @{
-    ViewData["Title"] = "تعديل مستخدم";
+    ViewData["Title"] = L["Users_Edit_Title"];
     ViewBag.ActiveMenu = "Users";
 }
 
 @section HeaderActions {
     <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
-        ← رجوع
+        ← @L["Btn_Back"]
     </a>
 }
 
@@ -15,7 +16,7 @@
     <div class="col-lg-7 col-xl-6">
         <div class="pr-card">
             <div class="h-section-title mb-3">
-                تعديل مستخدم
+                @L["Users_Edit_Header"]
             </div>
 
             <form method="post" asp-action="Edit" asp-route-id="@(ViewBag.UserId)">
@@ -24,14 +25,14 @@
                 <!-- الاسم الكامل -->
                 <div class="pr-field">
                     <input asp-for="fullName" placeholder=" " />
-                    <label>الاسم الكامل</label>
+                    <label>@L["Users_Field_FullName"]</label>
                     @Html.ValidationMessageFor(m => m.fullName, "", new { @class = "text-danger small" })
                 </div>
 
                 <!-- البريد -->
                 <div class="pr-field">
                     <input asp-for="email" placeholder=" " type="email" />
-                    <label>البريد الإلكتروني</label>
+                    <label>@L["Users_Field_Email"]</label>
                     @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger small" })
                 </div>
 
@@ -40,24 +41,24 @@
                     <select asp-for="roleId"
                             class="form-select"
                             asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.Roles, "Value", "Text"))">
-                        <option value="">-- اختر الدور --</option>
+                        <option value="">-- @L["Users_Field_SelectRole"] --</option>
                     </select>
-                    <label>الدور</label>
+                    <label>@L["Users_Field_Role"]</label>
                     @Html.ValidationMessageFor(m => m.roleId, "", new { @class = "text-danger small" })
                 </div>
 
                 <!-- الحالة -->
                 <div class="form-check form-switch mb-3">
                     @Html.CheckBoxFor(m => m.isActive, new { @class = "form-check-input", id = "isActive" })
-                    <label class="form-check-label" for="isActive">نشط</label>
+                    <label class="form-check-label" for="isActive">@L["Status_Active"]</label>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-3">
                     <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
-                        رجوع
+                        @L["Btn_Back"]
                     </a>
                     <button type="submit" class="btn-pr btn-pr-primary">
-                        حفظ
+                        @L["Btn_Save"]
                     </button>
                 </div>
             </form>
