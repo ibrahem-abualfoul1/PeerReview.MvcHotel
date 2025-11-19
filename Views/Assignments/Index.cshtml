@@ -1,6 +1,7 @@
 @using System.Collections.Generic
+@using Microsoft.AspNetCore.Mvc.Localization
 @using PeerReview.MvcHotel.Models
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@inject IViewLocalizer L
 @model List<AssignmentDto>
 
 @{
@@ -175,11 +176,11 @@
                     <div class="assign-filter-label">@L["Assignments_Bulk_QuestionIds"]</div>
 
                     <div class="pr-multi"
-                         data-placeholder="@L["Assignments_Bulk_Questions_Placeholder", "اختر الأسئلة"]"
+                         data-placeholder="@L["Assignments_Bulk_Questions_Placeholder"]"
                          data-group="questions">
                         <button type="button" class="pr-multi-toggle">
                             <span class="pr-multi-label pr-multi-placeholder">
-                                @L["Assignments_Bulk_Questions_Placeholder", "اختر الأسئلة"]
+                                @L["Assignments_Bulk_Questions_Placeholder"]
                             </span>
                             <span class="pr-multi-count"></span>
                         </button>
@@ -187,7 +188,7 @@
                             <div class="pr-multi-header">
                                 <label>
                                     <input type="checkbox" class="pr-multi-selectall" data-group="questions" />
-                                    <span>@L["SelectAll", "تحديد الكل"]</span>
+                                    <span>@L["SelectAll"]</span>
                                 </label>
                             </div>
                             <div class="pr-multi-list">
@@ -206,7 +207,7 @@
                         </div>
                     </div>
 
-                    <div class="form-text">@L["Assignments_Bulk_Questions_Hint", L["Answers_Add"].Value]</div>
+                    <div class="form-text">@L["Assignments_Bulk_Questions_Hint"]</div>
                 </div>
 
                 <!-- مستخدمون -->
@@ -214,11 +215,11 @@
                     <div class="assign-filter-label">@L["Assignments_Bulk_UserIds"]</div>
 
                     <div class="pr-multi"
-                         data-placeholder="@L["Assignments_Bulk_Users_Placeholder", "اختر المستخدمين"]"
+                         data-placeholder="@L["Assignments_Bulk_Users_Placeholder"]"
                          data-group="users">
                         <button type="button" class="pr-multi-toggle">
                             <span class="pr-multi-label pr-multi-placeholder">
-                                @L["Assignments_Bulk_Users_Placeholder", "اختر المستخدمين"]
+                                @L["Assignments_Bulk_Users_Placeholder"]
                             </span>
                             <span class="pr-multi-count"></span>
                         </button>
@@ -226,7 +227,7 @@
                             <div class="pr-multi-header">
                                 <label>
                                     <input type="checkbox" class="pr-multi-selectall" data-group="users" />
-                                    <span>@L["SelectAll", "تحديد الكل"]</span>
+                                    <span>@L["SelectAll"]</span>
                                 </label>
                             </div>
                             <div class="pr-multi-list">
@@ -244,7 +245,7 @@
                         </div>
                     </div>
 
-                    <div class="form-text">@L["Assignments_Bulk_Users_Hint", L["Answers_Add"].Value]</div>
+                    <div class="form-text">@L["Assignments_Bulk_Users_Hint"]</div>
                 </div>
 
                 <div class="mt-2 d-flex gap-2">
@@ -254,7 +255,7 @@
                     </button>
                     <button type="reset" class="btn-pr btn-pr-outline">
                         <i class="bi bi-x-lg"></i>
-                        @L["Btn_Reset", "Reset"]
+                        @L["Btn_Reset"]
                     </button>
                 </div>
             </form>
@@ -269,7 +270,7 @@
                     @L["Assignments_Title_List", L["Assignments_Title"].Value]
                 </div>
                 <span class="text-muted-soft" style="font-size:0.8rem;">
-                    @L["Assignments_Subtitle", "إدارة الإسنادات الحالية"]
+                    @L["Assignments_Subtitle"]
                 </span>
             </div>
 
@@ -321,9 +322,9 @@
                      "<'row'<'col-sm-12'tr>>" +
                      "<'row mt-2'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                 buttons: [
-                    { extend: 'copyHtml5',  text: '<i class="bi bi-clipboard"></i> Copy' },
-                    { extend: 'excelHtml5', text: '<i class="bi bi-filetype-xlsx"></i> Excel' },
-                    { extend: 'pdfHtml5',   text: '<i class="bi bi-filetype-pdf"></i> PDF', orientation: 'landscape', pageSize: 'A4' }
+                    { extend: 'copyHtml5',  text: '<i class="bi bi-clipboard"></i> @L["Btn_Copy"]' },
+                    { extend: 'excelHtml5', text: '<i class="bi bi-filetype-xlsx"></i> @L["Btn_Excel"]' },
+                    { extend: 'pdfHtml5',   text: '<i class="bi bi-filetype-pdf"></i> @L["Btn_Pdf"]', orientation: 'landscape', pageSize: 'A4' }
                 ],
                 pageLength: 10,
                 order: [],
@@ -377,7 +378,7 @@
                     } else {
                         labelEl.textContent = checked.length === 1
                             ? checked[0].nextElementSibling?.textContent.trim()
-                            : `${checked.length} @L["Selected", "محدد"]`;
+                            : `${checked.length} @L["Selected"]`;
                         labelEl.classList.remove('pr-multi-placeholder');
                         countEl.textContent = checked.length > 1 ? '✓' : '';
                     }
@@ -427,8 +428,8 @@
             if (!qs.length || !us.length) {
                 Swal.fire({
                     icon: 'warning',
-                    title: '@L["Swal_Warning_Title", "تنبيه"]',
-                    text: '@L["Assignments_Bulk_Validation_SelectBoth", "يرجى اختيار الأسئلة والمستخدمين قبل التنفيذ"]'
+                    title: '@L["Swal_Warning_Title"]',
+                    text: '@L["Assignments_Bulk_Validation_SelectBoth"]'
                 });
                 return;
             }
@@ -447,11 +448,11 @@
                     const msg = (typeof j.message === 'object'
                                     ? j.message.value
                                     : j.message)
-                                || '@L["Assignments_Bulk_Success_Default", "تم توزيع الأسئلة على المستخدمين"]';
+                                || '@L["Assignments_Bulk_Success_Default"]';
 
                     Swal.fire({
                         icon: 'success',
-                        title: '@L["Swal_Success_Title", "تمت العملية بنجاح"]',
+                        title: '@L["Swal_Success_Title"]',
                         text: msg,
                         timer: 2000,
                         showConfirmButton: false
@@ -461,16 +462,16 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: '@L["Swal_Error_Title", "فشل التنفيذ"]',
-                        text: '@L["Assignments_Bulk_Error", "حدث خطأ أثناء الإسناد"]'
+                        title: '@L["Swal_Error_Title"]',
+                        text: '@L["Assignments_Bulk_Error"]'
                     });
                 }
             })
             .catch(() =>
                 Swal.fire({
                     icon: 'error',
-                    title: '@L["Swal_Error_Title", "خطأ"]',
-                    text: '@L["Assignments_Bulk_Error_Generic", "حدث خطأ في تنفيذ العملية"]'
+                    title: '@L["Swal_Error_Title"]',
+                    text: '@L["Assignments_Bulk_Error_Generic"]'
                 })
             );
         });
@@ -486,15 +487,15 @@
                 method: 'POST',
                 headers: { 'RequestVerificationToken': getAfToken() }
             })
-            .then r => r.json())
+            .then(r => r.json())
             .then(j => {
                 if (j.ok) {
                     reloadAssignmentsTable();
                 } else {
-                    alert('@L["Assignments_Toggle_Failed", "فشل العملية"]');
+                    alert('@L["Assignments_Toggle_Failed"]');
                 }
             })
-            .catch(() => alert('@L["Assignments_Toggle_Error", "خطأ أثناء التنفيذ"]'));
+            .catch(() => alert('@L["Assignments_Toggle_Error"]'));
         });
     </script>
 }

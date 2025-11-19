@@ -1,8 +1,9 @@
 ﻿@model List<PeerReview.MvcHotel.Models.AnswerForScoringDto>
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer L
 
 @{
-    ViewData["Title"] = (L["UnscoredAnswers"] ?? "Unscored Answers");
+    ViewData["Title"] = L["UnscoredAnswers_Title"];
     var ci = System.Globalization.CultureInfo.CurrentUICulture;
     var isRtl = ci.TwoLetterISOLanguageName == "ar";
 }
@@ -10,14 +11,14 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">@ViewData["Title"]</h5>
     <a class="btn btn-link" href="@Url.Action("Index", "AnswerScoring")">
-        ← @(L["Back"] ?? "Back")
+        ← @L["Btn_Back"]
     </a>
 </div>
 
 @if (Model?.Any() != true)
 {
     <div class="alert alert-info">
-        @(L["NoUnscoredAnswers"] ?? "No unscored answers found.")
+        @L["NoUnscoredAnswers"]
     </div>
 }
 else
@@ -33,11 +34,11 @@ else
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>@(L["Question"] ?? "Question")</th>
-                            <th>@(L["Item"] ?? "Item")</th>
-                            <th>@(L["Answer"] ?? "Answer")</th>
-                            <th style="width:140px">@("Score")</th>
-                            <th>@(L["Notes"] ?? "Notes")</th>
+                            <th>@L["Column_Question"]</th>
+                            <th>@L["Column_Item"]</th>
+                            <th>@L["Column_Answer"]</th>
+                            <th style="width:140px">@L["Column_Score"]</th>
+                            <th>@L["Column_Notes"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,7 +51,7 @@ else
 
                                 <!-- Question -->
                                 <td>
-                                    <div class="fw-semibold">
+                                <div class="fw-semibold">
                                         @{
                                             var q = a.question;
                                             string qText;
@@ -70,7 +71,7 @@ else
                                     @qText
                                 </div>
                                 <div class="small text-muted">
-                                    Q# @a.QuestionId
+                                    @string.Format(L["QuestionId_Label"].Value, a.QuestionId)
                                 </div>
                             </td>
 
@@ -84,7 +85,7 @@ else
                                                                     )
                                 </div>
                                 <div class="small text-muted">
-                                    ItemId: @a.QuestionItemId
+                                    @string.Format(L["ItemId_Label"].Value, a.QuestionItemId)
                                 </div>
                             </td>
 
@@ -145,9 +146,9 @@ else
             </div>
         </div>
 
-        <div class="card-footer d-flex justify-content-end gap-2">
+                    <div class="card-footer d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-primary">
-                @(L["Save"] ?? "Save")
+                @L["Btn_Save"]
             </button>
         </div>
     </form>

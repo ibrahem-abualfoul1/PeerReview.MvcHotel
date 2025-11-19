@@ -1,5 +1,6 @@
-﻿@using System.Globalization
-@inject Microsoft.Extensions.Localization.IStringLocalizer<PeerReview.MvcHotel.Resources.SharedResource> L
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using System.Globalization
+@inject IViewLocalizer L
 @model PeerReview.MvcHotel.Models.LoginRequest
 
 @{
@@ -388,8 +389,8 @@
     <div class="container">
         <div class="c-img">
             @* ممكن تستخدم عنوان النظام بدل Hotel chain *@
-            <h1>@L["Login_Header", "Evaluation &amp; Review System"]</h1>
-            <img src="~/data/qatar.png" alt="@L["HotelImageAlt", "صورة ترحيبية"]" />
+            <h1>@L["Login_Header"]</h1>
+            <img src="~/data/qatar.png" alt="@L["HotelImageAlt"]" />
         </div>
 
         <div class="c-form">
@@ -421,7 +422,7 @@
             </form>
 
             <div class="footer d-flex justify-content-between align-items-center">
-                <small class="muted">© @DateTime.UtcNow.Year @L["PeerReview", "PeerReview"]</small>
+                <small class="muted">© @DateTime.UtcNow.Year @L["PeerReview"]</small>
                 <div class="d-flex gap-2">
                     <a class="muted" href="?culture=ar&ui-culture=ar" style="margin-top: unset">AR</a>
                     <span class="muted">•</span>

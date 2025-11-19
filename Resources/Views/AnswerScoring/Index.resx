@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AnswerScoring_Title" xml:space="preserve">
+    <value>Answer scoring</value>
+  </data>
+  <data name="AnswerScoring_Overview_Hint" xml:space="preserve">
+    <value>Track how many answers each reviewer still needs to score.</value>
+  </data>
+  <data name="TotalReviewUsers" xml:space="preserve">
+    <value>Total reviewers</value>
+  </data>
+  <data name="ReviewerId_Label" xml:space="preserve">
+    <value>Reviewer ID</value>
+  </data>
+  <data name="UnscoredUsers" xml:space="preserve">
+    <value>Users to score</value>
+  </data>
+  <data name="ScoredUsers" xml:space="preserve">
+    <value>Users scored</value>
+  </data>
+  <data name="AnswerScoring_Progress" xml:space="preserve">
+    <value>Overall progress</value>
+  </data>
+  <data name="Column_UserName" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Column_FullName" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="Column_TotalAnswers" xml:space="preserve">
+    <value>Answers</value>
+  </data>
+  <data name="Column_Unscored" xml:space="preserve">
+    <value>Unscored</value>
+  </data>
+  <data name="Column_Scored" xml:space="preserve">
+    <value>Scored</value>
+  </data>
+  <data name="Column_LastUpdated" xml:space="preserve">
+    <value>Last scored</value>
+  </data>
+  <data name="Column_Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="ReviewUnscored" xml:space="preserve">
+    <value>Review unscored</value>
+  </data>
+  <data name="ViewScored" xml:space="preserve">
+    <value>View scored</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>No data to display.</value>
+  </data>
+</root>

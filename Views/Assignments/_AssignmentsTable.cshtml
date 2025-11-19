@@ -1,15 +1,17 @@
-﻿@using PeerReview.MvcHotel.Models
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using PeerReview.MvcHotel.Models
 @model List<AssignmentDto>
+@inject IViewLocalizer L
 
 <table id="assignTable" class="pr-table align-middle">
     <thead>
         <tr>
             <th>#</th>
-            <th>السؤال</th>
-            <th>المستخدم</th>
-            <th>التاريخ</th>
-            <th>الحالة</th>
-            <th class="text-center">إجراءات</th>
+            <th>@L["Column_Question"]</th>
+            <th>@L["Column_User"]</th>
+            <th>@L["Column_Date"]</th>
+            <th>@L["Column_Status"]</th>
+            <th class="text-center">@L["Column_Actions"]</th>
         </tr>
     </thead>
     <tbody>
@@ -29,24 +31,24 @@
                     <td>
                         @if (a.isActive)
                         {
-                            <span class="badge-active">مفعل</span>
+                            <span class="badge-active">@L["Status_Active"]</span>
                         }
                         else
                         {
-                            <span class="badge-inactive">معطل</span>
+                            <span class="badge-inactive">@L["Status_Inactive"]</span>
                         }
                     </td>
                     <td class="text-center">
                         @if (a.isActive)
                         {
                             <button class="btn-pr btn-pr-sm btn-pr-outline js-deactivate" data-id="@a.id">
-                                تعطيل
+                                @L["Btn_Deactivate"]
                             </button>
                         }
                         else
                         {
                             <button class="btn-pr btn-pr-sm btn-pr-soft js-activate" data-id="@a.id">
-                                تفعيل
+                                @L["Btn_Activate"]
                             </button>
                         }
                     </td>
@@ -57,7 +59,7 @@
         else
         {
             <tr>
-                <td colspan="6" class="text-center text-muted-soft">لا توجد بيانات</td>
+                <td colspan="6" class="text-center text-muted-soft">@L["NoAssignments"]</td>
             </tr>
         }
     </tbody>
