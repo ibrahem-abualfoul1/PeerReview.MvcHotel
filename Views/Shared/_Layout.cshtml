@@ -32,6 +32,12 @@
     @RenderSection("Styles", required: false)
 </head>
 <body>
+    <div class="app-background">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-grid"></div>
+    </div>
+
     <div class="app-shell">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -110,22 +116,24 @@
 
             <!-- bottom: theme + language + user -->
             <div>
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <!-- Theme toggle -->
-                    <button type="button" class="btn-pr btn-pr-icon" id="themeToggle" title="@L["Toggle_Theme"]">
-                        🌙
-                    </button>
+                <div class="sidebar-controls">
+                    <div class="control-pill" title="@L["Toggle_Theme"]">
+                        <button type="button" class="btn-pr btn-pr-icon" id="themeToggle">
+                            🌙
+                        </button>
+                        <span class="text-muted-soft">@L["Toggle_Theme"]</span>
+                    </div>
 
                     <!-- Language toggle
                          NOTE: عدّل الروت حسب Controller اللغة عندك (Lang / Language / Culture...) -->
-                    <div class="btn-group">
-                        <div class="btn-group">
+                    <div class="control-pill">
+                        <div class="d-flex gap-1">
                             <form method="post" asp-controller="Language" asp-action="Set" class="d-inline">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="culture" value="ar-SA" />
                                 <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
                                 <button type="submit"
-                                        class="btn-pr btn-pr-soft @(isRtl ? "active" : "")">
+                                        class="btn-pr btn-pr-soft btn-pr-sm @(isRtl ? "active" : "")">
                                     ع
                                 </button>
                             </form>
@@ -135,13 +143,12 @@
                                 <input type="hidden" name="culture" value="en-US" />
                                 <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
                                 <button type="submit"
-                                        class="btn-pr btn-pr-soft @(!isRtl ? "active" : "")">
+                                        class="btn-pr btn-pr-soft btn-pr-sm @(!isRtl ? "active" : "")">
                                     EN
                                 </button>
                             </form>
                         </div>
-
-
+                        <span class="text-muted-soft">@L["Language"]</span>
                     </div>
                 </div>
 
@@ -150,7 +157,7 @@
                         @((!string.IsNullOrEmpty(userName) ? userName[0].ToString().ToUpper() : "U"))
                     </div>
                     <div>
-                        <div style="font-size:0.85rem;">@userName</div>
+                        <div class="user-pill-name">@userName</div>
                         <div class="text-muted-soft">@L["Logged in"]</div>
                     </div>
                 </div>

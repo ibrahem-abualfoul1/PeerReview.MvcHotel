@@ -23,44 +23,62 @@
     </a>
 }
 
+<div class="dashboard-hero pr-card mb-3">
+    <div>
+        <div class="hero-pill">@L["PeerReview"]</div>
+        <h2 class="hero-title">@L["Dashboard_Subtitle"]</h2>
+        <p class="text-muted-soft">@L["Evaluation & Review System"]</p>
+        <div class="hero-meta">
+            <span class="meta-chip">@L["Dashboard_AssignedToMe"]: @assignedToMe</span>
+            <span class="meta-chip">@L["Dashboard_AnsweredByMe"]: @answeredByMe</span>
+            <span class="meta-chip">@L["Dashboard_MyPending"]: @myPending</span>
+        </div>
+    </div>
+    <div class="hero-actions">
+        <div class="hero-badge">
+            <div class="badge-label">@L["Dashboard_Users"]</div>
+            <div class="badge-number">@users</div>
+        </div>
+        <div class="hero-badge">
+            <div class="badge-label">@L["Dashboard_Questions"]</div>
+            <div class="badge-number">@questions</div>
+        </div>
+        <div class="hero-badge">
+            <div class="badge-label">@L["Dashboard_Answers"]</div>
+            <div class="badge-number">@answers</div>
+        </div>
+    </div>
+</div>
+
 <div class="row g-3">
-    <div class="col-md-3 col-sm-6">
-        <div class="pr-card">
-            <div class="text-muted-soft">@L["Dashboard_Users"]</div>
-            <div class="d-flex justify-content-between align-items-end">
-                <div class="pr-stat-number">@users</div>
-                <span class="badge-pill badge-success">@L["Dashboard_Total"]</span>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div>
+                <div class="stat-label">@L["Dashboard_Users"]</div>
+                <div class="stat-value">@users</div>
             </div>
+            <span class="stat-chip success">@L["Dashboard_Total"]</span>
         </div>
     </div>
-
-    <div class="col-md-3 col-sm-6">
-        <div class="pr-card">
-            <div class="text-muted-soft">@L["Dashboard_Questions"]</div>
-            <div class="d-flex justify-content-between align-items-end">
-                <div class="pr-stat-number">@questions</div>
-                <span class="badge-pill badge-warning">@L["Dashboard_Total"]</span>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon">❓</div>
+            <div>
+                <div class="stat-label">@L["Dashboard_Questions"]</div>
+                <div class="stat-value">@questions</div>
             </div>
+            <span class="stat-chip warning">@L["Dashboard_Total"]</span>
         </div>
     </div>
-
-    <div class="col-md-3 col-sm-6">
-        <div class="pr-card">
-            <div class="text-muted-soft">@L["Dashboard_Answers"]</div>
-            <div class="d-flex justify-content-between align-items-end">
-                <div class="pr-stat-number">@answers</div>
-                <span class="badge-pill badge-success">@L["Dashboard_Total"]</span>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon">📥</div>
+            <div>
+                <div class="stat-label">@L["Dashboard_Answers"]</div>
+                <div class="stat-value">@answers</div>
             </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6">
-        <div class="pr-card">
-            <div class="text-muted-soft">@L["Dashboard_AssignedToMe"]</div>
-            <div class="d-flex justify-content-between align-items-end">
-                <div class="pr-stat-number">@assignedToMe</div>
-                <span class="badge-pill badge-muted">@L["Dashboard_Pending"]</span>
-            </div>
+            <span class="stat-chip info">@L["Dashboard_Total"]</span>
         </div>
     </div>
 </div>
@@ -69,20 +87,29 @@
     <div class="col-lg-6">
         <div class="pr-card">
             <div class="h-section-title mb-2">@L["Dashboard_MyScoring"]</div>
-            <ul class="list-unstyled mt-2">
-                <li class="d-flex justify-content-between mb-1">
-                    <span>@L["Dashboard_AnsweredByMe"]</span>
-                    <span class="fw-semibold">@answeredByMe</span>
-                </li>
-                <li class="d-flex justify-content-between mb-1">
-                    <span>@L["Dashboard_AssignedToMe"]</span>
-                    <span class="fw-semibold">@assignedToMe</span>
-                </li>
-                <li class="d-flex justify-content-between mb-1">
-                    <span>@L["Dashboard_MyPending"]</span>
-                    <span class="fw-semibold">@myPending</span>
-                </li>
-            </ul>
+            <div class="summary-list">
+                <div class="summary-row">
+                    <div>
+                        <div class="summary-label">@L["Dashboard_AnsweredByMe"]</div>
+                        <small class="text-muted-soft">@L["Dashboard_Total"]</small>
+                    </div>
+                    <div class="summary-value">@answeredByMe</div>
+                </div>
+                <div class="summary-row">
+                    <div>
+                        <div class="summary-label">@L["Dashboard_AssignedToMe"]</div>
+                        <small class="text-muted-soft">@L["Dashboard_Pending"]</small>
+                    </div>
+                    <div class="summary-value">@assignedToMe</div>
+                </div>
+                <div class="summary-row">
+                    <div>
+                        <div class="summary-label">@L["Dashboard_MyPending"]</div>
+                        <small class="text-muted-soft">@L["Menu_Assignments"]</small>
+                    </div>
+                    <div class="summary-value">@myPending</div>
+                </div>
+            </div>
             <a href="@Url.Action("Index", "AnswerScoring")"
                class="btn-pr btn-pr-primary w-100 mt-2">
                 @L["Dashboard_GoToScoring"]
@@ -93,9 +120,29 @@
     <div class="col-lg-6">
         <div class="pr-card">
             <div class="h-section-title mb-2">@L["Dashboard_Activity_PlaceholderTitle"]</div>
-            <p class="text-muted-soft mb-0">
-                @L["Dashboard_Activity_PlaceholderText"]
-            </p>
+            <div class="activity-pulse">
+                <div class="activity-item">
+                    <div class="pulse-dot"></div>
+                    <div>
+                        <div class="activity-title">@L["Dashboard_AssignedToMe"]</div>
+                        <small class="text-muted-soft">@assignedToMe @L["Dashboard_Pending"]</small>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="pulse-dot"></div>
+                    <div>
+                        <div class="activity-title">@L["Dashboard_AnsweredByMe"]</div>
+                        <small class="text-muted-soft">@answeredByMe @L["Dashboard_Answers"]</small>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="pulse-dot"></div>
+                    <div>
+                        <div class="activity-title">@L["Dashboard_Questions"]</div>
+                        <small class="text-muted-soft">@questions @L["Dashboard_Total"]</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
