@@ -88,7 +88,7 @@
                                     @L["Users_Action_Edit"]
                                 </a>
                                 @* لو عندك Delete *@
-                                @* 
+                                
                                 <form method="post" action="@Url.Action("Delete","Users", new { id = u.id })"
                                       style="display:inline"
                                       onsubmit="return confirm('@L["Users_Confirm_Delete"]');">
@@ -97,7 +97,20 @@
                                         @L["Users_Action_Delete"]
                                     </button>
                                 </form>
-                                *@
+                                @if (u.isActive)
+                                {
+                                    <form method="post" action="/Users/Deactivate/@u.id" style="display:inline">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-sm btn-outline-warning">@L["Status_Inactive"]</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form method="post" action="/Users/Activate/@u.id" style="display:inline">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-sm btn-outline-success">@L["Status_Active"]</button>
+                                    </form>
+                                }
                             </td>
                         </tr>
                     }

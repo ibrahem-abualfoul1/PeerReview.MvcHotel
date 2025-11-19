@@ -203,11 +203,21 @@
 	<data name="RequiredField" xml:space="preserve">
     <value>هذا الحقل مطلوب.</value>
   </data>
-	<data name="InvalidValue" xml:space="preserve">
+        <data name="InvalidValue" xml:space="preserve">
     <value>القيمة المدخلة غير صحيحة.</value>
   </data>
-	<data name="ValidationSummaryTitle" xml:space="preserve">
+        <data name="ValidationSummaryTitle" xml:space="preserve">
     <value>يرجى مراجعة الأخطاء التالية:</value>
+  </data>
+
+        <data name="Login_Failed" xml:space="preserve">
+    <value>اسم المستخدم أو كلمة المرور غير صحيحة.</value>
+  </data>
+        <data name="Login_AttemptsExceeded" xml:space="preserve">
+    <value>تم تجاوز الحد الأقصى لمحاولات تسجيل الدخول. الرجاء المحاولة لاحقاً.</value>
+  </data>
+        <data name="Login_InvalidReturnUrl" xml:space="preserve">
+    <value>رابط العودة غير مسموح به.</value>
   </data>
 
 	<!-- Dashboard -->
@@ -678,9 +688,7 @@
     <value>آخر تحديث</value>
   </data>
 
-        <data name="Login_Failed" xml:space="preserve">
-    <value>اسم المستخدم أو كلمة المرور غير صحيحة.</value>
-  </data>
+        
 
         <data name="Login_Header" xml:space="preserve">
     <value>نظام التقييم والمراجعة</value>

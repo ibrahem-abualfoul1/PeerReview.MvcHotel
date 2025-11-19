@@ -7,6 +7,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using PeerReview.MvcHotel.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,6 +99,8 @@ app.UseRouting();
 
 // الجلسات قبل الأوثORIZATION وبعد الراوتينغ
 app.UseSession();
+
+app.UseMiddleware<SessionValidationMiddleware>();
 
 // ترتيب الأوثنتكيشن ثم الأوثورايزيشن مهم
 app.UseAuthentication();

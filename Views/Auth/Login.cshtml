@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
 @using System.Globalization
 @inject IViewLocalizer L
 @model PeerReview.MvcHotel.Models.LoginRequest
@@ -7,430 +7,100 @@
     ViewData["Title"] = L["Login_Title"];
     Layout = null;
     var isRtl = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
+    var theme = Context.Request.Cookies["theme"] ?? "dark";
 }
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@(isRtl ? "rtl" : "ltr")">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@(isRtl ? "rtl" : "ltr")" data-theme="@theme">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] - PeerReview</title>
+    <title>@ViewData["Title"] - @L["AppName"]</title>
 
-    <!-- ستايلات المشروع -->
-    <link rel="stylesheet" href="~/assets/css/styles.min.css" />
-
-    <!-- خط أنيق (اختياري) -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <style>
-        /* reset بسيط */
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            margin: 0;
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(to top right, #583046, #A44C53, #C45658, #EC7265);
-            display: grid;
-            align-items: center;
-            justify-content: center;
-            font-family: "Helvetica", Arial, sans-serif;
-        }
-
-        .container {
-            width: 700px;
-            height: 400px;
-            background: #eee;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            box-shadow: 0px 30px 60px 10px #583046;
-            border-radius: 30px;
-            padding-right: 0 !important;
-            padding-left: 0 !important;
-        }
-
-        .c-img {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            border-top-left-radius: 30px;
-            border-bottom-left-radius: 30px;
-        }
-
-        h1 {
-            position: absolute;
-            left: 50%;
-            top: 20%;
-            transform: translateX(-50%);
-            letter-spacing: 0.2rem;
-            font-size: 1.3rem;
-            color: #583046;
-            text-shadow: 0px 2px 2px #A44C53;
-        }
-
-        img {
-            width: 100%;
-            height: 100%;
-            border-top-left-radius: 30px;
-            border-bottom-left-radius: 30px;
-            object-fit: cover; /* اختياري: يقص الصورة بدون تمديد */
-        }
-
-        .c-form {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top right, #A44C53, #C45658, #EC7265);
-            box-sizing: border-box;
-            padding: 20px 50px;
-            /* border-top-right-radius: 30px; */
-            border-bottom-right-radius: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        form {
-            display: grid;
-            padding-top: 50px;
-        }
-
-        input {
-            padding: 10px 0;
-            text-indent: 10px;
-            margin: 7.5px 0;
-            border: 0;
-            border-bottom: 1px solid #fff;
-            background: transparent;
-            color: #fff;
-            outline: none; /* اختياري */
-        }
-
-        .btn-group {
-            margin-top: 30px;
-        }
-
-        button {
-            padding: 10px;
-            color: #fff;
-            background: transparent;
-            border: 1px solid #fff;
-            letter-spacing: 0.5px;
-            transition: 0.5s;
-            cursor: pointer;
-        }
-
-            button:hover {
-                background: #fff;
-                color: #A44C53;
-            }
-
-        a {
-            text-decoration: none;
-            color: #fff;
-            text-align: center;
-            margin-top: 80px;
-            font-size: 0.9rem;
-            display: inline-block; /* لضمان تطبيق margin-top */
-        }
-
-        .muted {
-            color: #cfcfcf;
-            font-size: .9rem;
-        }
-
-    </style>
-
-    <style>
-        /* تحسينات بسيطة قبل الميديا */
-        * {
-            box-sizing: border-box;
-        }
-
-        .container {
-            width: min(700px, 92vw);
-            height: 400px; /* تبقى كما هي على الشاشات المتوسطة فما فوق */
-        }
-
-        /* شاشات كبيرة جداً: حافظ على المقاس الأصلي */
-        @@media (min-width: 992px) {
-            .container {
-                width: 700px;
-                height: 400px;
-            }
-        }
-
-        /* شاشات متوسطة (تابلت وما حولها) */
-        @@media (max-width: 991.98px) {
-            body {
-                padding-inline: 12px; /* مسافة أمان من الأطراف */
-            }
-
-            .container {
-                width: min(760px, 95vw);
-                height: auto; /* السماح بالتمدد عمودي */
-                grid-template-columns: 1fr; /* عمود واحد */
-                grid-auto-rows: auto;
-                border-radius: 24px;
-                overflow: hidden; /* يمنع نتوء الحدود عند الدمج */
-            }
-
-            .c-img {
-                height: 220px; /* ارتفاع معقول لقسم الصورة */
-                border-top-left-radius: 24px;
-                border-bottom-left-radius: 0; /* لأننا صارينا عمود واحد */
-                border-top-right-radius: 24px;
-                position: relative;
-            }
-
-            img {
-                border-top-left-radius: 24px;
-                border-bottom-left-radius: 0;
-                border-top-right-radius: 24px;
-                height: 100%;
-                object-fit: cover;
-            }
-
-            h1 {
-                top: 18%;
-                font-size: 1.2rem;
-                letter-spacing: 0.18rem;
-            }
-
-            .c-form {
-                padding: 20px 22px;
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 18px;
-            }
-
-            form {
-                padding-top: 28px;
-            }
-
-            input {
-                font-size: 16px;
-            }
-
-            .btn-group {
-                margin-top: 20px;
-            }
-
-            button {
-                width: 100%;
-            }
-
-            a {
-                margin-top: 24px;
-            }
-
-            .footer {
-                margin-top: 16px;
-                gap: .5rem;
-            }
-        }
-
-        /* شاشات صغيرة جداً (هواتف) */
-        @@media (max-width: 575.98px) {
-            .container {
-                width: 100%;
-                border-radius: 20px;
-                box-shadow: 0px 18px 40px 6px #583046; /* ظل أخف قليلاً */
-            }
-
-            .c-img {
-                height: 200px;
-            }
-
-            h1 {
-                top: 16%;
-                font-size: 1.05rem;
-                letter-spacing: 0.16rem;
-                text-shadow: 0 1px 1px #A44C53;
-            }
-
-            .c-form {
-                padding: 16px 16px;
-                gap: 10px;
-            }
-
-            form {
-                padding-top: 18px;
-            }
-
-            input {
-                margin: 6px 0;
-                padding: 10px 0;
-            }
-
-            .btn-group {
-                margin-top: 16px;
-            }
-
-            a {
-                font-size: .85rem;
-                margin-top: 16px;
-            }
-
-            .footer {
-                flex-direction: column;
-                align-items: center !important;
-                gap: 6px;
-            }
-        }
-
-        /* خيار إضافي لمن يفعّل تكبير نص النظام */
-        @@media (max-width: 400px) {
-            .c-img {
-                height: 180px;
-            }
-
-            h1 {
-                font-size: 0.98rem;
-            }
-        }
-    </style>
-
-    <style>
-        /* --- اتجاه LTR (الافتراضي) --- */
-        :root[dir="ltr"] .c-img {
-            border-top-left-radius: 30px;
-            border-bottom-left-radius: 30px;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        :root[dir="ltr"] img {
-            border-top-left-radius: 30px;
-            border-bottom-left-radius: 30px;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        :root[dir="ltr"] .c-form {
-            border-top-right-radius: 30px;
-            border-bottom-right-radius: 30px;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-
-        /* --- اتجاه RTL (نعكس الحواف) --- */
-        :root[dir="rtl"] .c-img {
-            border-top-right-radius: 30px;
-            border-bottom-right-radius: 30px;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-
-        :root[dir="rtl"] img {
-            border-top-right-radius: 30px;
-            border-bottom-right-radius: 30px;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-
-        :root[dir="rtl"] .c-form {
-            border-top-left-radius: 30px;
-            border-bottom-left-radius: 30px;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-
-        @@media (max-width: 991.98px) {
-            .c-img,
-            :root[dir="rtl"] .c-img,
-            :root[dir="ltr"] .c-img,
-            img,
-            :root[dir="rtl"] img,
-            :root[dir="ltr"] img {
-                border-top-left-radius: 24px;
-                border-top-right-radius: 24px;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-
-            .c-form,
-            :root[dir="rtl"] .c-form,
-            :root[dir="ltr"] .c-form {
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-                border-bottom-left-radius: 18px;
-                border-bottom-right-radius: 18px;
-            }
-        }
-
-        @@media (max-width: 575.98px) {
-            .c-img,
-            :root[dir="rtl"] .c-img,
-            :root[dir="ltr"] .c-img,
-            img,
-            :root[dir="rtl"] img,
-            :root[dir="ltr"] img {
-                border-top-left-radius: 20px;
-                border-top-right-radius: 20px;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-
-            .c-form,
-            :root[dir="rtl"] .c-form,
-            :root[dir="ltr"] .c-form {
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-                border-bottom-left-radius: 20px;
-                border-bottom-right-radius: 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/peerreview-theme.css" />
 </head>
-<body>
-
-    <div class="container">
-        <div class="c-img">
-            @* ممكن تستخدم عنوان النظام بدل Hotel chain *@
-            <h1>@L["Login_Header"]</h1>
-            <img src="~/data/qatar.png" alt="@L["HotelImageAlt"]" />
-        </div>
-
-        <div class="c-form">
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="validation-summary">
-                    @L["Login_Failed"]
+<body class="auth-body">
+    <div class="auth-shell">
+        <div class="auth-backdrop"></div>
+        <div class="auth-card">
+            <div class="auth-media">
+                <img src="~/data/qatar.png" alt="@L["HotelImageAlt"]" />
+                <div class="auth-media-overlay">
+                    <div class="auth-pill">@L["AppName"]</div>
+                    <div class="auth-media-title">@L["Login_Header"]</div>
+                    <div class="auth-media-text">@L["Login_Title"]</div>
+                    <div class="auth-highlight-grid">
+                        <div class="auth-highlight">@L["AppTitle"]</div>
+                        <div class="auth-highlight">@L["Evaluation & Review System"]</div>
+                    </div>
                 </div>
-            }
+            </div>
 
-            <form asp-action="Login" asp-controller="Auth" method="post" class="needs-validation" novalidate>
-                @Html.AntiForgeryToken()
-
-                <input asp-for="userName" type="email"
-                       placeholder="@L["Login_UserName"]"
-                       autocomplete="username" />
-                <span asp-validation-for="userName" class="text-danger"></span>
-
-                <input asp-for="password" type="password"
-                       placeholder="@L["Login_Password"]"
-                       autocomplete="current-password" />
-                <span asp-validation-for="password" class="text-danger"></span>
-
-                <div class="btn-group">
-                    <button type="submit" style="width: 100%;">@L["Login_Submit"]</button>
+            <div class="auth-form">
+                <div class="auth-head">
+                    <div class="auth-brand">
+                        <div class="auth-brand-icon">
+                            <img src="~/assets/images/logos/logo_1.png" alt="Logo" />
+                        </div>
+                        <div>
+                            <div class="auth-brand-title">@L["AppTitle"]</div>
+                            <div class="auth-brand-sub">@L["PeerReview"]</div>
+                        </div>
+                    </div>
+                    <div class="auth-locale-switch">
+                        <a class="btn-pr btn-pr-soft btn-pr-sm" href="?culture=ar&ui-culture=ar">AR</a>
+                        <a class="btn-pr btn-pr-soft btn-pr-sm" href="?culture=en&ui-culture=en">EN</a>
+                    </div>
                 </div>
 
-                @* <a href="~/Auth/ForgotPassword">@L["ForgotPassword"]</a> *@
-            </form>
+                <div class="auth-title-block">
+                    <div class="auth-pill subtle">@L["Login_Title"]</div>
+                    <h1>@L["Login_Header"]</h1>
+                    <p class="text-muted-soft">@L["Evaluation & Review System"]</p>
+                </div>
 
-            <div class="footer d-flex justify-content-between align-items-center">
-                <small class="muted">© @DateTime.UtcNow.Year @L["PeerReview"]</small>
-                <div class="d-flex gap-2">
-                    <a class="muted" href="?culture=ar&ui-culture=ar" style="margin-top: unset">AR</a>
-                    <span class="muted">•</span>
-                    <a class="muted" href="?culture=en&ui-culture=en" style="margin-top: unset">EN</a>
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger auth-alert" role="alert">
+                        @L["Login_Failed"]
+                    </div>
+                }
+
+                <form asp-action="Login" asp-controller="Auth" method="post" class="auth-fields">
+                    @Html.AntiForgeryToken()
+
+                    <div class="pr-field">
+                        <input asp-for="userName" type="text" placeholder=" " autocomplete="username" required />
+                        <label>@L["Login_UserName"]</label>
+                        <span asp-validation-for="userName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="pr-field">
+                        <input asp-for="password" type="password" placeholder=" " autocomplete="current-password" required />
+                        <label>@L["Login_Password"]</label>
+                        <span asp-validation-for="password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="auth-meta">
+                        <span class="text-muted-soft">@L["AppName"]</span>
+                        <span class="auth-chip">@L["PeerReview"]</span>
+                    </div>
+
+                    <button type="submit" class="btn-pr btn-pr-primary w-100 mt-1">
+                        @L["Login_Submit"]
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    <div class="auth-quick">
+                        <span>@L["Login_Header"]</span>
+                        <span class="text-muted-soft">@L["Login_Title"]</span>
+                    </div>
+                    <small class="text-muted-soft">© @DateTime.UtcNow.Year @L["AppName"]</small>
                 </div>
             </div>
         </div>
     </div>
-
 </body>
 </html>

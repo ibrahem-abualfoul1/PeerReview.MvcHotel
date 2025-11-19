@@ -4,35 +4,51 @@
 
 @{
     ViewData["Title"] = L["Questions_Create_Title"];
+    ViewBag.ActiveMenu = "Questions";
 }
 
-<h3>@L["Questions_Create_Title"]</h3>
+<div class="row justify-content-center">
+    <div class="col-xl-7 col-lg-8">
+        <div class="pr-card">
+            <div class="d-flex justify-content-between align-items-start mb-2 gap-2 flex-wrap">
+                <div>
+                    <div class="h-section-title mb-0">@L["Questions_Create_Title"]</div>
+                    <p class="text-muted-soft mb-0">@L["Questions_Description"]</p>
+                </div>
+                <span class="pill-badge">@L["Field_Category"]</span>
+            </div>
 
-<form method="post" class="card card-hotel p-3">
-    @Html.AntiForgeryToken()
+            <form method="post" class="pr-form-grid">
+                @Html.AntiForgeryToken()
 
-    <div class="row g-2">
-        <div class="col-md-6">
-            <label class="form-label">@L["Field_Title"]</label>
-            <input asp-for="TitleEn" class="form-control" />
-        </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="pr-field">
+                            <input asp-for="TitleEn" placeholder=" " required />
+                            <label>@L["Field_Title"]</label>
+                        </div>
+                    </div>
 
-        <div class="col-md-6">
-            <label class="form-label">@L["Field_Description"]</label>
-            <input asp-for="DescriptionEn" class="form-control" />
-        </div>
+                    <div class="col-md-6">
+                        <div class="pr-field">
+                            <input asp-for="DescriptionEn" placeholder=" " />
+                            <label>@L["Field_Description"]</label>
+                        </div>
+                    </div>
 
-        <div class="col-md-4">
-            <label class="form-label">@L["Field_Category"]</label>
-            <input asp-for="CategoryId" type="number" class="form-control" />
+                    <div class="col-md-4">
+                        <div class="pr-field">
+                            <input asp-for="CategoryId" type="number" placeholder=" " />
+                            <label>@L["Field_Category"]</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pr-form-actions mt-1">
+                    <a class="btn-pr btn-pr-outline" href="/Questions">@L["Btn_Back"]</a>
+                    <button class="btn-pr btn-pr-primary" type="submit">@L["Btn_Save"]</button>
+                </div>
+            </form>
         </div>
     </div>
-
-    <button class="btn btn-gold mt-2">
-        @L["Btn_Save"]
-    </button>
-
-    <a class="btn btn-secondary mt-2" href="/Questions">
-        @L["Btn_Back"]
-    </a>
-</form>
+</div>

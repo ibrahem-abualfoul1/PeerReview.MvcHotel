@@ -156,17 +156,26 @@
                 </div>
             </div>
         </aside>
+        <div class="sidebar-backdrop d-lg-none" id="sidebarBackdrop"></div>
 
         <!-- Main -->
         <main class="app-main">
             <!-- Header -->
             <header class="app-header">
-                <div>
-                    <h1 class="h-page-title mb-0">
-                        @ViewData["Title"]
-                    </h1>
-                    <div class="text-muted-soft mt-1">
-                        @RenderSection("PageSubtitle", required: false)
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button"
+                            class="btn-pr btn-pr-icon d-lg-none"
+                            id="sidebarToggle"
+                            aria-label="@L["Toggle navigation"]">
+                        ☰
+                    </button>
+                    <div>
+                        <h1 class="h-page-title mb-0">
+                            @ViewData["Title"]
+                        </h1>
+                        <div class="text-muted-soft mt-1">
+                            @RenderSection("PageSubtitle", required: false)
+                        </div>
                     </div>
                 </div>
 
@@ -211,6 +220,39 @@
                     btn.textContent = next === "dark" ? "🌙" : "☀️";
                 });
             }
+
+            const body = document.body;
+            const sidebar = document.querySelector(".sidebar");
+            const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+            const sidebarToggle = document.getElementById("sidebarToggle");
+
+            const closeSidebar = () => {
+                body.classList.remove("sidebar-open");
+                sidebar?.classList.remove("is-open");
+                sidebarBackdrop?.classList.remove("show");
+            };
+
+            const openSidebar = () => {
+                body.classList.add("sidebar-open");
+                sidebar?.classList.add("is-open");
+                sidebarBackdrop?.classList.add("show");
+            };
+
+            sidebarToggle?.addEventListener("click", () => {
+                if (body.classList.contains("sidebar-open")) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            sidebarBackdrop?.addEventListener("click", () => closeSidebar());
+
+            window.addEventListener("resize", () => {
+                if (window.innerWidth >= 992) {
+                    closeSidebar();
+                }
+            });
         })();
     </script>
 

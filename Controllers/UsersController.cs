@@ -52,7 +52,7 @@ namespace PeerReview.MvcHotel.Controllers
                 return View(model);
 
             await _svc.Create(model);
-            TempData["msg"] = _L["Msg_Added"];
+            TempData["msg"] = _L["Msg_Added"].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -91,7 +91,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Edit(int id, UserUpdateDto model)
         {
             await _svc.Update(id, model);
-            TempData["msg"] = _L["Msg_Updated"];
+            TempData["msg"] = _L["Msg_Updated"].Value; 
             return RedirectToAction(nameof(Index));
         }
 
@@ -100,7 +100,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             await _svc.Delete(id);
-            TempData["msg"] = _L["Msg_Deleted"];
+            TempData["msg"] = _L["Msg_Deleted"].Value; 
             return RedirectToAction(nameof(Index));
         }
 
@@ -110,7 +110,7 @@ namespace PeerReview.MvcHotel.Controllers
         {
             await _svc.Activate(id);
             // ممكن تضيف:
-            // TempData["msg"] = _L["Msg_Activated"];
+            TempData["msg"] = _L["Msg_Activated"].Value; ;
             return RedirectToAction(nameof(Index));
         }
 
@@ -120,7 +120,7 @@ namespace PeerReview.MvcHotel.Controllers
         {
             await _svc.Deactivate(id);
             // ممكن تضيف:
-            // TempData["msg"] = _L["Msg_Deactivated"];
+            TempData["msg"] = _L["Msg_Deactivated"].Value;
             return RedirectToAction(nameof(Index));
         }
     }
