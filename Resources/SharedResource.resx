@@ -505,4 +505,357 @@
     <value>No records found.</value>
   </data>
 
+
+        <data name="Answers_Action_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+
+        <data name="Answers_Add" xml:space="preserve">
+    <value>Add answer</value>
+  </data>
+
+        <data name="Answers_Col_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+
+        <data name="Answers_Col_Item" xml:space="preserve">
+    <value>Item</value>
+  </data>
+
+        <data name="Answers_Col_Question" xml:space="preserve">
+    <value>Question</value>
+  </data>
+
+        <data name="Answers_Col_Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+
+        <data name="Answers_Create_Title" xml:space="preserve">
+    <value>Create answer</value>
+  </data>
+
+        <data name="Answers_Edit_Title" xml:space="preserve">
+    <value>Edit answer</value>
+  </data>
+
+        <data name="Answers_Title" xml:space="preserve">
+    <value>My answers</value>
+  </data>
+
+        <data name="Assignments_Action_Activate" xml:space="preserve">
+    <value>Bulk assignment</value>
+  </data>
+
+        <data name="Assignments_Bulk_Error" xml:space="preserve">
+    <value>An error occurred while assigning the selection.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Error_Generic" xml:space="preserve">
+    <value>The bulk assignment could not be completed.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Execute" xml:space="preserve">
+    <value>Assign now</value>
+  </data>
+
+        <data name="Assignments_Bulk_Hint" xml:space="preserve">
+    <value>Choose the questions and users you want to connect, then run the assignment.</value>
+  </data>
+
+        <data name="Assignments_Bulk_QuestionIds" xml:space="preserve">
+    <value>Questions</value>
+  </data>
+
+        <data name="Assignments_Bulk_Questions_Hint" xml:space="preserve">
+    <value>Can't find the question you need? Use {0} to add it first.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Questions_Placeholder" xml:space="preserve">
+    <value>Select questions</value>
+  </data>
+
+        <data name="Assignments_Bulk_Success_Default" xml:space="preserve">
+    <value>Questions were assigned to the selected users.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Title" xml:space="preserve">
+    <value>Bulk assignments</value>
+  </data>
+
+        <data name="Assignments_Bulk_UserIds" xml:space="preserve">
+    <value>Users</value>
+  </data>
+
+        <data name="Assignments_Bulk_Users_Hint" xml:space="preserve">
+    <value>Need more reviewers? Use {0} to add them before assigning.</value>
+  </data>
+
+        <data name="Assignments_Bulk_Users_Placeholder" xml:space="preserve">
+    <value>Select users</value>
+  </data>
+
+        <data name="Assignments_Bulk_Validation_SelectBoth" xml:space="preserve">
+    <value>Please select at least one question and one user before running the assignment.</value>
+  </data>
+
+        <data name="Assignments_Subtitle" xml:space="preserve">
+    <value>Manage the current reviewer assignments.</value>
+  </data>
+
+        <data name="Assignments_Title" xml:space="preserve">
+    <value>Assignments</value>
+  </data>
+
+        <data name="Assignments_Title_List" xml:space="preserve">
+    <value>{0} list</value>
+  </data>
+
+        <data name="Assignments_Toggle_Error" xml:space="preserve">
+    <value>An error occurred while toggling the assignment.</value>
+  </data>
+
+        <data name="Assignments_Toggle_Failed" xml:space="preserve">
+    <value>Unable to update the assignment status.</value>
+  </data>
+
+        <data name="Btn_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+
+        <data name="Btn_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+
+        <data name="Btn_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+
+        <data name="Field_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+
+        <data name="Field_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+
+        <data name="Field_QuestionId" xml:space="preserve">
+    <value>Question</value>
+  </data>
+
+        <data name="Field_QuestionItemId" xml:space="preserve">
+    <value>Question item</value>
+  </data>
+
+        <data name="Field_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+
+        <data name="Field_Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+
+        <data name="Filter_Button" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+
+        <data name="ForgotPassword" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
+
+        <data name="FullName" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+
+        <data name="HotelImageAlt" xml:space="preserve">
+    <value>Welcome illustration</value>
+  </data>
+
+        <data name="Item" xml:space="preserve">
+    <value>Item</value>
+  </data>
+
+        <data name="LastUpdated" xml:space="preserve">
+    <value>Last updated</value>
+  </data>
+
+        <data name="Login_Failed" xml:space="preserve">
+    <value>The username or password is incorrect.</value>
+  </data>
+
+        <data name="Login_Header" xml:space="preserve">
+    <value>Evaluation &amp; Review System</value>
+  </data>
+
+        <data name="Login_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+
+        <data name="Login_Submit" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+
+        <data name="Login_Title" xml:space="preserve">
+    <value>Login</value>
+  </data>
+
+        <data name="Login_UserName" xml:space="preserve">
+    <value>Username or email</value>
+  </data>
+
+        <data name="Manage your questions, categories and items." xml:space="preserve">
+    <value>Manage your questions, categories and items.</value>
+  </data>
+
+        <data name="Menu_Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+
+        <data name="NoScoredAnswers" xml:space="preserve">
+    <value>No scored answers were found.</value>
+  </data>
+
+        <data name="NoUnscoredAnswers" xml:space="preserve">
+    <value>No unscored answers were found.</value>
+  </data>
+
+        <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+
+        <data name="PeerReview" xml:space="preserve">
+    <value>PeerReview</value>
+  </data>
+
+        <data name="Questions_Col_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+
+        <data name="Questions_Col_Items" xml:space="preserve">
+    <value>Items</value>
+  </data>
+
+        <data name="Questions_Col_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+
+        <data name="Questions_Create_Title" xml:space="preserve">
+    <value>Create question</value>
+  </data>
+
+        <data name="Questions_DescAr" xml:space="preserve">
+    <value>Arabic description</value>
+  </data>
+
+        <data name="Questions_DescEn" xml:space="preserve">
+    <value>English description</value>
+  </data>
+
+        <data name="Questions_Details" xml:space="preserve">
+    <value>Question details</value>
+  </data>
+
+        <data name="Questions_Edit" xml:space="preserve">
+    <value>Edit question</value>
+  </data>
+
+        <data name="Questions_Edit_Title" xml:space="preserve">
+    <value>Edit question</value>
+  </data>
+
+        <data name="Questions_Items" xml:space="preserve">
+    <value>Answer items</value>
+  </data>
+
+        <data name="Questions_Items_Help" xml:space="preserve">
+    <value>Select the answer options that apply to this question.</value>
+  </data>
+
+        <data name="Questions_SubCategory" xml:space="preserve">
+    <value>Sub category</value>
+  </data>
+
+        <data name="Questions_Title" xml:space="preserve">
+    <value>Questions</value>
+  </data>
+
+        <data name="Questions_TitleAr" xml:space="preserve">
+    <value>Arabic title</value>
+  </data>
+
+        <data name="Questions_TitleEn" xml:space="preserve">
+    <value>English title</value>
+  </data>
+
+        <data name="ReviewUnscored" xml:space="preserve">
+    <value>Review</value>
+  </data>
+
+        <data name="Scored" xml:space="preserve">
+    <value>Scored</value>
+  </data>
+
+        <data name="ScoredAnswers_Hint" xml:space="preserve">
+    <value>A log of the answers you have already scored.</value>
+  </data>
+
+        <data name="ScoredUsers" xml:space="preserve">
+    <value>Users scored</value>
+  </data>
+
+        <data name="Scoring" xml:space="preserve">
+    <value>Scoring</value>
+  </data>
+
+        <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+
+        <data name="Select_Category" xml:space="preserve">
+    <value>Select category</value>
+  </data>
+
+        <data name="Select_SubCategory" xml:space="preserve">
+    <value>Select sub category</value>
+  </data>
+
+        <data name="Selected" xml:space="preserve">
+    <value>selected</value>
+  </data>
+
+        <data name="Status_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+
+        <data name="Status_Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+
+        <data name="Swal_Error_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+
+        <data name="Swal_Success_Title" xml:space="preserve">
+    <value>Success</value>
+  </data>
+
+        <data name="Swal_Warning_Title" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+
+        <data name="TotalReviewUsers" xml:space="preserve">
+    <value>Review users</value>
+  </data>
+
+        <data name="Upload_File_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+
+        <data name="Users_Action_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+
+        <data name="user-questions" xml:space="preserve">
+    <value>User questions</value>
+  </data>
+
 </root>
