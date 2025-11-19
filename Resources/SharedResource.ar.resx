@@ -688,9 +688,7 @@
     <value>آخر تحديث</value>
   </data>
 
-        <data name="Login_Failed" xml:space="preserve">
-    <value>اسم المستخدم أو كلمة المرور غير صحيحة.</value>
-  </data>
+        
 
         <data name="Login_Header" xml:space="preserve">
     <value>نظام التقييم والمراجعة</value>

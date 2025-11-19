@@ -71,7 +71,7 @@
                     @Html.AntiForgeryToken()
 
                     <div class="pr-field">
-                        <input asp-for="userName" type="email" placeholder=" " autocomplete="username" required />
+                        <input asp-for="userName" type="text" placeholder=" " autocomplete="username" required />
                         <label>@L["Login_UserName"]</label>
                         <span asp-validation-for="userName" class="text-danger small"></span>
                     </div>

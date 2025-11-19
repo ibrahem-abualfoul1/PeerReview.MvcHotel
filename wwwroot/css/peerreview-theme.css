@@ -640,7 +640,7 @@ body {
 
 .auth-shell {
     width: min(980px, 96vw);
-    display: grid;
+    /*display: grid;*/
     grid-template-columns: 1.1fr 0.9fr;
     gap: 0;
     position: relative;
