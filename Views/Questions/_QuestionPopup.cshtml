@@ -23,8 +23,31 @@
 
 
 
+<style>
+    .question-modal .modal-dialog {
+        margin-top: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .question-modal .modal-content {
+        border-radius: 1rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .question-modal .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    @media (max-width: 768px) {
+        .question-modal .modal-body {
+            max-height: 65vh;
+        }
+    }
+</style>
+
 <div class="modal fade question-modal" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content shadow-lg" style="border-radius:1rem; overflow:hidden;">
 
             <!-- Header -->
