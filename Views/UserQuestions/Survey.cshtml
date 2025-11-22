@@ -44,17 +44,17 @@
         }
 
         .survey-card {
-            background: var(--panel);
+            background: var(--bg-panel);
             border-radius: 24px;
-            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.55);
+            box-shadow: 0 28px 70px rgba(234, 88, 12, 0.18);
             overflow: hidden;
-            border: 1px solid rgba(148,163,184,0.3);
+            border: 1px solid var(--border-color);
             animation: sv-slide-in 0.4s ease-out;
         }
 
         .survey-header {
-            background: radial-gradient(circle at top left, rgba(201,162,39,0.18) 0, rgba(15,23,42,0.95) 40%, rgba(15,23,42,1) 100%);
-            color: #f9fafb;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 205, 170, 0.35) 0, rgba(255, 240, 225, 0.92) 40%, rgba(255, 255, 255, 0.95) 100%);
+            color: var(--text-main);
             padding: 32px 28px 26px;
             position: relative;
         }
@@ -78,8 +78,8 @@
             padding: .2rem .7rem;
             border-radius: 999px;
             font-size: .75rem;
-            background: rgba(15,23,42,0.8);
-            border: 1px solid rgba(148,163,184,0.35);
+            background: var(--bg-muted);
+            border: 1px solid var(--border-color);
             display: inline-flex;
             align-items: center;
             gap: .35rem;
@@ -90,7 +90,7 @@
             }
 
         .progress-container {
-            background: rgba(15,23,42,0.5);
+            background: var(--bg-muted);
             height: 7px;
             border-radius: 999px;
             margin-top: 18px;
@@ -108,13 +108,13 @@
         .progress-text {
             margin-top: 8px;
             font-size: 0.8rem;
-            opacity: 0.88;
+            color: var(--text-muted);
         }
 
         .survey-body {
             padding: 26px 26px 22px;
-            background: radial-gradient(circle at top, rgba(15,23,42,0.65) 0, rgba(2,6,23,1) 34%, rgba(2,6,23,1) 100%);
-            color: var(--text-main,#e5e7eb);
+            background: linear-gradient(180deg, rgba(255, 244, 235, 0.85), rgba(255, 255, 255, 0.95));
+            color: var(--text-main);
         }
 
         .group-title {
@@ -124,7 +124,7 @@
         }
 
         .group-description {
-            color: var(--text-muted,#9ca3af);
+            color: var(--text-muted);
             margin-bottom: 20px;
             font-size: 0.9rem;
             line-height: 1.6;
@@ -134,9 +134,9 @@
             margin-bottom: 22px;
             padding: 16px 16px 14px;
             border-radius: 18px;
-            background: radial-gradient(circle at top left, rgba(15,23,42,0.9) 0, rgba(15,23,42,0.95) 60%, rgba(15,23,42,1) 100%);
-            border: 1px solid rgba(31,41,55,0.9);
-            box-shadow: 0 10px 25px rgba(15,23,42,0.7);
+            background: linear-gradient(145deg, rgba(255, 244, 235, 0.9), rgba(255, 230, 210, 0.9));
+            border: 1px solid var(--border-color);
+            box-shadow: 0 18px 38px rgba(234, 88, 12, 0.16);
             animation: sv-fade-in 0.25s ease-out;
         }
 
@@ -159,18 +159,18 @@
             padding: 10px 12px;
             border-radius: 12px;
             font-size: 0.95rem;
-            border: 1px solid rgba(148,163,184,0.4);
-            background: rgba(15,23,42,0.85);
-            color: #e5e7eb;
+            border: 1px solid var(--border-color);
+            background: var(--bg-panel);
+            color: var(--text-main);
             font-family: inherit;
             transition: all 0.25s ease;
         }
 
             .input-field:focus {
                 outline: none;
-                border-color: rgba(201,162,39,0.9);
-                box-shadow: 0 0 0 1px rgba(201,162,39,0.65);
-                background: rgba(15,23,42,0.9);
+                border-color: rgba(249, 115, 22, 0.55);
+                box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+                background: #fff;
             }
 
         textarea.input-field {
@@ -190,10 +190,10 @@
             align-items: center;
             padding: 10px 12px;
             border-radius: 12px;
-            border: 1px solid rgba(55,65,81,0.95);
+            border: 1px solid var(--border-color);
             cursor: pointer;
             transition: all 0.2s ease;
-            background: rgba(15,23,42,0.9);
+            background: var(--bg-muted);
             gap: 8px;
         }
 
@@ -202,8 +202,8 @@
             }
 
             .option-label:hover {
-                border-color: rgba(201,162,39,0.9);
-                background: rgba(24,31,51,1);
+                border-color: rgba(249, 115, 22, 0.4);
+                background: rgba(249, 115, 22, 0.08);
                 transform: translateX( @(isRtl ? "5px" : "-5px") );
             }
 
@@ -215,8 +215,8 @@
             }
 
             .option-label.selected {
-                border-color: rgba(201,162,39,1);
-                background: radial-gradient(circle at top left, rgba(201,162,39,0.25) 0, rgba(15,23,42,1) 55%);
+                border-color: rgba(249, 115, 22, 0.55);
+                background: linear-gradient(135deg, rgba(255, 230, 210, 0.9), rgba(255, 244, 235, 1));
                 font-weight: 600;
             }
 
@@ -226,12 +226,12 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.25s ease;
-            background: rgba(15,23,42,0.95);
-            border: 1.5px dashed rgba(201,162,39,0.7);
+            background: var(--bg-muted);
+            border: 1.5px dashed rgba(249, 115, 22, 0.55);
         }
 
             .file-upload:hover {
-                background: radial-gradient(circle at top, rgba(201,162,39,0.22) 0, rgba(15,23,42,1) 45%);
+                background: radial-gradient(circle at top, rgba(249, 115, 22, 0.12) 0, rgba(255, 255, 255, 0.95) 45%);
                 transform: translateY(-1px);
             }
 
@@ -240,14 +240,14 @@
             }
 
         .file-upload-text {
-            color: #facc15;
+            color: var(--color-primary);
             font-weight: 600;
             font-size: 0.95rem;
         }
 
         .file-name {
             margin-top: 6px;
-            color: #9ca3af;
+            color: var(--text-muted);
             font-size: 0.85rem;
         }
 
@@ -257,7 +257,7 @@
             gap: 10px;
             margin-top: 18px;
             padding-top: 18px;
-            border-top: 1px solid rgba(31,41,55,0.85);
+            border-top: 1px solid var(--border-color);
         }
 
         .btn-sv {
@@ -288,14 +288,14 @@
             }
 
         .btn-sv-secondary {
-            background: rgba(15,23,42,0.9);
-            color: #e5e7eb;
-            border: 1px solid rgba(148,163,184,0.5);
+            background: var(--bg-muted);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
             min-width: 120px;
         }
 
             .btn-sv-secondary:hover {
-                background: rgba(31,41,55,1);
+                background: rgba(249, 115, 22, 0.1);
                 transform: translateY(-1px);
             }
 
@@ -332,7 +332,7 @@
         }
 
         .success-message {
-            color: #9ca3af;
+            color: var(--text-muted);
             font-size: 0.95rem;
             line-height: 1.7;
         }

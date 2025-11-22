@@ -9,29 +9,34 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">@ViewData["Title"]</h5>
-    <a class="btn btn-link" href="@Url.Action("Index", "AnswerScoring")">
+    <div>
+        <div class="h-section-title mb-1">@ViewData["Title"]</div>
+        <div class="text-muted-soft" style="font-size:0.9rem;">@L["Scoring_Prompt"]</div>
+    </div>
+    <a class="btn-pr btn-pr-outline" href="@Url.Action("Index", "AnswerScoring")">
         ← @L["Btn_Back"]
     </a>
 </div>
 
 @if (Model?.Any() != true)
 {
-    <div class="alert alert-info">
-        @L["NoUnscoredAnswers"]
+    <div class="pr-card">
+        <div class="pr-empty">
+            <strong>@L["NoUnscoredAnswers"]</strong>
+        </div>
     </div>
 }
 else
 {
     <form method="post"
           action="@Url.Action("add", "AnswerScoring")"
-          class="card shadow-sm">
+          class="pr-card">
         @Html.AntiForgeryToken()
 
         <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped mb-0 align-middle">
-                    <thead class="table-light">
+            <div class="table-responsive-sm">
+                <table class="pr-table table table-hover table-striped align-middle w-100 mb-0">
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>@L["Column_Question"]</th>

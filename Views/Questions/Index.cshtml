@@ -28,13 +28,13 @@
     <div id="modalHost"></div>
 
     <div class="table-responsive-sm mt-3">
-        <table id="qustions" class="pr-table display nowrap" style="width:100%;">
+        <table id="qustions" class="pr-table display nowrap questions-table" style="width:100%;">
             <thead>
                 <tr>
-                    <th>@L["Questions_Col_Title"] (@L["Arabic"])</th>
-                    <th>@L["Questions_Col_Title"] (@L["English"])</th>
-                    <th>@L["Questions_Col_Description"]</th>
-                    <th>@L["Questions_Col_Items"]</th>
+                    <th class="col-title">@L["Questions_Col_Title"] (@L["Arabic"])</th>
+                    <th class="col-title">@L["Questions_Col_Title"] (@L["English"])</th>
+                    <th class="col-desc">@L["Questions_Col_Description"]</th>
+                    <th class="col-count text-center">@L["Questions_Col_Items"]</th>
                     <th>@L["Actions"]</th>
                 </tr>
             </thead>
@@ -42,10 +42,18 @@
                 @foreach (var q in Model)
                 {
                     <tr>
-                        <td>@q.TitleAr</td>
-                        <td>@q.TitleEn</td>
-                        <td>@q.DescriptionEn</td>
-                        <td>@(q.Items?.Count ?? 0)</td>
+                        <td class="col-title">
+                            <span class="cell-clip" title="@q.TitleAr">@q.TitleAr</span>
+                        </td>
+                        <td class="col-title">
+                            <span class="cell-clip" title="@q.TitleEn">@q.TitleEn</span>
+                        </td>
+                        <td class="col-desc">
+                            <span class="cell-clip" title="@q.DescriptionEn">@q.DescriptionEn</span>
+                        </td>
+                        <td class="col-count text-center">
+                            <span class="pill-badge pill-soft">@(q.Items?.Count ?? 0)</span>
+                        </td>
                         <td class="text-nowrap">
                             <button class="btn-pr btn-pr-sm btn-pr-soft"
                                     type="button"
@@ -62,7 +70,6 @@
 
                             <form method="post"
                                   action="/Questions/Delete/@q.Id"
-                                  
                                   onsubmit="return confirm('@L["Confirm_Delete"]');">
                                 @Html.AntiForgeryToken()
                                 <button class="btn-pr btn-pr-sm btn-pr-outline">
@@ -78,38 +85,41 @@
 </div>
 
 @section Styles {
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css" />
+    <style>
+        .questions-table .col-title {
+            max-width: 240px;
+            min-width: 180px;
+        }
+
+        .questions-table .col-desc {
+            max-width: 320px;
+            min-width: 220px;
+        }
+
+        .questions-table .col-count {
+            width: 120px;
+        }
+
+        .questions-table .cell-clip {
+            display: inline-block;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
+
+        .modal-backdrop.fade.show {
+            display: none;
+        }
+    </style>
 }
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
-
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-
     <script>
-        $(function () {
-            $('#qustions').DataTable({
-                dom: 'Bftip',
-                buttons: ['copy', 'excel', 'pdf'],
-                language: {
-                    url: '@(System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
-                                            ? "https://cdn.datatables.net/plug-ins/1.13.8/i18n/ar.json"
-                                            : "https://cdn.datatables.net/plug-ins/1.13.8/i18n/en-GB.json")'
-            }
-        });
-    });
+
 
         // ========= JS الخاص بـ المودال و Select_All =========
 
@@ -122,7 +132,9 @@
                 modal.show();
 
                 // بعد ما يحمل المودال فعليًا
-                initQuestionItemsMultiSelect();
+                if (typeof initQuestionItemsMultiSelect === 'function') {
+                    initQuestionItemsMultiSelect();
+                }
             });
         }
 
@@ -133,7 +145,11 @@
 
         $(document).on('question:upserted', function (e, res) {
             var tbl = $('#qustions').DataTable();
-            tbl.ajax ? tbl.ajax.reload(null, false) : location.reload();
+            if (tbl.ajax) {
+                tbl.ajax.reload(null, false);
+            } else {
+                location.reload();
+            }
         });
 
         // ======== من هنا كود Select_All (Vanilla JS + Event Delegation) ========
@@ -201,4 +217,3 @@
         })();
     </script>
 }
-

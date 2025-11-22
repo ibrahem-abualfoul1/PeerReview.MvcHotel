@@ -23,62 +23,67 @@
     </a>
 }
 
-<div class="row g-3">
-    <div class="col-md-3 col-sm-6">
-        <div class="pr-card">
-            <div class="text-muted-soft">@L["Dashboard_Users"]</div>
-            <div class="d-flex justify-content-between align-items-end">
-                <div class="pr-stat-number">@users</div>
-                <span class="badge-pill badge-success">@L["Dashboard_Total"]</span>
-            </div>
+<div class="pr-card mb-3">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <div class="h-section-title">@L["Menu_Dashboard"]</div>
+            <p class="text-muted-soft mb-0">@L["Dashboard_Subtitle"]</p>
+        </div>
+        <div class="app-meta">
+            <span class="chip">@L["Dashboard_AnsweredByMe"]: @answeredByMe</span>
+            <span class="chip">@L["Dashboard_AssignedToMe"]: @assignedToMe</span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-grid">
+    <div class="pr-card">
+        <div class="text-muted-soft">@L["Dashboard_Users"]</div>
+        <div class="d-flex justify-content-between align-items-end">
+            <div class="pr-stat-number">@users</div>
+            <span class="badge-pill badge-success">@L["Dashboard_Total"]</span>
         </div>
     </div>
 
-    <div class="col-md-3 col-sm-6">
-        <div class="pr-card">
-            <div class="text-muted-soft">@L["Dashboard_Questions"]</div>
-            <div class="d-flex justify-content-between align-items-end">
-                <div class="pr-stat-number">@questions</div>
-                <span class="badge-pill badge-warning">@L["Dashboard_Total"]</span>
-            </div>
+    <div class="pr-card">
+        <div class="text-muted-soft">@L["Dashboard_Questions"]</div>
+        <div class="d-flex justify-content-between align-items-end">
+            <div class="pr-stat-number">@questions</div>
+            <span class="badge-pill badge-warning">@L["Dashboard_Total"]</span>
         </div>
     </div>
 
-    <div class="col-md-3 col-sm-6">
-        <div class="pr-card">
-            <div class="text-muted-soft">@L["Dashboard_Answers"]</div>
-            <div class="d-flex justify-content-between align-items-end">
-                <div class="pr-stat-number">@answers</div>
-                <span class="badge-pill badge-success">@L["Dashboard_Total"]</span>
-            </div>
+    <div class="pr-card">
+        <div class="text-muted-soft">@L["Dashboard_Answers"]</div>
+        <div class="d-flex justify-content-between align-items-end">
+            <div class="pr-stat-number">@answers</div>
+            <span class="badge-pill badge-success">@L["Dashboard_Total"]</span>
         </div>
     </div>
 
-    <div class="col-md-3 col-sm-6">
-        <div class="pr-card">
-            <div class="text-muted-soft">@L["Dashboard_AssignedToMe"]</div>
-            <div class="d-flex justify-content-between align-items-end">
-                <div class="pr-stat-number">@assignedToMe</div>
-                <span class="badge-pill badge-muted">@L["Dashboard_Pending"]</span>
-            </div>
+    <div class="pr-card">
+        <div class="text-muted-soft">@L["Dashboard_AssignedToMe"]</div>
+        <div class="d-flex justify-content-between align-items-end">
+            <div class="pr-stat-number">@assignedToMe</div>
+            <span class="badge-pill badge-muted">@L["Dashboard_Pending"]</span>
         </div>
     </div>
 </div>
 
 <div class="row g-3 mt-1">
     <div class="col-lg-6">
-        <div class="pr-card">
+        <div class="pr-card h-100">
             <div class="h-section-title mb-2">@L["Dashboard_MyScoring"]</div>
             <ul class="list-unstyled mt-2">
-                <li class="d-flex justify-content-between mb-1">
+                <li class="d-flex justify-content-between mb-2">
                     <span>@L["Dashboard_AnsweredByMe"]</span>
                     <span class="fw-semibold">@answeredByMe</span>
                 </li>
-                <li class="d-flex justify-content-between mb-1">
+                <li class="d-flex justify-content-between mb-2">
                     <span>@L["Dashboard_AssignedToMe"]</span>
                     <span class="fw-semibold">@assignedToMe</span>
                 </li>
-                <li class="d-flex justify-content-between mb-1">
+                <li class="d-flex justify-content-between mb-2">
                     <span>@L["Dashboard_MyPending"]</span>
                     <span class="fw-semibold">@myPending</span>
                 </li>
@@ -91,11 +96,16 @@
     </div>
 
     <div class="col-lg-6">
-        <div class="pr-card">
+        <div class="pr-card h-100">
             <div class="h-section-title mb-2">@L["Dashboard_Activity_PlaceholderTitle"]</div>
-            <p class="text-muted-soft mb-0">
+            <p class="text-muted-soft mb-2">
                 @L["Dashboard_Activity_PlaceholderText"]
             </p>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="chip">@L["Menu_Assignments"]</span>
+                <span class="chip">@L["Menu_Questions"]</span>
+                <span class="chip">@L["Menu_UserQuestions"]</span>
+            </div>
         </div>
     </div>
 </div>

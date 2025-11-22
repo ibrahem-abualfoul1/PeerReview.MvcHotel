@@ -16,45 +16,46 @@
 <div class="row justify-content-center">
     <div class="col-lg-7 col-xl-6">
         <div class="pr-card">
-            <div class="h-section-title mb-3">
-                @L["Users_Edit_Title"]
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="h-section-title mb-0">@L["Users_Edit_Title"]</div>
+                <span class="chip">ID #@ViewBag.UserId</span>
             </div>
 
-            <form method="post" asp-action="Edit" asp-route-id="@(ViewBag.UserId)">
+            <form method="post" asp-action="Edit" asp-route-id="@(ViewBag.UserId)" class="mt-2">
                 @Html.AntiForgeryToken()
 
-                <!-- الاسم الكامل -->
-                <div class="pr-field">
-                    <input asp-for="fullName" placeholder=" " />
-                    <label>@L["Field_FullName"]</label>
-                    @Html.ValidationMessageFor(m => m.fullName, "", new { @class = "text-danger small" })
+                <div class="pr-form-grid">
+                    <div class="pr-field">
+                        <label class="form-label">@L["Field_FullName"]</label>
+                        <input asp-for="fullName" class="form-control" />
+                        @Html.ValidationMessageFor(m => m.fullName, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="pr-field">
+                        <label class="form-label">@L["Field_Email"]</label>
+                        <input asp-for="email" class="form-control" type="email" />
+                        @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="pr-field">
+                        <label class="form-label">@L["Field_Role"]</label>
+                        <select asp-for="roleId"
+                                class="form-select"
+                                asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.Roles, "Value", "Text"))">
+                            <option value="">@L["Field_RolePlaceholder"]</option>
+                        </select>
+                        @Html.ValidationMessageFor(m => m.roleId, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="d-flex align-items-center ps-1">
+                        <div class="form-check form-switch">
+                            @Html.CheckBoxFor(m => m.isActive, new { @class = "form-check-input", id = "isActive" })
+                            <label class="form-check-label" for="isActive">@L["Field_IsActive"]</label>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- البريد -->
-                <div class="pr-field">
-                    <input asp-for="email" placeholder=" " type="email" />
-                    <label>@L["Field_Email"]</label>
-                    @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger small" })
-                </div>
-
-                <!-- الدور -->
-                <div class="pr-field">
-                    <select asp-for="roleId"
-                            class="form-select"
-                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.Roles, "Value", "Text"))">
-                        <option value="">@L["Field_RolePlaceholder"]</option>
-                    </select>
-                    <label>@L["Field_Role"]</label>
-                    @Html.ValidationMessageFor(m => m.roleId, "", new { @class = "text-danger small" })
-                </div>
-
-                <!-- الحالة -->
-                <div class="form-check form-switch mb-3">
-                    @Html.CheckBoxFor(m => m.isActive, new { @class = "form-check-input", id = "isActive" })
-                    <label class="form-check-label" for="isActive">@L["Field_IsActive"]</label>
-                </div>
-
-                <div class="d-flex justify-content-end gap-2 mt-3">
+                <div class="pr-form-footer">
                     <a href="@Url.Action("Index", "Users")" class="btn-pr btn-pr-outline">
                         @L["Btn_Back"]
                     </a>

@@ -14,7 +14,7 @@
 }
 
 <!DOCTYPE html>
-<html lang="@lang" dir="@dir" data-theme="dark">
+<html lang="@lang" dir="@dir" data-theme="sunrise">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,6 +32,10 @@
     @RenderSection("Styles", required: false)
 </head>
 <body>
+    <div class="app-surface-bg">
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
     <div class="app-shell">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -110,12 +114,7 @@
 
             <!-- bottom: theme + language + user -->
             <div>
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <!-- Theme toggle -->
-                    <button type="button" class="btn-pr btn-pr-icon" id="themeToggle" title="@L["Toggle_Theme"]">
-                        🌙
-                    </button>
-
+                <div class="d-flex align-items-center justify-content-end mb-3">
                     <!-- Language toggle
                          NOTE: عدّل الروت حسب Controller اللغة عندك (Lang / Language / Culture...) -->
                     <div class="btn-group">
@@ -140,8 +139,6 @@
                                 </button>
                             </form>
                         </div>
-
-
                     </div>
                 </div>
 
@@ -173,7 +170,14 @@
                         <h1 class="h-page-title mb-0">
                             @ViewData["Title"]
                         </h1>
-                        <div class="text-muted-soft mt-1">
+                        <div class="app-meta mt-2">
+                            <span class="chip">@L["Logged in"]</span>
+                            @if (!string.IsNullOrEmpty(role))
+                            {
+                                <span class="chip">@role</span>
+                            }
+                        </div>
+                        <div class="text-muted-soft mt-2">
                             @RenderSection("PageSubtitle", required: false)
                         </div>
                     </div>
@@ -204,23 +208,6 @@
 
     <script>
         (function () {
-            const root = document.documentElement;
-            const savedTheme = localStorage.getItem("pr-theme") || "dark";
-            root.setAttribute("data-theme", savedTheme);
-
-            const btn = document.getElementById("themeToggle");
-            if (btn) {
-                btn.textContent = savedTheme === "dark" ? "🌙" : "☀️";
-
-                btn.addEventListener("click", function () {
-                    const current = root.getAttribute("data-theme") || "dark";
-                    const next = current === "dark" ? "light" : "dark";
-                    root.setAttribute("data-theme", next);
-                    localStorage.setItem("pr-theme", next);
-                    btn.textContent = next === "dark" ? "🌙" : "☀️";
-                });
-            }
-
             const body = document.body;
             const sidebar = document.querySelector(".sidebar");
             const sidebarBackdrop = document.getElementById("sidebarBackdrop");
