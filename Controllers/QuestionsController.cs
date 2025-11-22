@@ -37,7 +37,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Create(QuestionCreateDto model)
         {
             await _svc.Create(model);
-            TempData["msg"] = _L["Msg_Added"];
+            TempData["msg"] = _L["Msg_Added"].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -88,11 +88,8 @@ namespace PeerReview.MvcHotel.Controllers
             );
 
             var questionItems = await _svc.ListQuestionItems();
-            ViewBag.QuestionItems = new SelectList(
-                questionItems,
-                "Id",
-                culture == "ar" ? "TextAr" : "TextEn"
-            );
+            
+            ViewBag.QuestionItems = questionItems;
 
             // تحضير الموديل
             var model = new QuestionCreateDto();
@@ -121,7 +118,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             await _svc.Delete(id);
-            TempData["msg"] = _L["Msg_Deleted"];
+            TempData["msg"] = _L["Msg_Deleted"].Value;
             return RedirectToAction(nameof(Index));
         }
     }

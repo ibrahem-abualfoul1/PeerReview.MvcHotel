@@ -11,13 +11,17 @@
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
     var categories = ViewBag.Categorys as SelectList
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
-    var questionItems = ViewBag.QuestionItems as SelectList
-                ?? new SelectList(Enumerable.Empty<SelectListItem>());
+    // var questionItems = ViewBag.QuestionItems as SelectList
+    //             ?? new SelectList(Enumerable.Empty<SelectListItem>());
+    var selectedItems = Model?.Items ?? new List<int>();
+    var questionItems = ViewBag.QuestionItems as List<QuestionItemDto> ?? new();
 
     string url = isEdit
         ? Url.Action("Edit", "Questions", new { id = id!.Value })!
         : Url.Action("Create", "Questions")!;
 }
+
+
 
 <div class="modal fade" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -116,24 +120,76 @@
                             </div>
                             *@
 
-                            <!-- Items multi-select -->
-                            <div class="col-12">
-                                <label class="form-label fw-semibold text-body" asp-for="Items">
-                                    @L["Questions_Items"]
-                                </label>
+                            <!-- Items multi-select dropdown -->
+                            <div class="col-md-6">
+    <label class="form-label">@L["Field_UsersLabel"]</label>
 
-                                <select class="form-select"
-                                        asp-for="Items"
-                                        asp-items="questionItems"
-                                        multiple="multiple"
-                                        size="8">
-                                </select>
+    <div class="dropdown w-100">
+        <!-- زر الـ dropdown بشكل form-select -->
+        <button class="form-select d-flex justify-content-between align-items-center"
+                type="button"
+                id="itemsDropdownButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+            <span id="itemsDropdownText" class="flex-grow-1">
+                @L["Select_Items"]
+            </span>
+            <span class="ms-2 flex-shrink-0">
+                <i class="ti ti-chevron-down"></i>
+            </span>
+        </button>
 
-                                <small class="text-muted-soft d-block">
-                                    @L["Questions_Items_Help"]  @* اختر عنصرًا أو أكثر *@
-                                </small>
-                                <span class="text-danger small d-block" asp-validation-for="Items"></span>
-                            </div>
+        <!-- القائمة المنسدلة -->
+        <div class="dropdown-menu w-100 p-3 mt-1"
+             aria-labelledby="itemsDropdownButton"
+             style="max-height: 280px; overflow-y: auto;">
+
+            <!-- Select All -->
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="itemsSelectAll" />
+                <label class="form-check-label" for="itemsSelectAll">
+                    @L["Select_All"]
+                </label>
+            </div>
+
+            <hr class="mt-1 mb-2" />
+
+            @foreach (var item in questionItems)
+            {
+                var isChecked = selectedItems.Contains(item.Id);
+                <div class="form-check">
+                    <input class="form-check-input item-checkbox"
+                           type="checkbox"
+                           value="@item.Id"
+                           id="item_@item.Id"
+                           @(isChecked ? "checked" : "") />
+                    <label class="form-check-label" for="item_@item.Id">
+                        @item.TextEn (@item.TextAr)
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- الـ select الحقيقي المخفي للموديل -->
+    
+    <select asp-for="Items"
+        id="Items"
+        class="d-none"
+        multiple="multiple">
+    @foreach (var item in questionItems)
+    {
+                                        var selected = selectedItems.Contains(item.Id) ? "selected" : null;
+                                        <option value="@item.Id" selected="@selected">
+                                            @item.TextEn (@item.TextAr)
+                                        </option>
+    }
+</select>
+
+    <div class="form-text">@L["Field_Users_Hint"]</div>
+    <span class="text-danger small" asp-validation-for="Items"></span>
+</div>
+
                         </div>
                     </div>
                 </div>
@@ -154,11 +210,5 @@
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        // لو حاب بعد الحفظ تستخدم AJAX وتغلق المودال وتعيد تحميل الجدول:
-        // يمكنك في الـ Controller إرجاع JSON success،
-        // وهنا تتعامل مع submit بالـ JS وتطلق event: question:upserted
-        // حالياً النموذج يشتغل Submit عادي حسب الـ action.
-    </script>
-}
+
+

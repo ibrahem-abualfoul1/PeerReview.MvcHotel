@@ -125,7 +125,7 @@ namespace PeerReview.MvcHotel.Controllers
         {
             
             await _svc.BulkAssign(req);
-            return Json(new { ok = true, message = _L[SharedResource.Msg_Welcome] });
+            return Json(new { ok = true, message = _L[SharedResource.Msg_Welcome].Value });
         }
 
        
@@ -134,7 +134,7 @@ namespace PeerReview.MvcHotel.Controllers
         public async Task<IActionResult> Bulk([FromBody] AssignRequest req)
         {
             await _svc.BulkAssign(req);
-            return Json(new { ok = true, message = _L[SharedResource.Msg_Welcome] });
+            return Json(new { ok = true, message = _L[SharedResource.Msg_Welcome].Value });
         }
     }
 }
