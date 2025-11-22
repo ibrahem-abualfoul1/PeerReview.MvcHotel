@@ -23,8 +23,8 @@
 
 
 
-<div class="modal fade" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+<div class="modal fade question-modal" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow-lg" style="border-radius:1rem; overflow:hidden;">
 
             <!-- Header -->
@@ -46,7 +46,7 @@
                     <input type="hidden" name="Id" value="@id" />
                 }
 
-                <div class="modal-body" style="background:var(--app-bg);">
+                <div class="modal-body question-modal-body" style="background:var(--app-bg);">
                     <div class="pr-card mb-0">
                         <div class="h-section-title mb-3">
                             @L["Questions_Details"]

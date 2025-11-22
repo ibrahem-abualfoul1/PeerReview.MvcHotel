@@ -138,6 +138,28 @@ body {
 .h-section-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
 .text-muted-soft { color: var(--text-muted); font-size: 0.9rem; }
 
+/* Question modal refinements */
+.question-modal .modal-dialog { max-width: 1080px; }
+.question-modal .modal-content {
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(249, 115, 22, 0.25);
+    box-shadow: 0 24px 58px rgba(249, 115, 22, 0.18);
+    background: radial-gradient(circle at 18% 10%, rgba(255, 209, 170, 0.38), rgba(255, 255, 255, 0.92)), var(--bg-panel);
+}
+.question-modal .modal-header,
+.question-modal .modal-footer { background: linear-gradient(120deg, rgba(255, 255, 255, 0.92), rgba(255, 241, 228, 0.9)); }
+.question-modal .modal-title { letter-spacing: -0.01em; }
+.question-modal .modal-body { padding-bottom: 0; }
+.question-modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+.question-modal .pr-card { background: rgba(255, 255, 255, 0.9); border-color: rgba(249, 115, 22, 0.2); box-shadow: 0 18px 44px rgba(15, 23, 42, 0.05); }
+.question-modal .pr-field textarea { min-height: 110px; max-height: 180px; }
+.question-modal .row.g-3 > [class*="col-"] { min-width: 320px; }
+.modal-backdrop.show { opacity: 0.55; background: radial-gradient(circle at 20% 30%, rgba(255, 202, 170, 0.35), rgba(15, 23, 42, 0.45)); }
+
 .app-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .chip {
     display: inline-flex;
