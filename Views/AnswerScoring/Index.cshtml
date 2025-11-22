@@ -217,8 +217,8 @@
     <div class="tab-content card-body px-0 pb-0 pt-2">
         <!-- Unscored -->
         <div class="tab-pane fade show active" id="tab-unscored">
-            <div class="table-responsive">
-                <table class="pr-table align-middle mb-0">
+            <div class="table-responsive-sm">
+                <table class="pr-table table table-hover table-striped align-middle w-100 mb-0">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -239,10 +239,10 @@
                             {
                                 <tr>
                                     <td>@i</td>
-                                    <td class="text-clip">
-                                        <div class="score-user-name">@u.UserName</div>
+                                    <td title="@u.UserName">
+                                        <div class="score-user-name cell-truncate">@u.UserName</div>
                                     </td>
-                                    <td class="text-clip">@u.FullName</td>
+                                    <td title="@u.FullName"><span class="cell-truncate lg">@u.FullName</span></td>
                                     <td class="text-center">@u.TotalAnswers</td>
                                     <td class="text-center">
                                         <span class="score-badge-unscored">@u.UnscoredCount</span>
@@ -250,18 +250,18 @@
                                     <td class="text-center">
                                         <span class="score-badge-scored">@u.ScoredCount</span>
                                     </td>
-                                    <td>
-                                        @(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")
+                                    <td title="@(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")">
+                                        <span class="cell-truncate">@(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")</span>
                                     </td>
                                     <td class="text-center">
-                                        <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                        <div class="table-actions justify-content-center">
                                             <a class="btn-pr btn-pr-sm btn-pr-primary"
                                                href="@Url.Action("ByUserUnscored", "AnswerScoring", new { userId = u.UserId })">
-                                                @L["ReviewUnscored"]
+                                                ⭐ @L["ReviewUnscored"]
                                             </a>
                                             <a class="btn-pr btn-pr-sm btn-pr-soft"
                                                href="@Url.Action("ByUserScored", "AnswerScoring", new { userId = u.UserId })">
-                                                @L["ViewScored"]
+                                                👀 @L["ViewScored"]
                                             </a>
                                         </div>
                                     </td>
@@ -272,8 +272,10 @@
                         else
                         {
                             <tr class="score-empty-row">
-                                <td colspan="8" class="text-center text-muted-soft">
-                                    @L["NoData"]
+                                <td colspan="8">
+                                    <div class="pr-empty text-center">
+                                        <strong>@L["NoData"]</strong>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -284,8 +286,8 @@
 
         <!-- Scored -->
         <div class="tab-pane fade" id="tab-scored">
-            <div class="table-responsive">
-                <table class="pr-table align-middle mb-0">
+            <div class="table-responsive-sm">
+                <table class="pr-table table table-hover table-striped align-middle w-100 mb-0">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -306,10 +308,10 @@
                             {
                                 <tr>
                                     <td>@i</td>
-                                    <td class="text-clip">
-                                        <div class="score-user-name">@u.UserName</div>
+                                    <td title="@u.UserName">
+                                        <div class="score-user-name cell-truncate">@u.UserName</div>
                                     </td>
-                                    <td class="text-clip">@u.FullName</td>
+                                    <td title="@u.FullName"><span class="cell-truncate lg">@u.FullName</span></td>
                                     <td class="text-center">@u.TotalAnswers</td>
                                     <td class="text-center">
                                         <span class="score-badge-scored">@u.ScoredCount</span>
@@ -317,18 +319,18 @@
                                     <td class="text-center">
                                         <span class="score-badge-unscored">@u.UnscoredCount</span>
                                     </td>
-                                    <td>
-                                        @(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")
+                                    <td title="@(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")">
+                                        <span class="cell-truncate">@(u.LastScoredAt?.ToString("yyyy-MM-dd HH:mm", CultureInfo.CurrentUICulture) ?? "—")</span>
                                     </td>
                                     <td class="text-center">
-                                        <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                        <div class="table-actions justify-content-center">
                                             <a class="btn-pr btn-pr-sm btn-pr-soft"
                                                href="@Url.Action("ByUserScored", "AnswerScoring", new { userId = u.UserId })">
-                                                @L["ViewScored"]
+                                                👀 @L["ViewScored"]
                                             </a>
                                             <a class="btn-pr btn-pr-sm btn-pr-primary"
                                                href="@Url.Action("ByUserUnscored", "AnswerScoring", new { userId = u.UserId })">
-                                                @L["ReviewUnscored"]
+                                                ⭐ @L["ReviewUnscored"]
                                             </a>
                                         </div>
                                     </td>
@@ -339,8 +341,10 @@
                         else
                         {
                             <tr class="score-empty-row">
-                                <td colspan="8" class="text-center text-muted-soft">
-                                    @L["NoData"]
+                                <td colspan="8">
+                                    <div class="pr-empty text-center">
+                                        <strong>@L["NoData"]</strong>
+                                    </div>
                                 </td>
                             </tr>
                         }

@@ -14,24 +14,28 @@
 }
 
 <div class="pr-card mb-3">
-    <form method="get" class="row g-2">
-        <div class="col-md-4">
-            <div class="pr-field">
-                <input type="text" name="q" value="@Context.Request.Query["q"]" placeholder=" " />
-                <label>@L["Users_Search"]</label>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="h-section-title mb-0">@L["Users_Title"]</div>
+        <div class="text-muted-soft">@L["Users_Search"]</div>
+    </div>
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-5">
+            <div class="pr-field mb-0">
+                <label class="form-label">@L["Users_Search"]</label>
+                <input type="text" name="q" value="@Context.Request.Query["q"]" class="form-control" />
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="pr-field">
+        <div class="col-md-4">
+            <div class="pr-field mb-0">
+                <label class="form-label">@L["Users_Col_Status"]</label>
                 <select name="status" class="form-select">
                     <option value="">@L["Users_Filter_Status_All"]</option>
                     <option value="active">@L["Status_Active"]</option>
                     <option value="inactive">@L["Status_Inactive"]</option>
                 </select>
-                <label>@L["Users_Col_Status"]</label>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3 text-end">
             <button type="submit" class="btn-pr btn-pr-soft w-100">
                 @L["Filter_Button"]
             </button>
@@ -40,25 +44,27 @@
 </div>
 
 <div class="pr-card">
-    <div class="table-responsive">
-        <table class="pr-table">
+    <div class="table-responsive-sm">
+        <table class="pr-table table table-hover table-striped align-middle w-100">
             <thead>
                 <tr>
-                    <th>@L["Users_Col_Id"]</th>
+                    <th class="text-nowrap">@L["Users_Col_Id"]</th>
                     <th>@L["Users_Col_FullName"]</th>
                     <th>@L["Users_Col_UserName"]</th>
                     <th>@L["Users_Col_Email"]</th>
                     <th>@L["Users_Col_Role"]</th>
-                    <th>@L["Users_Col_Status"]</th>
-                    <th>@L["Users_Col_Actions"]</th>
+                    <th class="text-center">@L["Users_Col_Status"]</th>
+                    <th class="text-end">@L["Users_Col_Actions"]</th>
                 </tr>
             </thead>
             <tbody>
                 @if (Model == null || !Model.Any())
                 {
                     <tr>
-                        <td colspan="7" class="text-center text-muted-soft">
-                            @L["Users_Empty"]
+                        <td colspan="7">
+                            <div class="pr-empty">
+                                <strong>@L["Users_Empty"]</strong>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -67,50 +73,49 @@
                     foreach (var u in Model)
                     {
                         <tr>
-                            <td>@u.id</td>
-                            <td>@u.fullName</td>
-                            <td>@u.userName</td>
-                            <td>@u.email</td>
-                            <td>@u.RoleName</td>
-                            <td>
+                            <td class="text-muted">@u.id</td>
+                            <td title="@u.fullName"><span class="cell-truncate lg">@u.fullName</span></td>
+                            <td title="@u.userName"><span class="cell-truncate">@u.userName</span></td>
+                            <td title="@u.email"><span class="cell-truncate lg">@u.email</span></td>
+                            <td title="@u.RoleName"><span class="cell-truncate">@u.RoleName</span></td>
+                            <td class="text-center">
                                 @if (u.isActive)
                                 {
-                                    <span class="badge-pill badge-success">@L["Status_Active"]</span>
+                                    <span class="status-badge success"><span class="dot"></span> @L["Status_Active"]</span>
                                 }
                                 else
                                 {
-                                    <span class="badge-pill badge-muted">@L["Status_Inactive"]</span>
+                                    <span class="status-badge warning"><span class="dot"></span> @L["Status_Inactive"]</span>
                                 }
                             </td>
-                            <td class="text-nowrap">
-                                <a class="btn-pr btn-pr-sm btn-pr-soft"
-                                   href="@Url.Action("Edit", "Users", new { id = u.id })">
-                                    @L["Users_Action_Edit"]
-                                </a>
-                                @* لو عندك Delete *@
-                                
-                                <form method="post" action="@Url.Action("Delete","Users", new { id = u.id })"
-                                      style="display:inline"
-                                      onsubmit="return confirm('@L["Users_Confirm_Delete"]');">
-                                    @Html.AntiForgeryToken()
-                                    <button class="btn-pr btn-pr-sm btn-pr-outline">
-                                        @L["Users_Action_Delete"]
-                                    </button>
-                                </form>
-                                @if (u.isActive)
-                                {
-                                    <form method="post" action="/Users/Deactivate/@u.id" style="display:inline">
+                            <td class="text-end">
+                                <div class="table-actions justify-content-end">
+                                    <a class="btn-pr btn-pr-sm btn-pr-soft"
+                                       href="@Url.Action("Edit", "Users", new { id = u.id })">
+                                        ✏️ @L["Users_Action_Edit"]
+                                    </a>
+                                    <form method="post" action="@Url.Action("Delete","Users", new { id = u.id })"
+                                          onsubmit="return confirm('@L["Users_Confirm_Delete"]');">
                                         @Html.AntiForgeryToken()
-                                        <button class="btn btn-sm btn-outline-warning">@L["Status_Inactive"]</button>
+                                        <button class="btn-pr btn-pr-sm btn-pr-outline" type="submit">
+                                            🗑️ @L["Users_Action_Delete"]
+                                        </button>
                                     </form>
-                                }
-                                else
-                                {
-                                    <form method="post" action="/Users/Activate/@u.id" style="display:inline">
-                                        @Html.AntiForgeryToken()
-                                        <button class="btn btn-sm btn-outline-success">@L["Status_Active"]</button>
-                                    </form>
-                                }
+                                    @if (u.isActive)
+                                    {
+                                        <form method="post" action="/Users/Deactivate/@u.id">
+                                            @Html.AntiForgeryToken()
+                                            <button class="btn-pr btn-pr-sm btn-pr-outline" type="submit">⚠️ @L["Status_Inactive"]</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" action="/Users/Activate/@u.id">
+                                            @Html.AntiForgeryToken()
+                                            <button class="btn-pr btn-pr-sm btn-pr-outline" type="submit">✅ @L["Status_Active"]</button>
+                                        </form>
+                                    }
+                                </div>
                             </td>
                         </tr>
                     }
