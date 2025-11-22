@@ -28,11 +28,23 @@
                 <img src="~/data/qatar.png" alt="@L["HotelImageAlt"]" />
                 <div class="auth-media-overlay">
                     <div class="auth-pill">@L["AppName"]</div>
-                    <div class="auth-media-title">@L["Login_Header"]</div>
-                    <div class="auth-media-text">@L["Login_Title"]</div>
+                    <div>
+                        <div class="auth-media-title">@L["Login_Header"]</div>
+                        <div class="auth-media-text">@L["Login_Title"]</div>
+                    </div>
                     <div class="auth-highlight-grid">
                         <div class="auth-highlight">@L["AppTitle"]</div>
                         <div class="auth-highlight">@L["Evaluation & Review System"]</div>
+                    </div>
+                    <div class="auth-stats">
+                        <div class="auth-stat">
+                            <div class="label">@L["Login_Title"]</div>
+                            <div class="value">24/7</div>
+                        </div>
+                        <div class="auth-stat">
+                            <div class="label">@L["PeerReview"]</div>
+                            <div class="value">100%</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,6 +70,16 @@
                     <div class="auth-pill subtle">@L["Login_Title"]</div>
                     <h1>@L["Login_Header"]</h1>
                     <p class="text-muted-soft">@L["Evaluation & Review System"]</p>
+                    <div class="auth-meta-badges">
+                        <div class="auth-meta-badge">
+                            <span class="dot"></span>
+                            <span>@L["Login_Header"]</span>
+                        </div>
+                        <div class="auth-meta-badge">
+                            <span class="dot"></span>
+                            <span>@L["PeerReview"]</span>
+                        </div>
+                    </div>
                 </div>
 
                 @if (!ViewData.ModelState.IsValid)
@@ -91,6 +113,8 @@
                         @L["Login_Submit"]
                     </button>
                 </form>
+
+                <div class="auth-divider"></div>
 
                 <div class="auth-footer">
                     <div class="auth-quick">
