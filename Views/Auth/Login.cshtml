@@ -3,14 +3,13 @@
 @inject IViewLocalizer L
 @model PeerReview.MvcHotel.Models.LoginRequest
 
-@{
+@{ 
     ViewData["Title"] = L["Login_Title"];
     Layout = null;
     var isRtl = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
-    var theme = Context.Request.Cookies["theme"] ?? "dark";
 }
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@(isRtl ? "rtl" : "ltr")" data-theme="@theme">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@(isRtl ? "rtl" : "ltr")" data-theme="sunrise">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,28 +21,32 @@
 </head>
 <body class="auth-body">
     <div class="auth-shell">
+        <div class="auth-aura"></div>
+        <div class="auth-rings"></div>
         <div class="auth-backdrop"></div>
         <div class="auth-card">
             <div class="auth-media">
                 <img src="~/data/qatar.png" alt="@L["HotelImageAlt"]" />
                 <div class="auth-media-overlay">
                     <div class="auth-pill">@L["AppName"]</div>
-                    <div>
+                    <div class="auth-media-heading">
                         <div class="auth-media-title">@L["Login_Header"]</div>
-                        <div class="auth-media-text">@L["Login_Title"]</div>
+                        <div class="auth-media-text">@L["Evaluation & Review System"]</div>
                     </div>
                     <div class="auth-highlight-grid">
+                        <div class="auth-highlight">@L["Login_Title"]</div>
+                        <div class="auth-highlight">@L["PeerReview"]</div>
                         <div class="auth-highlight">@L["AppTitle"]</div>
-                        <div class="auth-highlight">@L["Evaluation & Review System"]</div>
+                        <div class="auth-highlight">24/7</div>
                     </div>
                     <div class="auth-stats">
                         <div class="auth-stat">
-                            <div class="label">@L["Login_Title"]</div>
-                            <div class="value">24/7</div>
+                            <div class="label">@L["Login_Header"]</div>
+                            <div class="value">★★★★★</div>
                         </div>
                         <div class="auth-stat">
-                            <div class="label">@L["PeerReview"]</div>
-                            <div class="value">100%</div>
+                            <div class="label">@L["AppTitle"]</div>
+                            <div class="value">@L["PeerReview"]</div>
                         </div>
                     </div>
                 </div>
