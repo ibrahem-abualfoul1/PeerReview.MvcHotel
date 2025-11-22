@@ -26,22 +26,23 @@
             border-radius: 999px;
             padding: .18rem .8rem;
             font-size: .78rem;
-            border: 1px solid var(--border-soft, rgba(148,163,184,.45));
-            background: rgba(15,23,42,.85);
-            color: var(--text-main,#e5e7eb);
+            border: 1px solid var(--border-color);
+            background: var(--bg-muted);
+            color: var(--text-main);
             display: inline-flex;
             align-items: center;
             gap: .35rem;
         }
 
             .lk-pill.badge-type {
-                background: rgba(15,23,42,.95);
+                background: rgba(249, 115, 22, 0.08);
+                border-color: rgba(249, 115, 22, 0.35);
             }
 
             .lk-pill.badge-code {
-                background: rgba(201,162,39,.08);
-                border-color: rgba(201,162,39,.6);
-                color: var(--primary,#c9a227);
+                background: linear-gradient(135deg, rgba(255, 244, 235, 0.9), rgba(255, 224, 204, 0.7));
+                border-color: rgba(249, 115, 22, 0.5);
+                color: var(--color-primary);
                 font-weight: 500;
             }
 
@@ -61,10 +62,6 @@
             letter-spacing: .02em;
             text-transform: uppercase;
             opacity: .85;
-        }
-
-        .pr-table tbody tr:hover {
-            background: rgba(15,23,42,.85);
         }
 
         .pr-table td.text-clip {
