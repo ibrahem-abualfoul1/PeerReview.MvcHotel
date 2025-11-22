@@ -158,7 +158,6 @@ body {
 .question-modal .pr-card { background: rgba(255, 255, 255, 0.9); border-color: rgba(249, 115, 22, 0.2); box-shadow: 0 18px 44px rgba(15, 23, 42, 0.05); }
 .question-modal .pr-field textarea { min-height: 110px; max-height: 180px; }
 .question-modal .row.g-3 > [class*="col-"] { min-width: 320px; }
-.modal-backdrop.show { opacity: 0.55; background: radial-gradient(circle at 20% 30%, rgba(255, 202, 170, 0.35), rgba(15, 23, 42, 0.45)); }
 
 .app-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .chip {
@@ -215,7 +214,6 @@ body {
     opacity: 0.6;
 }
 
-.pr-card > * { position: relative; z-index: 1; }
 
 .pr-stat-number { font-size: 1.9rem; font-weight: 700; }
 .badge-pill { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
