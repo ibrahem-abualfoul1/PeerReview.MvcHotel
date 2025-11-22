@@ -26,7 +26,7 @@
                     <td title="@title">
                         @(title?.Length > 60 ? title.Substring(0, 60) + "..." : title)
                     </td>
-                    <td>@a.userId</td>
+                    <td>@a.user?.fullName</td>
                     <td>@a.assignedAt</td>
                     <td>
                         @if (a.isActive)

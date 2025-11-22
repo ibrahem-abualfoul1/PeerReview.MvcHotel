@@ -52,7 +52,7 @@ namespace PeerReview.MvcHotel.Controllers
         {
             await _svc.AddScore(req);
             TempData["Toast"] = _L["ScoreAdded"].Value;
-            return View(Index(ct));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost("/AnswerScoring/update-form", Name = "AnswerScoring_UpdateForm")]

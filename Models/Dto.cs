@@ -101,7 +101,16 @@ namespace PeerReview.MvcHotel.Models
     //public class QuestionItemCreateDto { public string? text { get; set; } public int type { get; set; } public bool isRequired { get; set; } public string? optionsCsv { get; set; } public int? parentItemId { get; set; } public string? showWhenValue { get; set; } }
 
     public class AssignRequest { public List<int>? questionIds { get; set; } public List<int>? userIds { get; set; } }
-    public class AssignmentDto { public int id { get; set; } public int questionId { get; set; } public int userId { get; set; } public DateTime? assignedAt { get; set; } public bool isActive { get; set; } public QuestionDto? question { get; set; } }
+    public class AssignmentDto
+    {
+        public int id { get; set; }
+        public int questionId { get; set; }
+        public int userId { get; set; }
+        public DateTime? assignedAt { get; set; }
+        public bool isActive { get; set; }
+        public QuestionDto? question { get; set; }
+        public User? user { get; set; }
+    }
 
     public class Answer
     {
@@ -249,8 +258,10 @@ namespace PeerReview.MvcHotel.Models
         public DateTime? SubmittedAt { get; set; }
         public QuestionItemDto? questionItem { get; set; }
         public QuestionDto? question { get; set; }
-
-
+        //score
+        //notes
+        public decimal? Score { get; set; }
+        public string? Notes { get; set; }
 
     }
     public class ScoreDto
@@ -289,6 +300,8 @@ namespace PeerReview.MvcHotel.Models
         public bool HasScored { get; set; }
         public bool HasUnscored { get; set; }
         public DateTime? LastScoredAt { get; set; }
+        public decimal TotalScore { get; set; }
+
     }
 
     public class DashboardMetricsDto

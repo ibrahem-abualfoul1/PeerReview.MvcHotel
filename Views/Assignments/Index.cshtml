@@ -10,6 +10,8 @@
 
     var users = ViewBag.Users as List<User> ?? new();
     var qs = ViewBag.Questions as List<QuestionDto> ?? new();
+    var ci = System.Globalization.CultureInfo.CurrentUICulture;
+    var isRtl = ci.TwoLetterISOLanguageName == "ar";
 }
 
 @section Styles {
@@ -194,7 +196,7 @@
                             <div class="pr-multi-list">
                                 @foreach (var q in qs)
                                 {
-                                    var text = string.IsNullOrWhiteSpace(q.TitleAr) ? q.TitleEn : q.TitleAr;
+                                    var text = !isRtl ? q.TitleEn : q.TitleAr;
                                     <label class="pr-multi-item">
                                         <input type="checkbox"
                                                name="questionIds"
