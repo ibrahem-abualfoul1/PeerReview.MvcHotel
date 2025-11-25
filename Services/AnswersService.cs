@@ -11,15 +11,33 @@ namespace PeerReview.MvcHotel.Services
         public async Task Create(List<AnswerCreateDto> dto){ (await _api.Post("/api/Answers", dto)).EnsureSuccessStatusCode(); }
         public async Task Update(int id, AnswerUpdateDto dto){ (await _api.Put($"/api/Answers/{id}", dto)).EnsureSuccessStatusCode(); }
         public async Task Delete(int id){ (await _api.Delete($"/api/Answers/{id}")).EnsureSuccessStatusCode(); }
-        public async Task Upload(int questionId, int questionItemId, string fileName, byte[] bytes, string contentType = "application/octet-stream")
+        public async Task Upload(
+    int questionId,
+    int questionItemId,
+    string fileName,
+    byte[] bytes,
+    string contentType = "application/octet-stream")
         {
-            var fields = new Dictionary<string,string>{
-                {"questionId", questionId.ToString()},
-                {"questionItemId", questionItemId.ToString()}
-            };
-            (await _api.PostMultipart("/api/Answers/upload", fields, ("file", fileName, bytes, contentType))).EnsureSuccessStatusCode();
+            var fields = new Dictionary<string, string>{
+        {"questionId", questionId.ToString()},
+        {"questionItemId", questionItemId.ToString()}
+    };
+
+            var response = await _api.PostMultipart(
+                "/api/Answers/upload",
+                fields,
+                ("file", fileName, bytes, contentType)
+            );
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+                throw new Exception(
+                    $"Upload API failed ({(int)response.StatusCode} {response.StatusCode}): {body}");
+            }
         }
-      
+
+
     }
 }
 
