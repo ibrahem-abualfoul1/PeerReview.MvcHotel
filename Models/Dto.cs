@@ -113,16 +113,16 @@ namespace PeerReview.MvcHotel.Models
         public int? questionItemId { get; set; }
         public int userId { get; set; }
         public string? value { get; set; }
-        public int? fileId { get; set; }
         public DateTime? submittedAt { get; set; }
+
         public QuestionDto? question { get; set; }
         public QuestionItemDto? questionItem { get; set; }
         public User? user { get; set; }
-        public int? FileId { get; set; }
-        [JsonPropertyName("file")]
-        public FileEntryDto? File { get; set; }
 
+        [JsonPropertyName("files")]
+        public List<AnswerFileDto> Files { get; set; } = new();
     }
+
     public class FileEntryDto
     {
         public int Id { get; set; }
@@ -237,19 +237,18 @@ namespace PeerReview.MvcHotel.Models
 
         public string? ItemTextEn { get; set; }
 
-        public string? Value { get; set; }           // نص/قيمة الإجابة (قد تكون Base64 للملفات)
+        public string? Value { get; set; }
         public DateTime? SubmittedAt { get; set; }
         public QuestionItemDto? questionItem { get; set; }
         public QuestionDto? question { get; set; }
-        //score
-        //notes
+
         public decimal? Score { get; set; }
         public string? Notes { get; set; }
-        public int? FileId { get; set; }
-        [JsonPropertyName("file")]
-        public FileEntryDto? File { get; set; }
 
+        [JsonPropertyName("files")]
+        public List<AnswerFileDto> Files { get; set; } = new();
     }
+
     public class ScoreDto
     {
         public int AnswerId { get; set; }
@@ -305,6 +304,14 @@ namespace PeerReview.MvcHotel.Models
         public int TotalAssignments { get; set; }
         public int TotalAnswers { get; set; }
     }
+    public class AnswerFileDto
+    {
+        public int Id { get; set; }
+        public int AnswerId { get; set; }
+        public int FileId { get; set; }
 
+        [JsonPropertyName("file")]
+        public FileEntryDto? File { get; set; }
+    }
 
 }

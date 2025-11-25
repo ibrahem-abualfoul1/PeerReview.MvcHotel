@@ -621,7 +621,7 @@
                                     value="${v ?? ''}">`;
                     break;
 
-                case 7: // ملف
+                case 7: // ملف (multi-file)
                     const hasFile = !!v;
                     const fileLabel = hasFile ? fileSelectedText : '';
                     html += `
@@ -631,6 +631,7 @@
                                    id="file_${key}"
                                    data-gid="${groupId}"
                                    data-id="${id}"
+                                   multiple
                                    accept="image/*,application/pdf">
                             <div class="file-upload-text">📁 ${uploadPromptText}</div>
                             <div class="file-name" id="fileName_${key}">${fileLabel}</div>
@@ -686,48 +687,64 @@
                 });
             });
 
+            // ====== MULTI FILE UPLOAD ======
             document.querySelectorAll('input[type="file"]').forEach(fileInput => {
                 fileInput.addEventListener('change', async (e) => {
                     const gid = parseInt(e.target.dataset.gid);
                     const id = parseInt(e.target.dataset.id);
                     const item = findItem(gid, id);
-                    const file = e.target.files?.[0];
                     const key = makeKey(gid, id);
-                    if (!file) return;
+
+                    const files = Array.from(e.target.files || []);
+                    if (!files.length) return;
 
                     const nameEl = document.getElementById(`fileName_${key}`);
                     if (nameEl) nameEl.textContent = '... Uploading';
 
+                    let successCount = 0;
+
                     try {
-                        const formData = new FormData();
-                        formData.append('questionId', item.qId);       // ID السؤال (Group)
-                        formData.append('questionItemId', item.Id);    // ID الآيتَم
-                        formData.append('file', file);
+                        for (const file of files) {
+                            const formData = new FormData();
+                            formData.append('questionId', item.qId);       // ID السؤال (Group)
+                            formData.append('questionItemId', item.Id);    // ID الآيتَم
+                            formData.append('file', file);
 
-                        const res = await fetch('/user-questions/upload', {
-                            method: 'POST',
-                            headers: {
-                                'RequestVerificationToken': antiForgeryToken
-                            },
-                            body: formData
-                        });
+                            const res = await fetch('/user-questions/upload', {
+                                method: 'POST',
+                                headers: {
+                                    'RequestVerificationToken': antiForgeryToken
+                                },
+                                body: formData
+                            });
 
-                        if (!res.ok) {
-                            throw new Error('Upload failed: ' + res.status);
+                            if (res.ok) {
+                                successCount++;
+                                // ممكن لو حاب تقرأ response:
+                                // const data = await res.json();
+                                // console.log('File uploaded', data);
+                            } else {
+                                console.error('Upload failed for one file: ', res.status);
+                            }
                         }
 
-                        const data = await res.json();
+                        if (successCount > 0) {
+                            // نكتفي بوضع قيمة معنوية تدل إنه في ملفات مرفوعة
+                            setAnswer(item, gid, '__uploaded__');
 
-                        setAnswer(item, gid, '__uploaded__');
-
-                        if (nameEl) nameEl.textContent = fileSelectedText;
-
-                        console.log('File uploaded', data);
-
+                            if (nameEl) {
+                                nameEl.textContent =
+                                    successCount === 1
+                                        ? fileSelectedText
+                                        : `${fileSelectedText} (${successCount})`;
+                            }
+                        } else {
+                            if (nameEl) nameEl.textContent = 'Upload failed';
+                            delete answers[key];
+                        }
                     } catch (err) {
                         console.error(err);
                         if (nameEl) nameEl.textContent = 'Upload failed';
-                        const key = makeKey(gid, item.Id);
                         delete answers[key];
                     }
                 });

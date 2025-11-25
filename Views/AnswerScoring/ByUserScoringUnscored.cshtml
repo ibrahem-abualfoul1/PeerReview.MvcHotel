@@ -9,7 +9,6 @@
     var ci = System.Globalization.CultureInfo.CurrentUICulture;
     var isRtl = ci.TwoLetterISOLanguageName == "ar";
     var api = Config["ApiBaseUrl"];
-
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -50,12 +49,12 @@ else
                             <th>@L["Column_Notes"]</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @for (var i = 0; i < Model.Count; i++)
                         {
                             var a = Model[i];
                             <tr>
-                                <!-- # -->
                                 <td>@(i + 1)</td>
 
                                 <!-- Question -->
@@ -63,9 +62,7 @@ else
                                     <div class="fw-semibold">
                                         @{
                                             var q = a.question;
-                                            string qText;
-
-                                            qText = q?.TitleEn
+                                            string qText = q?.TitleEn
                                             ?? q?.DescriptionEn
                                             ?? $"Q#{a.QuestionId}";
                                         }
@@ -78,9 +75,7 @@ else
 
                                 <!-- Item -->
                                 <td>
-                                    <div>
-                                        @(isRtl? a.ItemTextEn: a.ItemTextEn)
-                                    </div>
+                                    <div>@a.ItemTextEn</div>
                                     <div class="small text-muted">
                                         @string.Format(L["ItemId_Label"].Value, a.QuestionItemId)
                                     </div>
@@ -88,23 +83,38 @@ else
 
                                 <!-- Answer -->
                                 <td>
-                                    @if (a.questionItem?.Type == 7)  // File upload
+                                    @if (a.questionItem?.Type == 7)  // FILE UPLOAD
                                     {
-                                        // أولوية لملف فعلي من الـ File.Path
-                                        if (a.File != null && !string.IsNullOrWhiteSpace(a.File.Path))
-                                        {
-                                            @* var fileUrl = Url.Content("~/" + a.File.Path.TrimStart('/')); *@
-                                            var fileUrl =  (Config["ApiBaseUrl"] + a.File!.Path) ;
+                                        // قائمة الملفات من الـ API
+                                        var fileItems = a.Files?
+                                        .Where(f => f.File != null && !string.IsNullOrWhiteSpace(f.File.Path))
+                                        .ToList()
+                                        ?? new List<PeerReview.MvcHotel.Models.AnswerFileDto>();
 
-                                            <a href="@fileUrl"
-                                               target="_blank"
-                                               class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-file-earmark-arrow-down"></i>
-                                                @L["ViewFile"]
-                                            </a>
+                                        if (fileItems.Any())
+                                        {
+                                            <ul class="list-unstyled mb-0">
+                                                @foreach (var f in fileItems)
+                                                {
+                                                    var path = f.File!.Path?.TrimStart('/') ?? "";
+                                                    var baseUrl = api?.TrimEnd('/') ?? "";
+                                                    var fileUrl = $"{baseUrl}/{path}";
+                                                    var filename = string.IsNullOrWhiteSpace(f.File.FileName)
+                                                    ? L["ViewFile"].Value
+                                                    : f.File.FileName;
+
+                                                    <li class="mb-1">
+                                                        <a href="@fileUrl"
+                                                           target="_blank"
+                                                           class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-file-earmark-arrow-down"></i>
+                                                            @filename
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
                                         }
-                                        // دعم للحالات القديمة اللي فيها Base64 داخل Value
-                                        else if (!string.IsNullOrWhiteSpace(a.Value))
+                                        else if (!string.IsNullOrWhiteSpace(a.Value))   // Fallback للبيانات القديمة
                                         {
                                             <button type="button"
                                                     class="btn btn-sm btn-outline-primary"
@@ -165,7 +175,7 @@ else
 }
 
 <script>
-    // Fallback فقط لو عندك إجابات قديمة مخزّنة كـ Base64
+    // Base64 fallback
     function openBase64File(base64String) {
         let base64 = base64String;
         let mime = "";
@@ -181,12 +191,7 @@ else
         }
 
         const byteCharacters = atob(base64);
-        const byteNumbers = new Array(byteCharacters.length);
-
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-
+        const byteNumbers = Array.from(byteCharacters).map(c => c.charCodeAt(0));
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: mime });
 

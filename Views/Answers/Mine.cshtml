@@ -10,7 +10,6 @@
     ViewData["Title"] = L["Answers_Title"];
     ViewBag.ActiveMenu = "Answers";
     var api = Config["ApiBaseUrl"];
-
 }
 
 @functions {
@@ -46,6 +45,7 @@
             font-size: 0.8rem;
             border-radius: 999px;
             padding-inline: .75rem;
+            margin-bottom: .15rem;
         }
 
         .answers-badge-type {
@@ -101,11 +101,26 @@
                         var itemText = a.questionItem?.TextEn;
                         var val = a.value ?? "";
 
-                        // ملف الإجابة (لو نوع السؤال File Upload)
                         var isFileUpload = a.questionItem?.Type == 7;
-                        var hasFile = isFileUpload && a.File != null;
-                        var fileName = a.File?.FileName ?? "";
-                        var fileUrl = hasFile ? (Config["ApiBaseUrl"] + a.File!.Path) : "";
+
+                        // قائمة ملفات الإجابة (إن وجدت)
+                        var fileItems = isFileUpload
+                        ? (a.Files?
+                        .Where(f => f.File != null && !string.IsNullOrWhiteSpace(f.File.Path))
+                        .ToList()
+                        ?? new List<AnswerFileDto>())
+                        : new List<AnswerFileDto>();
+
+                        var hasFiles = fileItems.Any();
+
+                        string firstFileName = "";
+                        int extraFilesCount = 0;
+
+                        if (hasFiles)
+                        {
+                            firstFileName = fileItems[0].File?.FileName ?? "";
+                            extraFilesCount = fileItems.Count - 1;
+                        }
 
                         <tr>
                             <td>@i</td>
@@ -121,9 +136,25 @@
                             @* خانة القيمة *@
                             @if (isFileUpload)
                             {
-                                <td class="text-clip-wide text-muted" title="@fileName">
-                                    @(string.IsNullOrEmpty(fileName) ? L["Upload_File_File"] : Trunc(fileName, 80))
-                                </td>
+                                if (hasFiles)
+                                {
+                                    var displayName = firstFileName;
+                                    if (string.IsNullOrWhiteSpace(displayName))
+                                        displayName = L["Upload_File_File"].Value;
+
+                                    if (extraFilesCount > 0)
+                                        displayName += $" (+{extraFilesCount})";
+
+                                    <td class="text-clip-wide text-muted" title="@firstFileName">
+                                        @Trunc(displayName, 80)
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-clip-wide text-muted">
+                                        @L["Upload_File_File"]
+                                    </td>
+                                }
                             }
                             else
                             {
@@ -137,15 +168,27 @@
                             </td>
 
                             <td class="text-center">
-                                @if (hasFile)
+                                @if (hasFiles)
                                 {
-                                    <a href="@fileUrl"
-                                       class="btn-pr btn-pr-sm btn-pr-soft answers-file-btn"
-                                       target="_blank"
-                                       download="@fileName">
-                                        <i class="bi bi-file-earmark-arrow-down me-1"></i>
-                                        @L["Upload_File_File"]
-                                    </a>
+                                    <div class="d-inline-flex flex-column align-items-center">
+                                        @foreach (var f in fileItems)
+                                        {
+                                            var path = f.File!.Path?.TrimStart('/') ?? "";
+                                            var baseUrl = api?.TrimEnd('/') ?? "";
+                                            var fileUrl = $"{baseUrl}/{path}";
+                                            var fileName = f.File.FileName ?? "";
+
+                                            <a href="@fileUrl"
+                                               class="btn-pr btn-pr-sm btn-pr-soft answers-file-btn"
+                                               target="_blank"
+                                               download="@fileName">
+                                                <i class="bi bi-file-earmark-arrow-down me-1"></i>
+                                                @(string.IsNullOrWhiteSpace(fileName)
+                                                                                ? L["Upload_File_File"].Value
+                                                                                : Trunc(fileName, 40))
+                            </a>
+                                                        }
+                                    </div>
                                 }
                                 else
                                 {
@@ -158,7 +201,6 @@
                         i++;
                     }
                 }
-                @* لو ما في داتا بنترك الـ tbody فاضي و DataTables بعرض "No data available in table" *@
             </tbody>
         </table>
     </div>
