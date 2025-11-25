@@ -32,8 +32,8 @@
 
     public class SurveyViewModel
     {
-        public string HeaderTitle { get; set; } = "استطلاع الفنادق";
-        public string HeaderDescription { get; set; } = "مساعدتك في تحسين خدماتنا";
+        public string HeaderTitle { get; set; } = "Hotel Survey";
+        public string HeaderDescription { get; set; } = "Helping Us Improve Our Services";
         public List<QuestionGroup> Groups { get; set; } = new();
     }
 }

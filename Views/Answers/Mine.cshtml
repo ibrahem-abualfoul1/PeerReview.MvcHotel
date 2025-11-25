@@ -1,3 +1,5 @@
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Config
 @using System.Collections.Generic
 @using PeerReview.MvcHotel.Models
 @using Microsoft.AspNetCore.Mvc.Localization
@@ -7,6 +9,8 @@
 @{
     ViewData["Title"] = L["Answers_Title"];
     ViewBag.ActiveMenu = "Answers";
+    var api = Config["ApiBaseUrl"];
+
 }
 
 @functions {
@@ -93,9 +97,15 @@
                     var i = 1;
                     foreach (var a in Model)
                     {
-                        var qTitle = a.question?.TitleEn ?? a.question?.TitleAr ?? "";
-                        var itemText = a.questionItem?.TextEn ?? a.questionItem?.TextAr ?? "";
+                        var qTitle = a.question?.TitleEn;
+                        var itemText = a.questionItem?.TextEn;
                         var val = a.value ?? "";
+
+                        // ملف الإجابة (لو نوع السؤال File Upload)
+                        var isFileUpload = a.questionItem?.Type == 7;
+                        var hasFile = isFileUpload && a.File != null;
+                        var fileName = a.File?.FileName ?? "";
+                        var fileUrl = hasFile ? (Config["ApiBaseUrl"] + a.File!.Path) : "";
 
                         <tr>
                             <td>@i</td>
@@ -108,10 +118,11 @@
                                 @Trunc(itemText, 60)
                             </td>
 
-                            @if (a.questionItem?.Type == 7)   @* File Upload *@
+                            @* خانة القيمة *@
+                            @if (isFileUpload)
                             {
-                                <td class="text-clip-wide text-muted" title="@val">
-                                    @L["Upload_File_File"]
+                                <td class="text-clip-wide text-muted" title="@fileName">
+                                    @(string.IsNullOrEmpty(fileName) ? L["Upload_File_File"] : Trunc(fileName, 80))
                                 </td>
                             }
                             else
@@ -126,14 +137,15 @@
                             </td>
 
                             <td class="text-center">
-                                @if (a.questionItem?.Type == 7 && !string.IsNullOrWhiteSpace(a.value))
+                                @if (hasFile)
                                 {
-                                    <button type="button"
-                                            class="btn-pr btn-pr-sm btn-pr-soft answers-file-btn"
-                                            onclick="openBase64File('@a.value')">
+                                    <a href="@fileUrl"
+                                       class="btn-pr btn-pr-sm btn-pr-soft answers-file-btn"
+                                       target="_blank"
+                                       download="@fileName">
                                         <i class="bi bi-file-earmark-arrow-down me-1"></i>
                                         @L["Upload_File_File"]
-                                    </button>
+                                    </a>
                                 }
                                 else
                                 {
@@ -146,14 +158,7 @@
                         i++;
                     }
                 }
-                else
-                {
-                    <tr>
-                        <td colspan="6" class="text-center text-muted-soft">
-                            @L["Upload_File_File"]
-                        </td>
-                    </tr>
-                }
+                @* لو ما في داتا بنترك الـ tbody فاضي و DataTables بعرض "No data available in table" *@
             </tbody>
         </table>
     </div>
@@ -161,7 +166,10 @@
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
@@ -188,39 +196,5 @@
                 } : {}
             });
         });
-
-        function openBase64File(base64String) {
-            if (!base64String) return;
-
-            let base64 = base64String;
-            let mime = "";
-
-            if (base64String.includes("base64,")) {
-                mime = base64String.substring(
-                    base64String.indexOf(":") + 1,
-                    base64String.indexOf(";")
-                );
-                base64 = base64String.split("base64,")[1];
-            } else {
-                mime = "application/octet-stream";
-            }
-
-            try {
-                const byteCharacters = atob(base64);
-                const byteNumbers = new Array(byteCharacters.length);
-
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: mime });
-
-                const blobUrl = URL.createObjectURL(blob);
-                window.open(blobUrl, "_blank");
-            } catch {
-                alert('تعذر فتح الملف.');
-            }
-        }
     </script>
 }

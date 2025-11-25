@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PeerReview.MvcHotel.Models;
 using PeerReview.MvcHotel.Services;
+using System.Net.Mime;
 
 namespace PeerReview.MvcHotel.Controllers
 {
@@ -13,7 +14,7 @@ namespace PeerReview.MvcHotel.Controllers
         private readonly IHttpContextAccessor _http;
         private readonly AssignmentsService _assignmentsService;
 
-        public UserQuestionsController(IQuestionsService questions ,AnswersService answersService, IHttpContextAccessor http, AssignmentsService assignmentsService)
+        public UserQuestionsController(IQuestionsService questions, AnswersService answersService, IHttpContextAccessor http, AssignmentsService assignmentsService)
         {
             _answersService = answersService;
             _http = http;
@@ -24,7 +25,7 @@ namespace PeerReview.MvcHotel.Controllers
         [HttpGet("survey/{userId:int}")]
         public async Task<IActionResult> Survey(int userId)
         {
-            List<AssignmentDto>? vm =  await _assignmentsService.ByUser(userId);
+            List<AssignmentDto>? vm = await _assignmentsService.ByUser(userId);
 
             SurveyViewModel surveyVm = new SurveyViewModel();
 
@@ -55,6 +56,8 @@ namespace PeerReview.MvcHotel.Controllers
 
         [HttpPost("submit")]
         [ValidateAntiForgeryToken]
+        [DisableRequestSizeLimit]
+        [Consumes("application/json")]
         public async Task<IActionResult> Submit([FromBody] List<AnswerCreateDto> answers)
         {
             if (answers is null || answers.Count == 0)
@@ -68,6 +71,48 @@ namespace PeerReview.MvcHotel.Controllers
 
             return Ok(new { ok = true, saved = answers.Count });
         }
+
+
+
+
+        [HttpPost("upload")]
+        [ValidateAntiForgeryToken]
+        [DisableRequestSizeLimit]
+        // احذف Consumes أو خليه multipart/form-data لو حاب
+        // [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Upload(
+     [FromForm] int questionId,
+     [FromForm] int questionItemId,
+     IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded");
+
+            // اقرأ الملف إلى byte[]
+            byte[] bytes;
+            using (var ms = new MemoryStream())
+            {
+                await file.CopyToAsync(ms);
+                bytes = ms.ToArray();
+            }
+
+            var userId = _http.HttpContext!.User
+                             .FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?
+                             .Value ?? "anonymous";
+
+            // لو حاب تمرر userId للـ API ممكن تضيفه ضمن الـ fields لاحقًا
+            await _answersService.Upload(
+                questionId,
+                questionItemId,
+                file.FileName,
+                bytes,
+                file.ContentType ?? "application/octet-stream"
+            );
+
+            return Ok(new { ok = true });
+        }
+
+
 
 
     }

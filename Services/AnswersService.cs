@@ -19,14 +19,7 @@ namespace PeerReview.MvcHotel.Services
             };
             (await _api.PostMultipart("/api/Answers/upload", fields, ("file", fileName, bytes, contentType))).EnsureSuccessStatusCode();
         }
-        //public async Task BulkCreate(int questionId, Dictionary<int, string?> values, CancellationToken ct = default)
-        //{
-        //    foreach (var kv in values)
-        //    {
-        //        var dto = new Models.AnswerCreateDto { questionId = questionId, questionItemId = kv.Key, value = kv.Value };
-        //        await Create(dto);
-        //    }
-        //}
+      
     }
 }
 

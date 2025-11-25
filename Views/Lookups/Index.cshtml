@@ -122,9 +122,7 @@
                 <tr>
                     <th style="width:60px;">@L["Id"]</th>
                     <th>@L["NameEn"]</th>
-                    <th>@L["NameAR"]</th>
                     <th>@L["TypeEn"]</th>
-                    <th>@L["TypeAr"]</th>
                     <th>@L["Code"]</th>
                     <th class="text-center" style="width:220px;">@L["Actions"]</th>
                 </tr>
@@ -141,9 +139,7 @@
                                 @item.NameEn
                             </td>
 
-                            <td class="text-clip" title="@item.NameAr">
-                                @item.NameAr
-                            </td>
+                            
 
                             <td>
                                 @if (!string.IsNullOrWhiteSpace(item.TypeEn))
@@ -155,15 +151,7 @@
                                 }
                             </td>
 
-                            <td>
-                                @if (!string.IsNullOrWhiteSpace(item.TypeAr))
-                                {
-                                    <span class="lk-pill badge-type" title="@item.TypeAr">
-                                        <i class="bi bi-tag"></i>
-                                        @item.TypeAr
-                                    </span>
-                                }
-                            </td>
+                           
 
                             <td>
                                 @if (!string.IsNullOrWhiteSpace(item.Code))
