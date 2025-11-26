@@ -71,11 +71,9 @@ namespace PeerReview.MvcHotel.Controllers
         }
 
 
-
         [HttpPost("upload")]
         [ValidateAntiForgeryToken]
         [DisableRequestSizeLimit]
-        // [Consumes("multipart/form-data")] // لو حاب تثبّتها، مش ضروري
         public async Task<IActionResult> Upload(
     [FromForm] int questionId,
     [FromForm] int questionItemId,
@@ -91,11 +89,7 @@ namespace PeerReview.MvcHotel.Controllers
                 bytes = ms.ToArray();
             }
 
-            var userId = _http.HttpContext!.User
-                             .FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?
-                             .Value ?? "anonymous";
-
-            await _answersService.Upload(
+            var result = await _answersService.Upload(
                 questionId,
                 questionItemId,
                 file.FileName,
@@ -103,9 +97,17 @@ namespace PeerReview.MvcHotel.Controllers
                 file.ContentType ?? "application/octet-stream"
             );
 
-            return Ok(new { ok = true });
+            return Ok(result); // ← مهم عشان الـ JS يعرف AnswerFileId & FileUrl
         }
 
+
+        [HttpPost("delete-file/{answerFileId:int}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteFile(int answerFileId)
+        {
+            await _answersService.DeleteFile(answerFileId);
+            return Ok(new { ok = true });
+        }
 
 
 

@@ -306,6 +306,11 @@
             transform: none;
         }
 
+        .btn-sv-xs {
+            padding: 4px 10px;
+            font-size: 0.8rem;
+        }
+
         .error-message {
             color: #fb7185;
             font-size: 0.8rem;
@@ -336,6 +341,16 @@
             font-size: 0.95rem;
             line-height: 1.7;
         }
+
+        .file-list {
+            margin-top: 8px;
+            padding-left: 0;
+            list-style: none;
+        }
+
+            .file-list li a {
+                font-size: 0.9rem;
+            }
 
         @@keyframes sv-slide-in {
             from {
@@ -451,6 +466,9 @@
         // key = `${groupId}_${itemId}`
         const answers = {};
 
+        // files[key] = [ { answerFileId, fileName, fileUrl } ]
+        const uploadedFiles = {};
+
         function makeKey(groupId, itemId) {
             return `${groupId}_${itemId}`;
         }
@@ -498,6 +516,32 @@
                     txt.textContent = `${currentGroupIndex + 1} / ${total}`;
                 }
             }
+        }
+
+        // ===== رسم قائمة الملفات لسؤال معيّن =====
+        function renderFileList(groupId, itemId) {
+            const key = makeKey(groupId, itemId);
+            const listEl = document.getElementById(`fileList_${key}`);
+            if (!listEl) return;
+
+            const arr = uploadedFiles[key] || [];
+            if (arr.length === 0) {
+                listEl.innerHTML = '';
+                return;
+            }
+
+            listEl.innerHTML = arr.map(f => `
+                <li class="d-flex align-items-center justify-content-between mb-1" data-afid="${f.answerFileId}">
+                    <a href="${f.fileUrl}" target="_blank">
+                        ${f.fileName}
+                    </a>
+                    <button type="button"
+                            class="btn-sv btn-sv-secondary btn-sv-xs"
+                            onclick="deleteUploadedFile(${groupId}, ${itemId}, ${f.answerFileId})">
+                        ✕
+                    </button>
+                </li>
+            `).join('');
         }
 
         // ===== الرسم =====
@@ -635,7 +679,9 @@
                                    accept="image/*,application/pdf">
                             <div class="file-upload-text">📁 ${uploadPromptText}</div>
                             <div class="file-name" id="fileName_${key}">${fileLabel}</div>
-                        </div>`;
+                        </div>
+                        <ul class="file-list" id="fileList_${key}"></ul>
+                    `;
                     break;
             }
 
@@ -662,8 +708,7 @@
                     setAnswer(item, gid, e.target.value);
 
                     const key = makeKey(gid, id);
-                    const labels = document.querySelectorAll(`input[name="q${key}"]`)
-                        ?? [];
+                    const labels = document.querySelectorAll(`input[name="q${key}"]`) ?? [];
                     labels.forEach(r => r.closest('.option-label')?.classList.remove('selected'));
                     e.target.closest('.option-label')?.classList.add('selected');
                 });
@@ -702,12 +747,13 @@
                     if (nameEl) nameEl.textContent = '... Uploading';
 
                     let successCount = 0;
+                    if (!uploadedFiles[key]) uploadedFiles[key] = [];
 
                     try {
                         for (const file of files) {
                             const formData = new FormData();
-                            formData.append('questionId', item.qId);       // ID السؤال (Group)
-                            formData.append('questionItemId', item.Id);    // ID الآيتَم
+                            formData.append('questionId', item.qId);
+                            formData.append('questionItemId', item.Id);
                             formData.append('file', file);
 
                             const res = await fetch('/user-questions/upload', {
@@ -718,26 +764,33 @@
                                 body: formData
                             });
 
-                            if (res.ok) {
-                                successCount++;
-                                // ممكن لو حاب تقرأ response:
-                                // const data = await res.json();
-                                // console.log('File uploaded', data);
-                            } else {
-                                console.error('Upload failed for one file: ', res.status);
+                            if (!res.ok) {
+                                console.error('Upload failed: ', res.status);
+                                continue;
                             }
+
+                            const data = await res.json();
+                            successCount++;
+
+                            uploadedFiles[key].push({
+                                answerFileId: data.answerFileId || data.AnswerFileId,
+                                fileName: data.fileName || data.FileName || file.name,
+                                fileUrl: data.fileUrl || data.FileUrl || ''
+                            });
                         }
 
                         if (successCount > 0) {
-                            // نكتفي بوضع قيمة معنوية تدل إنه في ملفات مرفوعة
+                            // اعتبر السؤال متجاوب عليه (فيه ملفات مرفوعة)
                             setAnswer(item, gid, '__uploaded__');
 
                             if (nameEl) {
                                 nameEl.textContent =
                                     successCount === 1
                                         ? fileSelectedText
-                                        : `${fileSelectedText} (${successCount})`;
+                                        : `${fileSelectedText} (${uploadedFiles[key].length})`;
                             }
+
+                            renderFileList(gid, id);
                         } else {
                             if (nameEl) nameEl.textContent = 'Upload failed';
                             delete answers[key];
@@ -769,6 +822,43 @@
             });
         }
 
+        // حذف ملف واحد (Append + Delete)
+        async function deleteUploadedFile(groupId, itemId, answerFileId) {
+            const key = makeKey(groupId, itemId);
+
+            try {
+                const res = await fetch(`/user-questions/delete-file/${answerFileId}`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': antiForgeryToken
+                    }
+                });
+
+                if (!res.ok) {
+                    console.error('Delete failed: ', res.status);
+                    alert('Failed to delete file');
+                    return;
+                }
+
+                uploadedFiles[key] = (uploadedFiles[key] || [])
+                    .filter(f => f.answerFileId !== answerFileId);
+
+                if (!uploadedFiles[key].length) {
+                    // لو السؤال Required، نخليه بدون قيمة عشان الفاليديشن يمسكه
+                    delete answers[key];
+                } else {
+                    const item = findItem(groupId, itemId);
+                    setAnswer(item, groupId, '__uploaded__');
+                }
+
+                renderFileList(groupId, itemId);
+            }
+            catch (e) {
+                console.error(e);
+                alert('Failed to delete file');
+            }
+        }
+
         function restoreAnswers() {
             const group = (surveyData || [])[currentGroupIndex];
             const gid = group?.Id;
@@ -776,7 +866,13 @@
 
             (group.Items || []).forEach(item => {
                 const v = getStoredValue(item, gid);
-                if (v === undefined) return;
+                if (v === undefined) {
+                    // لكن ما زال ممكن يكون عندنا uploadedFiles موجودة
+                    if (item.Type === 7) {
+                        renderFileList(gid, item.Id);
+                    }
+                    return;
+                }
 
                 const key = makeKey(gid, item.Id);
 
@@ -805,9 +901,10 @@
                     if (input) input.value = v ?? '';
                 }
 
-                if (item.Type === 7 && v) {
+                if (item.Type === 7) {
                     const el = document.getElementById(`fileName_${key}`);
-                    if (el) el.textContent = fileSelectedText;
+                    if (el && v) el.textContent = fileSelectedText;
+                    renderFileList(gid, item.Id);
                 }
             });
         }
