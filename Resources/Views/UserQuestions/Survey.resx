@@ -106,4 +106,7 @@
 	<data name="Survey_Submitting" xml:space="preserve">
     <value>Submitting your responses, please wait…</value>
   </data>
+	<data name="Survey_SaveDraft" xml:space="preserve">
+    <value>Save</value>
+  </data>
 </root>

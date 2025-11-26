@@ -35,6 +35,7 @@
     var jsFileSelected = jsEncoder.Encode(L["Survey_FileSelected"].Value);
     var jsFieldRequired = jsEncoder.Encode(L["Survey_FieldRequired"].Value);
     var jsSubmitLoading = jsEncoder.Encode(L["Survey_Submitting"].Value);
+    var jsSaveDraft = jsEncoder.Encode(L["Survey_SaveDraft"].Value);
 }
 
 @section Styles {
@@ -357,7 +358,7 @@
         .sv-loading-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.45); /* خلفية معتمة خفيفة */
+            background: rgba(15, 23, 42, 0.45);
             display: none;
             align-items: center;
             justify-content: center;
@@ -497,6 +498,7 @@
         const fileSelectedText = '@jsFileSelected';
         const fieldRequiredText = '@jsFieldRequired';
         const submitLoadingText = '@jsSubmitLoading';
+        const saveDraftLabel = '@jsSaveDraft';
 
         // ===== الحالة العامة =====
         const antiForgeryToken =
@@ -611,6 +613,13 @@
                             ${(currentGroupIndex === 0) ? 'disabled' : ''}>
                         ${prevLabel}
                     </button>
+
+                    <button type="button"
+                            class="btn-sv btn-sv-secondary"
+                            id="saveDraftBtn">
+                        ${saveDraftLabel}
+                    </button>
+
                     <button type="button"
                             class="btn-sv btn-sv-primary"
                             id="nextBtn">
@@ -862,9 +871,13 @@
                     }
                 }
             });
+
+            document.getElementById('saveDraftBtn')?.addEventListener('click', () => {
+                saveDraft();
+            });
         }
 
-        // حذف ملف واحد (Append + Delete)
+        // حذف ملف واحد
         async function deleteUploadedFile(groupId, itemId, answerFileId) {
             const key = makeKey(groupId, itemId);
 
@@ -911,7 +924,6 @@
                 const key = makeKey(gid, item.Id);
 
                 if (v === undefined) {
-                    // لكن ما زال ممكن يكون عندنا uploadedFiles موجودة
                     if (item.Type === 7) {
                         renderFileList(gid, item.Id);
                     }
@@ -988,7 +1000,16 @@
             if (el) el.style.display = 'none';
         }
 
-        function toArrayPayload() {
+        // ===== فحص القيمة الفارغة =====
+        function isValueEmpty(v) {
+            return v === undefined || v === null ||
+                (Array.isArray(v) && v.length === 0) ||
+                (typeof v === 'string' && v.trim() === '');
+        }
+
+        // ===== تحويل الإجابات إلى Payload =====
+        // onlyAnswered = true → نرجع فقط الأسئلة اللي عليها إجابة (للـ Save Draft)
+        function toArrayPayload(onlyAnswered = false) {
             const out = [];
             for (const g of (surveyData || [])) {
                 const gid = g.Id;
@@ -997,6 +1018,11 @@
                     if (it.Type === 7) continue;
 
                     const v = getStoredValue(it, gid);
+
+                    if (onlyAnswered && isValueEmpty(v)) {
+                        continue;
+                    }
+
                     out.push({
                         questionId: gid,
                         questionItemId: it.Id,
@@ -1006,6 +1032,72 @@
             }
             return out;
         }
+
+        // ===== حفظ جزئي: نرسل فقط الأسئلة المجاوَب عليها =====
+                       // ===== حفظ جزئي: نرسل فقط الأسئلة المجاوَب عليها =====
+        async function saveDraft() {
+            const payload = toArrayPayload(true); // فقط المجاب عليها
+            const json = JSON.stringify(payload);
+
+            const btn = document.getElementById('saveDraftBtn');
+            if (!btn) return;
+
+            const originalLabel = btn.dataset.originalLabel || btn.textContent;
+            btn.dataset.originalLabel = originalLabel;
+
+            btn.disabled = true;
+            btn.textContent = saveDraftLabel + '...';
+
+            try {
+                const res = await fetch('/user-questions/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': antiForgeryToken
+                    },
+                    body: json
+                });
+
+                if (!res.ok) {
+                    throw new Error('Failed to save draft: ' + res.status);
+                }
+
+                console.log('Draft saved');
+
+                // نفس حركة submitSurvey تقريباً
+                const content = document.getElementById('surveyContent');
+                const success = document.getElementById('successScreen');
+                const hdr = document.querySelector('.survey-header');
+
+                if (content) content.style.display = 'none';
+                if (hdr && hdr.style) hdr.style.display = 'none';
+
+                if (success) {
+                    // لو حاب تستخدم نفس نص الزر كعنوان
+                    const titleEl = success.querySelector('.success-title');
+                    if (titleEl) {
+                        titleEl.textContent = saveDraftLabel; // مثلاً: "Save draft"
+                    }
+
+                    // ممكن تخلي الرسالة كما هي أو تعدلها لاحقًا من الـ resx
+                    success.style.display = 'block';
+                }
+
+                // بعد ما يشوف الرسالة الحلوة -> ريفريش للصفحة
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500); // 1.5 ثانية مثلاً
+
+            } catch (e) {
+                console.error(e);
+                alert('Failed to save draft, please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = btn.dataset.originalLabel || saveDraftLabel;
+            }
+        }
+
+
 
         // ===== حالة الـ submit (loader + تعطيل الأزرار) =====
         function setSubmitting(isSubmitting) {
@@ -1041,7 +1133,7 @@
         }
 
         async function submitSurvey() {
-            const payload = toArrayPayload();
+            const payload = toArrayPayload(); // كل الأسئلة (مجاوب/فاضي)
             const json = JSON.stringify(payload);
 
             console.log('JSON length (approx bytes):', json.length);
@@ -1078,4 +1170,3 @@
         renderGroup();
     </script>
 }
-
