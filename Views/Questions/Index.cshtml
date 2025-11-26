@@ -107,7 +107,48 @@
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTables (أساسي) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+
     <script>
+        // تهيئة DataTable
+        function initQuestionsDataTable() {
+            const $tbl = $('#qustions');
+            if (!$tbl.length) return;
+
+            const isRtl = document.documentElement.dir === 'rtl';
+
+            if ($.fn.dataTable.isDataTable($tbl)) {
+                $tbl.DataTable().destroy();
+            }
+
+            $tbl.DataTable({
+                pageLength: 10,
+                order: [], // بدون ترتيب مبدئي
+                scrollX: true,
+                language: isRtl ? {
+                    search: "بحث:",
+                    lengthMenu: "إظهار _MENU_ سجل",
+                    info: "إظهار _START_ إلى _END_ من أصل _TOTAL_ سجل",
+                    paginate: {
+                        first: "الأولى",
+                        last: "الأخيرة",
+                        next: "التالي",
+                        previous: "السابق"
+                    },
+                    zeroRecords: "لا توجد بيانات",
+                    infoEmpty: "لا توجد سجلات",
+                    infoFiltered: "(تمت التصفية من إجمالي _MAX_ سجلات)"
+                } : {}
+            });
+        }
+
+        $(function () {
+            initQuestionsDataTable();
+        });
+
         // فتح المودال (إنشاء / تعديل)
         function openQuestionModal(id) {
             var url = '@Url.Action("UpsertPartial", "Questions")' + (id ? ('?id=' + id) : '');
@@ -129,13 +170,14 @@
         });
 
         // لما يخلص الحفظ (لو عندك event من ajax مثلاً)
+        // هنا بنعيد تحميل الصفحة أو الريلود على حسب اللي سويته
         $(document).on('question:upserted', function (e, res) {
-            var tbl = $('#qustions').DataTable();
-            if (tbl.ajax) {
-                tbl.ajax.reload(null, false);
-            } else {
-                location.reload();
-            }
+            // أسهل حل حالياً:
+            location.reload();
+
+            // لو لاحقاً عملت reload via ajax للـ tbody:
+            // var tbl = $('#qustions').DataTable();
+            // tbl.ajax.reload(null, false);
         });
 
         // ============ كود الـ multi-select (يشتغل على المودال المحمَّل ديناميكياً) ============

@@ -5,6 +5,8 @@
 @{
     ViewData["Title"] = L["Lookups"];
     ViewBag.ActiveMenu = "Lookups";
+    var ci = System.Globalization.CultureInfo.CurrentUICulture;
+    var isRtl = ci.TwoLetterISOLanguageName == "ar";
 }
 
 @section Styles {
@@ -117,7 +119,7 @@
 
     <!-- Table -->
     <div class="table-responsive mt-1">
-        <table class="pr-table table table-hover table-striped align-middle w-100">
+        <table id="lookupsTable" class="pr-table table table-hover table-striped align-middle w-100">
             <thead>
                 <tr>
                     <th style="width:60px;">@L["Id"]</th>
@@ -139,8 +141,6 @@
                                 @item.NameEn
                             </td>
 
-                            
-
                             <td>
                                 @if (!string.IsNullOrWhiteSpace(item.TypeEn))
                                 {
@@ -150,8 +150,6 @@
                                     </span>
                                 }
                             </td>
-
-                           
 
                             <td>
                                 @if (!string.IsNullOrWhiteSpace(item.Code))
@@ -199,7 +197,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="7" class="text-center text-muted-soft py-4">
+                        <td colspan="5" class="text-center text-muted-soft py-4">
                             @L["NoRecordsFound"]
                         </td>
                     </tr>
@@ -208,3 +206,43 @@
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <!-- لو مش محمّل jQuery / DataTables في الـ _Layout -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+
+    <script>
+        $(function () {
+            const $tbl = $('#lookupsTable');
+            if (!$tbl.length) return;
+
+            const isRtl = document.documentElement.dir === 'rtl';
+
+            if ($.fn.dataTable.isDataTable($tbl)) {
+                $tbl.DataTable().destroy();
+            }
+
+            $tbl.DataTable({
+                pageLength: 10,
+                order: [], // بدون ترتيب مبدئي
+                language: isRtl ? {
+                    search: "بحث:",
+                    lengthMenu: "إظهار _MENU_ سجل",
+                    info: "إظهار _START_ إلى _END_ من أصل _TOTAL_ سجل",
+                    paginate: {
+                        first: "الأولى",
+                        last: "الأخيرة",
+                        next: "التالي",
+                        previous: "السابق"
+                    },
+                    zeroRecords: "لا توجد بيانات",
+                    infoEmpty: "لا توجد سجلات",
+                    infoFiltered: "(تمت التصفية من إجمالي _MAX_ سجلات)"
+                } : {}
+            });
+        });
+    </script>
+}

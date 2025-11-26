@@ -103,4 +103,7 @@
   <data name="Survey_FieldRequired" xml:space="preserve">
     <value>This field is required</value>
   </data>
+	<data name="Survey_Submitting" xml:space="preserve">
+    <value>Submitting your responses, please wait…</value>
+  </data>
 </root>

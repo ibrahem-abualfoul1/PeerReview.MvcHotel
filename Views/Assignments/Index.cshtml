@@ -390,6 +390,19 @@
                     }
                 }
 
+                // 🔹 هذا الجزء الجديد: خلّي reset يرجّع الـ UI كمان
+                const form = ms.closest('form');
+                if (form) {
+                    form.addEventListener('reset', function () {
+                        // reset الحدث بنفّذ قبل ما المتصفح يفضّي الـ checkbox،
+                        // عشان هيك بنستخدم setTimeout
+                        setTimeout(() => {
+                            updateState();
+                        }, 0);
+                    });
+                }
+
+                // باقي الكود كما هو...
                 if (toggle) {
                     toggle.addEventListener('click', function (e) {
                         e.stopPropagation();

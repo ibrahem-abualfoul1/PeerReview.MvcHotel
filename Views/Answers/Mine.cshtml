@@ -84,6 +84,8 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>@L["Column_UserName"]</th>
+
                     <th>@L["Answers_Col_Question"]</th>
                     <th>@L["Answers_Col_Item"]</th>
                     <th>@L["Answers_Col_Value"]</th>
@@ -124,6 +126,9 @@
 
                         <tr>
                             <td>@i</td>
+                            <td class="text-clip" title="@a.user!.fullName">
+                                @a.user.fullName
+                            </td>
 
                             <td class="text-clip" title="@qTitle">
                                 @Trunc(qTitle, 70)
