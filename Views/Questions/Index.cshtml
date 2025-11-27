@@ -28,10 +28,9 @@
     <div id="modalHost"></div>
 
     <div class="table-responsive-sm mt-3">
-        <table id="qustions" class="pr-table display nowrap questions-table" style="width:100%;">
+        <table id="qustions" class="pr-table table table-hover table-striped align-middle w-100 display nowrap questions-table">
             <thead>
                 <tr>
-                    <th class="col-title">@L["Questions_Col_Title"] (@L["Arabic"])</th>
                     <th class="col-title">@L["Questions_Col_Title"] (@L["English"])</th>
                     <th class="col-desc">@L["Questions_Col_Description"]</th>
                     <th class="col-count text-center">@L["Questions_Col_Items"]</th>
@@ -43,30 +42,20 @@
                 {
                     <tr>
                         <td class="col-title">
-                            <span class="cell-clip" title="@q.TitleAr">@q.TitleAr</span>
-                        </td>
-                        <td class="col-title">
                             <span class="cell-clip" title="@q.TitleEn">@q.TitleEn</span>
                         </td>
                         <td class="col-desc">
                             <span class="cell-clip" title="@q.DescriptionEn">@q.DescriptionEn</span>
                         </td>
                         <td class="col-count text-center">
-                            <span class="pill-badge pill-soft">@(q.Items?.Count ?? 0)</span>
+                            <span class="pill-badge pill-soft">@(q.CategoryName)</span>
                         </td>
-                        <td class="text-nowrap">
+                        <td class="text-nowrap d-flex gap-1">
                             <button class="btn-pr btn-pr-sm btn-pr-soft"
                                     type="button"
                                     onclick="openQuestionModal(@q.Id)">
                                 @L["Questions_Action_Edit"]
                             </button>
-
-                            @* زر تعبئة (إن حاب ترجع تشغّله)
-                            <a class="btn-pr btn-pr-sm btn-pr-outline ms-1"
-                               href="/Answers/Screen/@q.Id">
-                                Fill
-                            </a>
-                            *@
 
                             <form method="post"
                                   action="/Questions/Delete/@q.Id"
@@ -109,6 +98,7 @@
             vertical-align: middle;
         }
 
+        /* لو حابب تلغي الـ backdrop للمودال */
         .modal-backdrop.fade.show {
             display: none;
         }
@@ -118,10 +108,46 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+    <!-- DataTables (أساسي) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+
     <script>
+        // تهيئة DataTable
+        function initQuestionsDataTable() {
+            const $tbl = $('#qustions');
+            if (!$tbl.length) return;
 
+            const isRtl = document.documentElement.dir === 'rtl';
 
-        // ========= JS الخاص بـ المودال و Select_All =========
+            if ($.fn.dataTable.isDataTable($tbl)) {
+                $tbl.DataTable().destroy();
+            }
+
+            $tbl.DataTable({
+                pageLength: 10,
+                order: [], // بدون ترتيب مبدئي
+                scrollX: true,
+                language: isRtl ? {
+                    search: "بحث:",
+                    lengthMenu: "إظهار _MENU_ سجل",
+                    info: "إظهار _START_ إلى _END_ من أصل _TOTAL_ سجل",
+                    paginate: {
+                        first: "الأولى",
+                        last: "الأخيرة",
+                        next: "التالي",
+                        previous: "السابق"
+                    },
+                    zeroRecords: "لا توجد بيانات",
+                    infoEmpty: "لا توجد سجلات",
+                    infoFiltered: "(تمت التصفية من إجمالي _MAX_ سجلات)"
+                } : {}
+            });
+        }
+
+        $(function () {
+            initQuestionsDataTable();
+        });
 
         // فتح المودال (إنشاء / تعديل)
         function openQuestionModal(id) {
@@ -131,9 +157,9 @@
                 var modal = new bootstrap.Modal(modalEl, { backdrop: 'static' });
                 modal.show();
 
-                // بعد ما يحمل المودال فعليًا
-                if (typeof initQuestionItemsMultiSelect === 'function') {
-                    initQuestionItemsMultiSelect();
+                // تهيئة الـ multi-select بعد ما المودال يترندر
+                if (typeof window.initQuestionItemsMultiSelect === 'function') {
+                    window.initQuestionItemsMultiSelect();
                 }
             });
         }
@@ -143,77 +169,76 @@
             openQuestionModal(null);
         });
 
+        // لما يخلص الحفظ (لو عندك event من ajax مثلاً)
+        // هنا بنعيد تحميل الصفحة أو الريلود على حسب اللي سويته
         $(document).on('question:upserted', function (e, res) {
-            var tbl = $('#qustions').DataTable();
-            if (tbl.ajax) {
-                tbl.ajax.reload(null, false);
-            } else {
-                location.reload();
-            }
+            // أسهل حل حالياً:
+            location.reload();
+
+            // لو لاحقاً عملت reload via ajax للـ tbody:
+            // var tbl = $('#qustions').DataTable();
+            // tbl.ajax.reload(null, false);
         });
 
-        // ======== من هنا كود Select_All (Vanilla JS + Event Delegation) ========
+        // ============ كود الـ multi-select (يشتغل على المودال المحمَّل ديناميكياً) ============
+        window.initQuestionItemsMultiSelect = function () {
+            const selectEl = document.getElementById('Items');
+            if (!selectEl) return;
 
-        (function () {
+            const checkboxes = document.querySelectorAll('.item-checkbox');
+            const selectAll = document.getElementById('itemsSelectAll');
+            const textSpan = document.getElementById('itemsDropdownText');
+            const countBadge = document.getElementById('itemsSelectedCount');
 
-            function syncHiddenSelect() {
-                var selectedValues = [];
-                document.querySelectorAll('.item-checkbox:checked').forEach(function (cb) {
-                    selectedValues.push(cb.value);
+            function syncFromCheckboxes() {
+                const selectedValues = [];
+                const selectedLabels = [];
+
+                checkboxes.forEach(cb => {
+                    const opt = selectEl.querySelector(`option[value="${cb.value}"]`);
+                    if (cb.checked) {
+                        selectedValues.push(cb.value);
+                        selectedLabels.push(cb.nextElementSibling.innerText.trim());
+                        if (opt) opt.selected = true;
+                    } else if (opt) {
+                        opt.selected = false;
+                    }
                 });
 
-                var select = document.getElementById('Items');
-                if (!select) return;
-
-                Array.prototype.forEach.call(select.options, function (o) {
-                    o.selected = selectedValues.indexOf(o.value) !== -1;
-                });
-
-                var textSpan = document.getElementById('itemsDropdownText');
-                if (!textSpan) return;
-
+                // تحديث نص الزر والبادج
                 if (selectedValues.length === 0) {
                     textSpan.textContent = '@L["Select_Items"]';
-                } else if (selectedValues.length === 1) {
-                    var lbl = document.querySelector('.item-checkbox:checked + label');
-                    textSpan.textContent = lbl ? lbl.textContent.trim() : (selectedValues.length + ' @L["Selected"]');
+                    countBadge.classList.add('d-none');
+                } else if (selectedValues.length <= 2) {
+                    textSpan.textContent = selectedLabels.join(', ');
+                    countBadge.classList.add('d-none');
                 } else {
-                    textSpan.textContent = selectedValues.length + ' @L["Selected"]';
+                    textSpan.textContent = '@L["Select_Items"]';
+                    countBadge.textContent = selectedValues.length;
+                    countBadge.classList.remove('d-none');
+                }
+
+                // حالة select all
+                if (selectAll) {
+                    selectAll.checked = selectedValues.length === checkboxes.length;
+                    selectAll.indeterminate =
+                        selectedValues.length > 0 && selectedValues.length < checkboxes.length;
                 }
             }
 
-            function updateSelectAllCheckbox() {
-                var all = document.querySelectorAll('.item-checkbox').length;
-                var checked = document.querySelectorAll('.item-checkbox:checked').length;
-                var selectAll = document.getElementById('itemsSelectAll');
-                if (!selectAll) return;
-                selectAll.checked = (all > 0 && checked === all);
-            }
+            function bindEvents() {
+                checkboxes.forEach(cb => cb.addEventListener('change', syncFromCheckboxes));
 
-            // event delegation عشان يشتغل حتى لو المودال انضاف بعدين
-            document.addEventListener('change', function (e) {
-                if (e.target && e.target.id === 'itemsSelectAll') {
-                    var isChecked = e.target.checked;
-                    document.querySelectorAll('.item-checkbox').forEach(function (cb) {
-                        cb.checked = isChecked;
+                if (selectAll) {
+                    selectAll.addEventListener('change', function () {
+                        checkboxes.forEach(cb => cb.checked = selectAll.checked);
+                        syncFromCheckboxes();
                     });
-                    syncHiddenSelect();
-                    return;
                 }
+            }
 
-                if (e.target && e.target.classList.contains('item-checkbox')) {
-                    updateSelectAllCheckbox();
-                    syncHiddenSelect();
-                    return;
-                }
-            });
-
-            // نستدعيها لما المودال يخلص تحميل
-            window.initQuestionItemsMultiSelect = function () {
-                updateSelectAllCheckbox();
-                syncHiddenSelect();
-            };
-
-        })();
+            bindEvents();
+            syncFromCheckboxes();
+        };
     </script>
 }

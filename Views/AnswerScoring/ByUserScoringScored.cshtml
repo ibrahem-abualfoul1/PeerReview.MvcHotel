@@ -1,4 +1,6 @@
-﻿@model List<PeerReview.MvcHotel.Models.AnswerForScoringDto>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Config
+@model List<PeerReview.MvcHotel.Models.AnswerForScoringDto>
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer L
 
@@ -8,6 +10,7 @@
 
     var ci = System.Globalization.CultureInfo.CurrentUICulture;
     var isRtl = ci.TwoLetterISOLanguageName == "ar";
+    var api = Config["ApiBaseUrl"];
 }
 
 @section Styles {
@@ -65,17 +68,17 @@ else
         @Html.AntiForgeryToken()
 
         <div class="table-responsive-sm mt-1">
-                <table class="pr-table table table-hover table-striped align-middle w-100 mb-0">
-                    <thead>
-                        <tr>
-                            <th style="width:50px;">#</th>
-                            <th style="min-width:220px;">@L["Column_Question"]</th>
-                            <th style="min-width:180px;">@L["Column_Item"]</th>
-                            <th style="min-width:240px;">@L["Column_Answer"]</th>
-                            <th style="width:140px">@L["Column_Score"]</th>
-                            <th style="min-width:180px;">@L["Column_Notes"]</th>
-                        </tr>
-                    </thead>
+            <table class="pr-table table table-hover table-striped align-middle w-100 mb-0">
+                <thead>
+                    <tr>
+                        <th style="width:50px;">#</th>
+                        <th style="min-width:220px;">@L["Column_Question"]</th>
+                        <th style="min-width:180px;">@L["Column_Item"]</th>
+                        <th style="min-width:240px;">@L["Column_Answer"]</th>
+                        <th style="width:140px">@L["Column_Score"]</th>
+                        <th style="min-width:180px;">@L["Column_Notes"]</th>
+                    </tr>
+                </thead>
                 <tbody>
                     @for (var i = 0; i < Model.Count; i++)
                     {
@@ -89,51 +92,68 @@ else
                                     @{
                                         var q = a.question;
                                         string qText;
-                                        if (isRtl)
-                                        {
-                                            qText = q?.TitleAr
-                                            ?? q?.DescriptionAr
-                                            ?? $"Q#{a.QuestionId}";
-                                        }
-                                        else
-                                        {
-                                            qText = q?.TitleEn
-                                            ?? q?.DescriptionEn
-                                            ?? $"Q#{a.QuestionId}";
-                                        }
-                                    }
-                                @qText
-                            </div>
-                            <div class="score-meta text-muted">
-                                @string.Format(L["QuestionId_Label"].Value, a.QuestionId)
-                            </div>
-                        </td>
 
-                        <!-- Item -->
-                        <td>
-                            <div>
-                                @(
-                                                            isRtl
-                                                            ? (a.ItemTextAr ?? a.ItemTextEn)
-                                                            : (a.ItemTextEn ?? a.ItemTextAr)
-                                                            )
-                            </div>
-                            <div class="score-meta text-muted">
-                                @string.Format(L["ItemId_Label"].Value, a.QuestionItemId)
-                            </div>
-                        </td>
+                                        qText = q?.TitleEn
+                                        ?? q?.DescriptionEn
+                                        ?? $"Q#{a.QuestionId}";
+                                    }
+                                    @qText
+                                </div>
+                                <div class="score-meta text-muted">
+                                    @string.Format(L["QuestionId_Label"].Value, a.QuestionId)
+                                </div>
+                            </td>
+
+                            <!-- Item -->
+                            <td>
+                                <div>
+                                    @(isRtl? a.ItemTextEn: a.ItemTextEn)
+                                </div>
+                                <div class="score-meta text-muted">
+                                    @string.Format(L["ItemId_Label"].Value, a.QuestionItemId)
+                                </div>
+                            </td>
 
                             <!-- Answer -->
                             <td class="score-answer-cell">
-                        @if (a.questionItem?.Type == 7)  // File upload
+                                @if (a.questionItem?.Type == 7)  // File upload
                                 {
-                                    if (!string.IsNullOrWhiteSpace(a.Value))
+                                    // أولوية: ملفات حقيقية من Answer.Files
+                                    var fileLinks = a.Files?
+                                    .Where(f => f.File != null && !string.IsNullOrWhiteSpace(f.File.Path))
+                                    .ToList()
+                                    ?? new List<PeerReview.MvcHotel.Models.AnswerFileDto>();
+
+                                    if (fileLinks.Any())
+                                    {
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach (var f in fileLinks)
+                                            {
+                                                var filePath = f.File!.Path?.TrimStart('/') ?? "";
+                                                var baseUrl = api?.TrimEnd('/') ?? "";
+                                                var fileUrl = $"{baseUrl}/{filePath}";
+
+                                                <li class="mb-1">
+                                                    <a href="@fileUrl"
+                                                       target="_blank"
+                                                       class="btn-pr btn-pr-sm btn-pr-soft">
+                                                        <i class="bi bi-file-earmark-arrow-down me-1"></i>
+                                                        @(string.IsNullOrWhiteSpace(f.File.FileName)
+                                                                                            ? L["ViewFile"].Value
+                                                                                            : f.File.FileName)
+                                </a>
+                            </li>
+                                                        }
+                                        </ul>
+                                    }
+                                    // دعم للحالات القديمة اللي فيها Base64 في Value
+                                    else if (!string.IsNullOrWhiteSpace(a.Value))
                                     {
                                         <button type="button"
                                                 class="btn-pr btn-pr-sm btn-pr-soft"
                                                 onclick="openBase64File('@a.Value')">
                                             <i class="bi bi-file-earmark-arrow-down me-1"></i>
-                                           @L["ViewFile"]
+                                            @L["ViewFile"]
                                         </button>
                                     }
                                     else
@@ -158,8 +178,9 @@ else
                                        name="Items[@i].Score"
                                        step="0.5"
                                        min="0"
-                                       max="100"
-                                       placeholder="—" />
+                                       max="1"
+                                       placeholder="—"
+                                       value="@(a.Score?.ToString() ?? "")" />
                             </td>
 
                             <!-- Notes -->
@@ -167,7 +188,8 @@ else
                                 <input type="text"
                                        class="form-control form-control-sm"
                                        name="Items[@i].Notes"
-                                       placeholder="—" />
+                                       placeholder="—"
+                                       value="@a.Notes" />
                             </td>
                         </tr>
                     }
@@ -187,6 +209,7 @@ else
 }
 
 <script>
+    // Fallback لو لسه في إجابات قديمة مخزّنة كـ Base64 في Value
     function openBase64File(base64String) {
         let base64 = base64String;
         let mime = "";

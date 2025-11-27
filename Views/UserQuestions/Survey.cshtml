@@ -34,6 +34,8 @@
     var jsUploadPrompt = jsEncoder.Encode(L["Survey_FileUploadPrompt"].Value);
     var jsFileSelected = jsEncoder.Encode(L["Survey_FileSelected"].Value);
     var jsFieldRequired = jsEncoder.Encode(L["Survey_FieldRequired"].Value);
+    var jsSubmitLoading = jsEncoder.Encode(L["Survey_Submitting"].Value);
+    var jsSaveDraft = jsEncoder.Encode(L["Survey_SaveDraft"].Value);
 }
 
 @section Styles {
@@ -306,6 +308,11 @@
             transform: none;
         }
 
+        .btn-sv-xs {
+            padding: 4px 10px;
+            font-size: 0.8rem;
+        }
+
         .error-message {
             color: #fb7185;
             font-size: 0.8rem;
@@ -335,6 +342,44 @@
             color: var(--text-muted);
             font-size: 0.95rem;
             line-height: 1.7;
+        }
+
+        .file-list {
+            margin-top: 8px;
+            padding-left: 0;
+            list-style: none;
+        }
+
+            .file-list li a {
+                font-size: 0.9rem;
+            }
+
+        /* overlay FULL SCREEN */
+        .sv-loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .sv-loading-inner {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 18px;
+            padding: 16px 22px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 220px;
+        }
+
+        .sv-loading-text {
+            font-size: 0.9rem;
+            color: var(--text-main);
         }
 
         @@keyframes sv-slide-in {
@@ -425,6 +470,18 @@
     </div>
 </div>
 
+<!-- FULL SCREEN Loader Overlay -->
+<div class="sv-loading-overlay" id="surveyLoading">
+    <div class="sv-loading-inner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="sv-loading-text">
+            @L["Survey_Submitting"]
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         // ===== بيانات من السيرفر =====
@@ -440,45 +497,48 @@
         const uploadPromptText = '@jsUploadPrompt';
         const fileSelectedText = '@jsFileSelected';
         const fieldRequiredText = '@jsFieldRequired';
+        const submitLoadingText = '@jsSubmitLoading';
+        const saveDraftLabel = '@jsSaveDraft';
 
         // ===== الحالة العامة =====
         const antiForgeryToken =
             document.querySelector('#afTokenForm input[name="__RequestVerificationToken"]')?.value || '';
 
         let currentGroupIndex = 0;
-        // answers[itemId] = { questionId, type, value }
-        let answers = {};
 
-        // ===== تخزين/تحميل محلي =====
-        function loadAnswers() {
-            try {
-                const saved = localStorage.getItem('surveyAnswers');
-                if (saved) answers = JSON.parse(saved) || {};
-            } catch {
-                answers = {};
-            }
-        }
-        function saveAnswers() {
-            localStorage.setItem('surveyAnswers', JSON.stringify(answers));
+        // answers[key] = { questionId, questionItemId, type, value }
+        // key = `${groupId}_${itemId}`
+        const answers = {};
+
+        // files[key] = [ { answerFileId, fileName, fileUrl } ]
+        const uploadedFiles = {};
+
+        function makeKey(groupId, itemId) {
+            return `${groupId}_${itemId}`;
         }
 
-        function findItemById(id) {
-            for (const g of surveyData || []) {
-                for (const it of (g.Items || [])) {
-                    if (it.Id === id) return { ...it, qId: g.Id };
-                }
-            }
-            return { Id: id, Type: 1 };
+        // ===== البحث عن Item حسب (groupId, itemId) =====
+        function findItem(groupId, itemId) {
+            const g = (surveyData || []).find(x => x.Id === groupId);
+            if (!g) return { Id: itemId, Type: 1, qId: groupId };
+            const it = (g.Items || []).find(x => x.Id === itemId) || { Id: itemId, Type: 1 };
+            return { ...it, qId: groupId };
         }
 
-        function setAnswer(item, value) {
-            answers[item.Id] = { questionId: item.Id, type: item.Type, value };
-            saveAnswers();
-            hideError(item.Id);
+        function setAnswer(item, groupId, value) {
+            const key = makeKey(groupId, item.Id);
+            answers[key] = {
+                questionId: groupId,       // Question (Group)
+                questionItemId: item.Id,   // Item
+                type: item.Type,
+                value
+            };
+            hideError(groupId, item.Id);
         }
 
-        function getStoredValue(item) {
-            const a = answers[item.Id];
+        function getStoredValue(item, groupId) {
+            const key = makeKey(groupId, item.Id);
+            const a = answers[key];
             if (!a) return undefined;
             return (typeof a === 'object' && a !== null && 'value' in a) ? a.value : a;
         }
@@ -502,6 +562,32 @@
             }
         }
 
+        // ===== رسم قائمة الملفات لسؤال معيّن =====
+        function renderFileList(groupId, itemId) {
+            const key = makeKey(groupId, itemId);
+            const listEl = document.getElementById(`fileList_${key}`);
+            if (!listEl) return;
+
+            const arr = uploadedFiles[key] || [];
+            if (arr.length === 0) {
+                listEl.innerHTML = '';
+                return;
+            }
+
+            listEl.innerHTML = arr.map(f => `
+                <li class="d-flex align-items-center justify-content-between mb-1" data-afid="${f.answerFileId}">
+                    <a href="${f.fileUrl}" target="_blank">
+                        ${f.fileName}
+                    </a>
+                    <button type="button"
+                            class="btn-sv btn-sv-secondary btn-sv-xs"
+                            onclick="deleteUploadedFile(${groupId}, ${itemId}, ${f.answerFileId})">
+                        ✕
+                    </button>
+                </li>
+            `).join('');
+        }
+
         // ===== الرسم =====
         function renderGroup() {
             const group = (surveyData || [])[currentGroupIndex];
@@ -517,9 +603,9 @@
             html += `<div class="group-title">${group.Title ?? ''}</div>`;
             html += `<div class="group-description">${group.Description ?? ''}</div>`;
 
-            (group.Items ?? []).forEach(item => { html += renderQuestion(item); });
+            (group.Items ?? []).forEach(item => { html += renderQuestion(item, group.Id); });
 
-                    html += `
+            html += `
                 <div class="buttons">
                     <button type="button"
                             class="btn-sv btn-sv-secondary"
@@ -527,6 +613,13 @@
                             ${(currentGroupIndex === 0) ? 'disabled' : ''}>
                         ${prevLabel}
                     </button>
+
+                    <button type="button"
+                            class="btn-sv btn-sv-secondary"
+                            id="saveDraftBtn">
+                        ${saveDraftLabel}
+                    </button>
+
                     <button type="button"
                             class="btn-sv btn-sv-primary"
                             id="nextBtn">
@@ -542,12 +635,14 @@
             restoreAnswers();
         }
 
-        function renderQuestion(item) {
+        function renderQuestion(item, groupId) {
             const required = item.IsRequired ? '<span class="required">*</span>' : '';
-            const v = getStoredValue(item);
+            const v = getStoredValue(item, groupId);
             const id = item.Id;
+            const key = makeKey(groupId, id);
+
             let html = `
-                <div class="question" data-id="${id}">
+                <div class="question" data-gid="${groupId}" data-id="${id}">
                     <div class="question-text">${item.Text ?? ''} ${required}</div>`;
 
             const csv = (item.OptionsCsv ?? '')
@@ -559,6 +654,7 @@
             switch (item.Type) {
                 case 1: // نص
                     html += `<textarea class="input-field"
+                                       data-gid="${groupId}"
                                        data-id="${id}"
                                        placeholder="${textPlaceholder}">${v ?? ''}</textarea>`;
                     break;
@@ -572,8 +668,9 @@
                         html += `
                             <label class="option-label ${selected}">
                                 <input type="radio"
-                                       name="q${id}"
+                                       name="q${key}"
                                        value="${option}"
+                                       data-gid="${groupId}"
                                        data-id="${id}"
                                        ${checked} />
                                 <span>${option}</span>
@@ -591,8 +688,9 @@
                         html += `
                             <label class="option-label ${selected}">
                                 <input type="checkbox"
-                                       name="q${id}"
+                                       name="q${key}"
                                        value="${option}"
+                                       data-gid="${groupId}"
                                        data-id="${id}"
                                        ${checked} />
                                 <span>${option}</span>
@@ -604,6 +702,7 @@
                 case 5: // رقم
                     html += `<input type="number"
                                     class="input-field"
+                                    data-gid="${groupId}"
                                     data-id="${id}"
                                     placeholder="${numberPlaceholder}"
                                     value="${v ?? ''}">`;
@@ -612,27 +711,32 @@
                 case 6: // تاريخ
                     html += `<input type="date"
                                     class="input-field"
+                                    data-gid="${groupId}"
                                     data-id="${id}"
                                     value="${v ?? ''}">`;
                     break;
 
-                case 7: // ملف
+                case 7: // ملف (multi-file)
                     const hasFile = !!v;
                     const fileLabel = hasFile ? fileSelectedText : '';
                     html += `
                         <div class="file-upload"
-                             onclick="document.getElementById('file${id}').click()">
+                             onclick="document.getElementById('file_${key}').click()">
                             <input type="file"
-                                   id="file${id}"
+                                   id="file_${key}"
+                                   data-gid="${groupId}"
                                    data-id="${id}"
+                                   multiple
                                    accept="image/*,application/pdf">
                             <div class="file-upload-text">📁 ${uploadPromptText}</div>
-                            <div class="file-name" id="fileName${id}">${fileLabel}</div>
-                        </div>`;
+                            <div class="file-name" id="fileName_${key}">${fileLabel}</div>
+                        </div>
+                        <ul class="file-list" id="fileList_${key}"></ul>
+                    `;
                     break;
             }
 
-            html += `<div class="error-message" id="error${id}">${fieldRequiredText}</div></div>`;
+            html += `<div class="error-message" id="error_${key}">${fieldRequiredText}</div></div>`;
             return html;
         }
 
@@ -640,51 +744,113 @@
         function attachEventListeners() {
             document.querySelectorAll('.input-field').forEach(input => {
                 input.addEventListener('input', (e) => {
+                    const gid = parseInt(e.target.dataset.gid);
                     const id = parseInt(e.target.dataset.id);
-                    const item = findItemById(id);
-                    setAnswer(item, e.target.value);
+                    const item = findItem(gid, id);
+                    setAnswer(item, gid, e.target.value);
                 });
             });
 
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.addEventListener('change', (e) => {
+                    const gid = parseInt(e.target.dataset.gid);
                     const id = parseInt(e.target.dataset.id);
-                    const item = findItemById(id);
-                    setAnswer(item, e.target.value);
+                    const item = findItem(gid, id);
+                    setAnswer(item, gid, e.target.value);
 
-                    const labels = e.target.closest('.options-container')?.querySelectorAll('.option-label') || [];
-                    labels.forEach(l => l.classList.remove('selected'));
+                    const key = makeKey(gid, id);
+                    const labels = document.querySelectorAll(`input[name="q${key}"]`) ?? [];
+                    labels.forEach(r => r.closest('.option-label')?.classList.remove('selected'));
                     e.target.closest('.option-label')?.classList.add('selected');
                 });
             });
 
             document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
                 chk.addEventListener('change', (e) => {
+                    const gid = parseInt(e.target.dataset.gid);
                     const id = parseInt(e.target.dataset.id);
-                    const item = findItemById(id);
-                    const allChecked = document.querySelectorAll(`input[name="q${id}"]:checked`);
+                    const item = findItem(gid, id);
+                    const key = makeKey(gid, id);
+
+                    const allChecked = document.querySelectorAll(
+                        `input[type="checkbox"][name="q${key}"]:checked`
+                    );
                     const arr = Array.from(allChecked).map(c => c.value);
-                    setAnswer(item, arr);
+                    setAnswer(item, gid, arr);
 
                     e.target.closest('.option-label')?.classList
                         .toggle('selected', e.target.checked);
                 });
             });
 
+            // ====== MULTI FILE UPLOAD ======
             document.querySelectorAll('input[type="file"]').forEach(fileInput => {
-                fileInput.addEventListener('change', (e) => {
+                fileInput.addEventListener('change', async (e) => {
+                    const gid = parseInt(e.target.dataset.gid);
                     const id = parseInt(e.target.dataset.id);
-                    const item = findItemById(id);
-                    const file = e.target.files?.[0];
-                    if (!file) return;
+                    const item = findItem(gid, id);
+                    const key = makeKey(gid, id);
 
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        setAnswer(item, ev.target.result);
-                        const nameEl = document.getElementById(`fileName${id}`);
-                        if (nameEl) nameEl.textContent = fileSelectedText;
-                    };
-                    reader.readAsDataURL(file);
+                    const files = Array.from(e.target.files || []);
+                    if (!files.length) return;
+
+                    const nameEl = document.getElementById(`fileName_${key}`);
+                    if (nameEl) nameEl.textContent = '... Uploading';
+
+                    let successCount = 0;
+                    if (!uploadedFiles[key]) uploadedFiles[key] = [];
+
+                    try {
+                        for (const file of files) {
+                            const formData = new FormData();
+                            formData.append('questionId', item.qId);
+                            formData.append('questionItemId', item.Id);
+                            formData.append('file', file);
+
+                            const res = await fetch('/user-questions/upload', {
+                                method: 'POST',
+                                headers: {
+                                    'RequestVerificationToken': antiForgeryToken
+                                },
+                                body: formData
+                            });
+
+                            if (!res.ok) {
+                                console.error('Upload failed: ', res.status);
+                                continue;
+                            }
+
+                            const data = await res.json();
+                            successCount++;
+
+                            uploadedFiles[key].push({
+                                answerFileId: data.answerFileId || data.AnswerFileId,
+                                fileName: data.fileName || data.FileName || file.name,
+                                fileUrl: data.fileUrl || data.FileUrl || ''
+                            });
+                        }
+
+                        if (successCount > 0) {
+                            // اعتبر السؤال متجاوب عليه (فيه ملفات مرفوعة)
+                            setAnswer(item, gid, '__uploaded__');
+
+                            if (nameEl) {
+                                nameEl.textContent =
+                                    successCount === 1
+                                        ? fileSelectedText
+                                        : `${fileSelectedText} (${uploadedFiles[key].length})`;
+                            }
+
+                            renderFileList(gid, id);
+                        } else {
+                            if (nameEl) nameEl.textContent = 'Upload failed';
+                            delete answers[key];
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        if (nameEl) nameEl.textContent = 'Upload failed';
+                        delete answers[key];
+                    }
                 });
             });
 
@@ -705,45 +871,116 @@
                     }
                 }
             });
+
+            document.getElementById('saveDraftBtn')?.addEventListener('click', () => {
+                saveDraft();
+            });
+        }
+
+        // حذف ملف واحد
+        async function deleteUploadedFile(groupId, itemId, answerFileId) {
+            const key = makeKey(groupId, itemId);
+
+            try {
+                const res = await fetch(`/user-questions/delete-file/${answerFileId}`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': antiForgeryToken
+                    }
+                });
+
+                if (!res.ok) {
+                    console.error('Delete failed: ', res.status);
+                    alert('Failed to delete file');
+                    return;
+                }
+
+                uploadedFiles[key] = (uploadedFiles[key] || [])
+                    .filter(f => f.answerFileId !== answerFileId);
+
+                if (!uploadedFiles[key].length) {
+                    // لو السؤال Required، نخليه بدون قيمة عشان الفاليديشن يمسكه
+                    delete answers[key];
+                } else {
+                    const item = findItem(groupId, itemId);
+                    setAnswer(item, groupId, '__uploaded__');
+                }
+
+                renderFileList(groupId, itemId);
+            }
+            catch (e) {
+                console.error(e);
+                alert('Failed to delete file');
+            }
         }
 
         function restoreAnswers() {
             const group = (surveyData || [])[currentGroupIndex];
-            (group?.Items ?? []).forEach(item => {
-                const v = getStoredValue(item);
-                if (v === undefined) return;
+            const gid = group?.Id;
+            if (!gid) return;
 
-                if (item.Type === 4 && Array.isArray(v)) {
-                    v.forEach(value => {
-                        const checkbox = document
-                            .querySelector(`input[name="q${item.Id}"][value="${value}"]`);
-                        if (checkbox) {
-                            checkbox.checked = true;
-                            checkbox.closest('.option-label')?.classList.add('selected');
-                        }
+            (group.Items || []).forEach(item => {
+                const v = getStoredValue(item, gid);
+                const key = makeKey(gid, item.Id);
+
+                if (v === undefined) {
+                    if (item.Type === 7) {
+                        renderFileList(gid, item.Id);
+                    }
+                    return;
+                }
+
+                if ((item.Type === 2 || item.Type === 3)) {
+                    const radios = document.querySelectorAll(`input[type="radio"][name="q${key}"]`);
+                    radios.forEach(r => {
+                        r.checked = (r.value === v);
+                        r.closest('.option-label')?.classList
+                            .toggle('selected', r.checked);
                     });
                 }
 
-                if (item.Type === 7 && v) {
-                    const el = document.getElementById(`fileName${item.Id}`);
-                    if (el) el.textContent = fileSelectedText;
+                if (item.Type === 4 && Array.isArray(v)) {
+                    const checkboxes = document.querySelectorAll(`input[type="checkbox"][name="q${key}"]`);
+                    checkboxes.forEach(c => {
+                        c.checked = v.includes(c.value);
+                        c.closest('.option-label')?.classList
+                            .toggle('selected', c.checked);
+                    });
+                }
+
+                if (item.Type === 1 || item.Type === 5 || item.Type === 6) {
+                    const input = document.querySelector(
+                        `.input-field[data-gid="${gid}"][data-id="${item.Id}"]`
+                    );
+                    if (input) input.value = v ?? '';
+                }
+
+                if (item.Type === 7) {
+                    const el = document.getElementById(`fileName_${key}`);
+                    if (el && v) el.textContent = fileSelectedText;
+                    renderFileList(gid, item.Id);
                 }
             });
         }
 
         function validateCurrentGroup() {
             const group = (surveyData || [])[currentGroupIndex];
+            if (!group) return true;
+
+            const gid = group.Id;
             let isValid = true;
 
-            (group?.Items ?? []).forEach(item => {
+            (group.Items ?? []).forEach(item => {
                 if (!item.IsRequired) return;
-                const val = getStoredValue(item);
+
+                const val = getStoredValue(item, gid);
                 const empty =
                     val === undefined || val === null ||
                     (Array.isArray(val) && val.length === 0) ||
                     (typeof val === 'string' && val.trim() === '');
+
                 if (empty) {
-                    showError(item.Id);
+                    showError(gid, item.Id);
                     isValid = false;
                 }
             });
@@ -751,23 +988,43 @@
             return isValid;
         }
 
-        function showError(id) {
-            const el = document.getElementById(`error${id}`);
+        function showError(groupId, itemId) {
+            const key = makeKey(groupId, itemId);
+            const el = document.getElementById(`error_${key}`);
             if (el) el.style.display = 'block';
         }
 
-        function hideError(id) {
-            const el = document.getElementById(`error${id}`);
+        function hideError(groupId, itemId) {
+            const key = makeKey(groupId, itemId);
+            const el = document.getElementById(`error_${key}`);
             if (el) el.style.display = 'none';
         }
 
-        function toArrayPayload() {
+        // ===== فحص القيمة الفارغة =====
+        function isValueEmpty(v) {
+            return v === undefined || v === null ||
+                (Array.isArray(v) && v.length === 0) ||
+                (typeof v === 'string' && v.trim() === '');
+        }
+
+        // ===== تحويل الإجابات إلى Payload =====
+        // onlyAnswered = true → نرجع فقط الأسئلة اللي عليها إجابة (للـ Save Draft)
+        function toArrayPayload(onlyAnswered = false) {
             const out = [];
             for (const g of (surveyData || [])) {
+                const gid = g.Id;
                 for (const it of (g.Items || [])) {
-                    const v = getStoredValue(it);
+                    // لا نرسل الأسئلة من نوع ملف (Type 7) هنا
+                    if (it.Type === 7) continue;
+
+                    const v = getStoredValue(it, gid);
+
+                    if (onlyAnswered && isValueEmpty(v)) {
+                        continue;
+                    }
+
                     out.push({
-                        questionId: g.Id,
+                        questionId: gid,
                         questionItemId: it.Id,
                         value: v ?? null
                     });
@@ -776,33 +1033,140 @@
             return out;
         }
 
-        async function submitSurvey() {
-            const payload = toArrayPayload();
+        // ===== حفظ جزئي: نرسل فقط الأسئلة المجاوَب عليها =====
+                       // ===== حفظ جزئي: نرسل فقط الأسئلة المجاوَب عليها =====
+        async function saveDraft() {
+            const payload = toArrayPayload(true); // فقط المجاب عليها
+            const json = JSON.stringify(payload);
+
+            const btn = document.getElementById('saveDraftBtn');
+            if (!btn) return;
+
+            const originalLabel = btn.dataset.originalLabel || btn.textContent;
+            btn.dataset.originalLabel = originalLabel;
+
+            btn.disabled = true;
+            btn.textContent = saveDraftLabel + '...';
 
             try {
-                const res = await fetch('@Url.Action("Submit", "UserQuestions")', {
+                const res = await fetch('/user-questions/submit', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'RequestVerificationToken': antiForgeryToken
                     },
-                    body: JSON.stringify(payload)
+                    body: json
                 });
-                if (!res.ok) throw new Error('Failed to submit');
+
+                if (!res.ok) {
+                    throw new Error('Failed to save draft: ' + res.status);
+                }
+
+                console.log('Draft saved');
+
+                // نفس حركة submitSurvey تقريباً
+                const content = document.getElementById('surveyContent');
+                const success = document.getElementById('successScreen');
+                const hdr = document.querySelector('.survey-header');
+
+                if (content) content.style.display = 'none';
+                if (hdr && hdr.style) hdr.style.display = 'none';
+
+                if (success) {
+                    // لو حاب تستخدم نفس نص الزر كعنوان
+                    const titleEl = success.querySelector('.success-title');
+                    if (titleEl) {
+                        titleEl.textContent = saveDraftLabel; // مثلاً: "Save draft"
+                    }
+
+                    // ممكن تخلي الرسالة كما هي أو تعدلها لاحقًا من الـ resx
+                    success.style.display = 'block';
+                }
+
+                // بعد ما يشوف الرسالة الحلوة -> ريفريش للصفحة
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500); // 1.5 ثانية مثلاً
+
             } catch (e) {
                 console.error(e);
+                alert('Failed to save draft, please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = btn.dataset.originalLabel || saveDraftLabel;
+            }
+        }
+
+
+
+        // ===== حالة الـ submit (loader + تعطيل الأزرار) =====
+        function setSubmitting(isSubmitting) {
+            const overlay = document.getElementById('surveyLoading');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+
+            if (overlay) {
+                overlay.style.display = isSubmitting ? 'flex' : 'none';
             }
 
-            localStorage.removeItem('surveyAnswers');
-            document.getElementById('surveyContent').style.display = 'none';
-            document.getElementById('successScreen').style.display = 'block';
+            if (nextBtn) {
+                if (isSubmitting) {
+                    if (!nextBtn.dataset.originalLabel) {
+                        nextBtn.dataset.originalLabel = nextBtn.innerHTML;
+                    }
+                    nextBtn.disabled = true;
+                    nextBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        ${submitLoadingText}
+                    `;
+                } else {
+                    nextBtn.disabled = false;
+                    if (nextBtn.dataset.originalLabel) {
+                        nextBtn.innerHTML = nextBtn.dataset.originalLabel;
+                    }
+                }
+            }
 
-            const hdr = document.querySelector('.survey-header');
-            if (hdr && hdr.style) hdr.style.display = 'none';
+            if (prevBtn) {
+                prevBtn.disabled = isSubmitting;
+            }
+        }
+
+        async function submitSurvey() {
+            const payload = toArrayPayload(); // كل الأسئلة (مجاوب/فاضي)
+            const json = JSON.stringify(payload);
+
+            console.log('JSON length (approx bytes):', json.length);
+
+            setSubmitting(true);
+
+            try {
+                const res = await fetch('/user-questions/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': antiForgeryToken
+                    },
+                    body: json
+                });
+                if (!res.ok)
+                    throw new Error('Failed to submit: ' + res.status);
+
+                setSubmitting(false);
+
+                document.getElementById('surveyContent').style.display = 'none';
+                document.getElementById('successScreen').style.display = 'block';
+                const hdr = document.querySelector('.survey-header');
+                if (hdr && hdr.style)
+                    hdr.style.display = 'none';
+            } catch (e) {
+                console.error(e);
+                setSubmitting(false);
+                alert('Failed to submit, please try again.');
+            }
         }
 
         // تشغيل أولي
-        loadAnswers();
         renderGroup();
     </script>
 }

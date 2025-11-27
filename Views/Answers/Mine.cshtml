@@ -1,3 +1,5 @@
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Config
 @using System.Collections.Generic
 @using PeerReview.MvcHotel.Models
 @using Microsoft.AspNetCore.Mvc.Localization
@@ -7,6 +9,7 @@
 @{
     ViewData["Title"] = L["Answers_Title"];
     ViewBag.ActiveMenu = "Answers";
+    var api = Config["ApiBaseUrl"];
 }
 
 @functions {
@@ -42,6 +45,7 @@
             font-size: 0.8rem;
             border-radius: 999px;
             padding-inline: .75rem;
+            margin-bottom: .15rem;
         }
 
         .answers-badge-type {
@@ -76,10 +80,12 @@
     </div>
 
     <div class="table-responsive mt-2">
-        <table id="answersMineTable" class="pr-table answers-table align-middle">
+        <table id="answersMineTable" class="pr-table table table-hover table-striped answers-table align-middle w-100">
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>@L["Column_UserName"]</th>
+
                     <th>@L["Answers_Col_Question"]</th>
                     <th>@L["Answers_Col_Item"]</th>
                     <th>@L["Answers_Col_Value"]</th>
@@ -93,12 +99,36 @@
                     var i = 1;
                     foreach (var a in Model)
                     {
-                        var qTitle = a.question?.TitleEn ?? a.question?.TitleAr ?? "";
-                        var itemText = a.questionItem?.TextEn ?? a.questionItem?.TextAr ?? "";
+                        var qTitle = a.question?.TitleEn;
+                        var itemText = a.questionItem?.TextEn;
                         var val = a.value ?? "";
+
+                        var isFileUpload = a.questionItem?.Type == 7;
+
+                        // قائمة ملفات الإجابة (إن وجدت)
+                        var fileItems = isFileUpload
+                        ? (a.Files?
+                        .Where(f => f.File != null && !string.IsNullOrWhiteSpace(f.File.Path))
+                        .ToList()
+                        ?? new List<AnswerFileDto>())
+                        : new List<AnswerFileDto>();
+
+                        var hasFiles = fileItems.Any();
+
+                        string firstFileName = "";
+                        int extraFilesCount = 0;
+
+                        if (hasFiles)
+                        {
+                            firstFileName = fileItems[0].File?.FileName ?? "";
+                            extraFilesCount = fileItems.Count - 1;
+                        }
 
                         <tr>
                             <td>@i</td>
+                            <td class="text-clip" title="@a.user!.fullName">
+                                @a.user.fullName
+                            </td>
 
                             <td class="text-clip" title="@qTitle">
                                 @Trunc(qTitle, 70)
@@ -108,11 +138,28 @@
                                 @Trunc(itemText, 60)
                             </td>
 
-                            @if (a.questionItem?.Type == 7)   @* File Upload *@
+                            @* خانة القيمة *@
+                            @if (isFileUpload)
                             {
-                                <td class="text-clip-wide text-muted" title="@val">
-                                    @L["Upload_File_File"]
-                                </td>
+                                if (hasFiles)
+                                {
+                                    var displayName = firstFileName;
+                                    if (string.IsNullOrWhiteSpace(displayName))
+                                        displayName = L["Upload_File_File"].Value;
+
+                                    if (extraFilesCount > 0)
+                                        displayName += $" (+{extraFilesCount})";
+
+                                    <td class="text-clip-wide text-muted" title="@firstFileName">
+                                        @Trunc(displayName, 80)
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-clip-wide text-muted">
+                                        @L["Upload_File_File"]
+                                    </td>
+                                }
                             }
                             else
                             {
@@ -126,14 +173,27 @@
                             </td>
 
                             <td class="text-center">
-                                @if (a.questionItem?.Type == 7 && !string.IsNullOrWhiteSpace(a.value))
+                                @if (hasFiles)
                                 {
-                                    <button type="button"
-                                            class="btn-pr btn-pr-sm btn-pr-soft answers-file-btn"
-                                            onclick="openBase64File('@a.value')">
-                                        <i class="bi bi-file-earmark-arrow-down me-1"></i>
-                                        @L["Upload_File_File"]
-                                    </button>
+                                    <div class="d-inline-flex flex-column align-items-center">
+                                        @foreach (var f in fileItems)
+                                        {
+                                            var path = f.File!.Path?.TrimStart('/') ?? "";
+                                            var baseUrl = api?.TrimEnd('/') ?? "";
+                                            var fileUrl = $"{baseUrl}/{path}";
+                                            var fileName = f.File.FileName ?? "";
+
+                                            <a href="@fileUrl"
+                                               class="btn-pr btn-pr-sm btn-pr-soft answers-file-btn"
+                                               target="_blank"
+                                               download="@fileName">
+                                                <i class="bi bi-file-earmark-arrow-down me-1"></i>
+                                                @(string.IsNullOrWhiteSpace(fileName)
+                                                                                ? L["Upload_File_File"].Value
+                                                                                : Trunc(fileName, 40))
+                            </a>
+                                                        }
+                                    </div>
                                 }
                                 else
                                 {
@@ -146,14 +206,6 @@
                         i++;
                     }
                 }
-                else
-                {
-                    <tr>
-                        <td colspan="6" class="text-center text-muted-soft">
-                            @L["Upload_File_File"]
-                        </td>
-                    </tr>
-                }
             </tbody>
         </table>
     </div>
@@ -161,7 +213,10 @@
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
@@ -188,39 +243,5 @@
                 } : {}
             });
         });
-
-        function openBase64File(base64String) {
-            if (!base64String) return;
-
-            let base64 = base64String;
-            let mime = "";
-
-            if (base64String.includes("base64,")) {
-                mime = base64String.substring(
-                    base64String.indexOf(":") + 1,
-                    base64String.indexOf(";")
-                );
-                base64 = base64String.split("base64,")[1];
-            } else {
-                mime = "application/octet-stream";
-            }
-
-            try {
-                const byteCharacters = atob(base64);
-                const byteNumbers = new Array(byteCharacters.length);
-
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: mime });
-
-                const blobUrl = URL.createObjectURL(blob);
-                window.open(blobUrl, "_blank");
-            } catch {
-                alert('تعذر فتح الملف.');
-            }
-        }
     </script>
 }

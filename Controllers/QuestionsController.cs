@@ -58,14 +58,14 @@ namespace PeerReview.MvcHotel.Controllers
         //    });
         //}
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, QuestionUpdateDto model)
-        //{
-        //    await _svc.Update(id, model);
-        //    TempData["msg"] = _L["Msg_Updated"];
-        //    return RedirectToAction(nameof(Index));
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, QuestionUpdateDto model)
+        {
+            await _svc.Update(id, model);
+            TempData["msg"] = _L["Msg_Updated"].Value;
+            return RedirectToAction(nameof(Index));
+        }
 
         [HttpGet]
         public async Task<IActionResult> UpsertPartial(int? id)
@@ -101,9 +101,7 @@ namespace PeerReview.MvcHotel.Controllers
                 if (existing == null) return NotFound();
 
                 model.TitleEn = existing.TitleEn;
-                model.TitleAr = existing.TitleAr;
                 model.DescriptionEn = existing.DescriptionEn;
-                model.DescriptionAr = existing.DescriptionAr;
                 model.CategoryId = existing.CategoryId;
                 model.Items = existing.Items?.Select(item => item.Id).ToList();
 

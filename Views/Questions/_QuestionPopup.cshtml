@@ -9,10 +9,10 @@
 
     var types = ViewBag.QuestionTypes as SelectList
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
+
     var categories = ViewBag.Categorys as SelectList
                 ?? new SelectList(Enumerable.Empty<SelectListItem>());
-    // var questionItems = ViewBag.QuestionItems as SelectList
-    //             ?? new SelectList(Enumerable.Empty<SelectListItem>());
+
     var selectedItems = Model?.Items ?? new List<int>();
     var questionItems = ViewBag.QuestionItems as List<QuestionItemDto> ?? new();
 
@@ -20,8 +20,6 @@
         ? Url.Action("Edit", "Questions", new { id = id!.Value })!
         : Url.Action("Create", "Questions")!;
 }
-
-
 
 <style>
     .question-modal .modal-dialog {
@@ -31,15 +29,105 @@
 
     .question-modal .modal-content {
         border-radius: 1rem;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: radial-gradient(circle at top left, rgba(255, 245, 230, 0.9), rgba(255, 255, 255, 0.96));
+        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.32);
+    }
+
+    .question-modal .modal-header {
+        background: linear-gradient(135deg, rgba(255, 216, 155, 0.45), rgba(255, 237, 213, 0.9));
+        border-bottom: 0;
     }
 
     .question-modal .modal-body {
+        background: var(--app-bg);
         max-height: 70vh;
         overflow-y: auto;
     }
 
-   
+    .question-modal .modal-footer {
+        background: var(--panel);
+        border-top: 0;
+    }
+
+    /* ==== MULTI-SELECT DROPDOWN (Items) ==== */
+
+    .pr-multiselect {
+        position: relative;
+    }
+
+    .pr-multiselect-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 48px;
+        padding: 0.55rem 0.9rem;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.98));
+        font-size: .9rem;
+        color: var(--text-muted, #4b5563);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+        .pr-multiselect-toggle:hover,
+        .pr-multiselect-toggle:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.35), 0 18px 45px rgba(15, 23, 42, 0.18);
+            outline: none;
+        }
+
+        .pr-multiselect-toggle .label-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pr-multiselect-toggle .badge-count {
+            font-size: 0.75rem;
+            padding: 0.1rem .4rem;
+            border-radius: 999px;
+            border: 1px solid rgba(248, 180, 90, 0.5);
+            background: rgba(254, 243, 199, 0.7);
+            color: #92400e;
+            margin-inline-end: 0.35rem;
+        }
+
+    .question-modal .dropdown-menu {
+        width: 100%;
+        border-radius: 0.85rem;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        box-shadow: 0 22px 60px rgba(15, 23, 42, 0.35);
+        background: rgba(255, 255, 255, 0.97);
+    }
+
+        .question-modal .dropdown-menu .form-check {
+            font-size: .87rem;
+            
+        }
+
+        .question-modal .dropdown-menu .form-check-input {
+            cursor: pointer;
+        }
+
+        .question-modal .dropdown-menu .form-check-label {
+            cursor: pointer;
+        }
+
+    .question-modal .dropdown-menu-divider {
+        margin: .35rem 0 .5rem;
+        border-top: 1px solid rgba(226, 232, 240, 0.9);
+    }
+
+    .question-modal .dropdown-sticky-header {
+        position: sticky;
+        top: -0.5rem;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
+        z-index: 5;
+        padding-bottom: .35rem;
+        margin-bottom: .25rem;
+    }
 </style>
 
 <div class="modal fade question-modal" id="questionUpsertModal" tabindex="-1" aria-hidden="true">
@@ -47,9 +135,9 @@
         <div class="modal-content shadow-lg" style="border-radius:1rem; overflow:hidden;">
 
             <!-- Header -->
-            <div class="modal-header border-0" style="background:var(--panel);">
+            <div class="modal-header border-0">
                 <h5 class="modal-title fw-bold text-body">
-                    @(isEdit ? L["Questions_Edit"] : L["Questions_Add"])
+                    @(isEdit? L["Questions_Edit"] : L["Questions_Add"])
                 </h5>
                 <button type="button"
                         class="btn-close"
@@ -65,7 +153,7 @@
                     <input type="hidden" name="Id" value="@id" />
                 }
 
-                <div class="modal-body question-modal-body" style="background:var(--app-bg);">
+                <div class="modal-body question-modal-body">
                     <div class="pr-card mb-0">
                         <div class="h-section-title mb-3">
                             @L["Questions_Details"]
@@ -80,33 +168,81 @@
                                     <span class="text-danger small" asp-validation-for="TitleEn"></span>
                                 </div>
                             </div>
-
-                            <!-- Title AR -->
+                            <!-- Items multi-select dropdown -->
                             <div class="col-md-6">
-                                <div class="pr-field">
-                                    <input asp-for="TitleAr" placeholder=" " required />
-                                    <label>@L["Questions_TitleAr"]</label>
-                                    <span class="text-danger small" asp-validation-for="TitleAr"></span>
-                                </div>
-                            </div>
+                                <label class="form-label fw-semibold text-muted">
+                                    @L["Field_UsersLabel"]
+                                </label>
 
-                            <!-- Description EN -->
-                            <div class="col-md-6">
-                                <div class="pr-field">
-                                    <textarea asp-for="DescriptionEn" rows="3" placeholder=" " required></textarea>
-                                    <label>@L["Questions_DescEn"]</label>
-                                    <span class="text-danger small" asp-validation-for="DescriptionEn"></span>
-                                </div>
-                            </div>
+                                <div class="pr-multiselect dropdown">
+                                    <!-- زر الـ dropdown -->
+                                    <button class="pr-multiselect-toggle"
+                                            type="button"
+                                            id="itemsDropdownButton"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        <span class="d-flex align-items-center w-100">
+                                            <span class="badge-count d-none" id="itemsSelectedCount"></span>
+                                            <span id="itemsDropdownText" class="label-text flex-grow-1">
+                                                @L["Select_Items"]
+                                            </span>
+                                        </span>
+                                        <span class="ms-2 flex-shrink-0">
+                                            <i class="ti ti-chevron-down"></i>
+                                        </span>
+                                    </button>
 
-                            <!-- Description AR -->
-                            <div class="col-md-6">
-                                <div class="pr-field">
-                                    <textarea asp-for="DescriptionAr" rows="3" placeholder=" " required></textarea>
-                                    <label>@L["Questions_DescAr"]</label>
-                                    <span class="text-danger small" asp-validation-for="DescriptionAr"></span>
+                                    <!-- القائمة المنسدلة -->
+                                    <div class="dropdown-menu p-3 mt-2"
+                                         aria-labelledby="itemsDropdownButton"
+                                         style="max-height: 280px; overflow-y: auto;">
+
+                                        <div class="dropdown-sticky-header">
+                                            <!-- Select All -->
+                                            <div class="form-check mb-1">
+                                                <input class="form-check-input" type="checkbox" id="itemsSelectAll" />
+                                                <label class="form-check-label" for="itemsSelectAll">
+                                                    @L["Select_All"]
+                                                </label>
+                                            </div>
+                                            <hr class="dropdown-menu-divider" />
+                                        </div>
+
+                                        @foreach (var item in questionItems)
+                                        {
+                                            var isChecked = selectedItems.Contains(item.Id);
+                                            <div class="form-check mb-1">
+                                                <input class="form-check-input item-checkbox"
+                                                       type="checkbox"
+                                                       value="@item.Id"
+                                                       id="item_@item.Id"
+                                                       @(isChecked ? "checked" : "") />
+                                                <label class="form-check-label" for="item_@item.Id">
+                                                    @item.TextEn
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
+
+                                <!-- الـ select الحقيقي للموديل (مخفي) -->
+                                <select asp-for="Items"
+                                        id="Items"
+                                        class="d-none"
+                                        multiple="multiple">
+                                    @foreach (var item in questionItems)
+                                    {
+                                        var selected = selectedItems.Contains(item.Id) ? "selected" : null;
+                                        <option value="@item.Id" selected="@selected">
+                                            @item.TextEn
+                                        </option>
+                                    }
+                                </select>
+
+                                <div class="form-text">@L["Field_Users_Hint"]</div>
+                                <span class="text-danger small" asp-validation-for="Items"></span>
                             </div>
+                            
 
                             <!-- Category -->
                             <div class="col-md-6">
@@ -123,98 +259,21 @@
                                     @L["Questions_Category_Help"]
                                 </small>
                             </div>
-
-                            <!-- SubCategory (جاهزة لو حاب تفعلها لاحقاً) -->
-                            @* 
+                            <!-- Description EN -->
                             <div class="col-md-6">
                                 <div class="pr-field">
-                                    <select asp-for="SubCategoryId"
-                                            class="form-select"
-                                            asp-items="ViewBag.SubCategories as SelectList">
-                                        <option value="">— @L["Select_SubCategory"] —</option>
-                                    </select>
-                                    <label>@L["Questions_SubCategory"]</label>
-                                    <span class="text-danger small" asp-validation-for="SubCategoryId"></span>
+                                    <textarea asp-for="DescriptionEn" rows="3" placeholder=" " required></textarea>
+                                    <label>@L["Questions_DescEn"]</label>
+                                    <span class="text-danger small" asp-validation-for="DescriptionEn"></span>
                                 </div>
                             </div>
-                            *@
-
-                            <!-- Items multi-select dropdown -->
-                            <div class="col-md-6">
-    <label class="form-label">@L["Field_UsersLabel"]</label>
-
-    <div class="dropdown w-100">
-        <!-- زر الـ dropdown بشكل form-select -->
-        <button class="form-select d-flex justify-content-between align-items-center"
-                type="button"
-                id="itemsDropdownButton"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-            <span id="itemsDropdownText" class="flex-grow-1">
-                @L["Select_Items"]
-            </span>
-            <span class="ms-2 flex-shrink-0">
-                <i class="ti ti-chevron-down"></i>
-            </span>
-        </button>
-
-        <!-- القائمة المنسدلة -->
-        <div class="dropdown-menu w-100 p-3 mt-1"
-             aria-labelledby="itemsDropdownButton"
-             style="max-height: 280px; overflow-y: auto;">
-
-            <!-- Select All -->
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" id="itemsSelectAll" />
-                <label class="form-check-label" for="itemsSelectAll">
-                    @L["Select_All"]
-                </label>
-            </div>
-
-            <hr class="mt-1 mb-2" />
-
-            @foreach (var item in questionItems)
-            {
-                var isChecked = selectedItems.Contains(item.Id);
-                <div class="form-check">
-                    <input class="form-check-input item-checkbox"
-                           type="checkbox"
-                           value="@item.Id"
-                           id="item_@item.Id"
-                           @(isChecked ? "checked" : "") />
-                    <label class="form-check-label" for="item_@item.Id">
-                        @item.TextEn (@item.TextAr)
-                    </label>
-                </div>
-            }
-        </div>
-    </div>
-
-    <!-- الـ select الحقيقي المخفي للموديل -->
-    
-    <select asp-for="Items"
-        id="Items"
-        class="d-none"
-        multiple="multiple">
-    @foreach (var item in questionItems)
-    {
-                                        var selected = selectedItems.Contains(item.Id) ? "selected" : null;
-                                        <option value="@item.Id" selected="@selected">
-                                            @item.TextEn (@item.TextAr)
-                                        </option>
-    }
-</select>
-
-    <div class="form-text">@L["Field_Users_Hint"]</div>
-    <span class="text-danger small" asp-validation-for="Items"></span>
-</div>
-
+                          
                         </div>
                     </div>
                 </div>
 
                 <!-- Footer -->
-                <div class="modal-footer border-0" style="background:var(--panel);">
+                <div class="modal-footer border-0">
                     <button type="button"
                             class="btn-pr btn-pr-outline"
                             data-bs-dismiss="modal">
@@ -228,6 +287,3 @@
         </div>
     </div>
 </div>
-
-
-

@@ -50,8 +50,7 @@ namespace PeerReview.MvcHotel.Models
     public class QuestionDto
     {
         public int Id { get; set; }
-        public string? TitleAr { get; set; }
-        public string? DescriptionAr { get; set; }
+
         public string? TitleEn { get; set; }
         public string? DescriptionEn { get; set; }
         public int? CategoryId { get; set; }
@@ -63,8 +62,7 @@ namespace PeerReview.MvcHotel.Models
     }
     public class QuestionCreateDto
     {
-        public string? TitleAr { get; set; }
-        public string? DescriptionAr { get; set; }
+
         public string? TitleEn { get; set; }
         public string? DescriptionEn { get; set; }
         public int? CategoryId { get; set; }
@@ -78,11 +76,9 @@ namespace PeerReview.MvcHotel.Models
 
     public class QuestionItemCreateDto
     {
-        public string? TextAr { get; set; }
         public string? TextEn { get; set; }
         public int Type { get; set; }
         public bool IsRequired { get; set; }
-        public string? OptionsCsvAr { get; set; }
         public string? OptionsCsvEn { get; set; }
         public int? ParentItemId { get; set; }
         public string? ShowWhenValue { get; set; }
@@ -91,17 +87,24 @@ namespace PeerReview.MvcHotel.Models
     public class QuestionItemDto
     {
         public int Id { get; set; }
-        public string? TextAr { get; set; }
         public string? TextEn { get; set; }
         public int Type { get; set; }
         public bool IsRequired { get; set; }
-        public string? OptionsCsvAr { get; set; }
         public string? OptionsCsvEn { get; set; }
     }
     //public class QuestionItemCreateDto { public string? text { get; set; } public int type { get; set; } public bool isRequired { get; set; } public string? optionsCsv { get; set; } public int? parentItemId { get; set; } public string? showWhenValue { get; set; } }
 
     public class AssignRequest { public List<int>? questionIds { get; set; } public List<int>? userIds { get; set; } }
-    public class AssignmentDto { public int id { get; set; } public int questionId { get; set; } public int userId { get; set; } public DateTime? assignedAt { get; set; } public bool isActive { get; set; } public QuestionDto? question { get; set; } }
+    public class AssignmentDto
+    {
+        public int id { get; set; }
+        public int questionId { get; set; }
+        public int userId { get; set; }
+        public DateTime? assignedAt { get; set; }
+        public bool isActive { get; set; }
+        public QuestionDto? question { get; set; }
+        public User? user { get; set; }
+    }
 
     public class Answer
     {
@@ -110,25 +113,24 @@ namespace PeerReview.MvcHotel.Models
         public int? questionItemId { get; set; }
         public int userId { get; set; }
         public string? value { get; set; }
-        public int? fileId { get; set; }
         public DateTime? submittedAt { get; set; }
+
         public QuestionDto? question { get; set; }
         public QuestionItemDto? questionItem { get; set; }
         public User? user { get; set; }
-        public int? FileId { get; set; }
-        [JsonPropertyName("file")]
-        public FileEntryDto? File { get; set; }
 
+        [JsonPropertyName("files")]
+        public List<AnswerFileDto> Files { get; set; } = new();
     }
+
     public class FileEntryDto
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? ContentType { get; set; }
-        public long? Size { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public bool IsDeleted { get; set; }
-        public DateTime? DeletedAt { get; set; }
+        public string FileName { get; set; } = "";
+        public string ContentType { get; set; } = "";
+        public long Length { get; set; }
+        public string Path { get; set; } = "";
+        public int UploadedByUserId { get; set; }
     }
     public class AnswerCreateDto { public int questionId { get; set; } public int? questionItemId { get; set; } public string? value { get; set; } }
     public class AnswerUpdateDto { public string? value { get; set; } }
@@ -143,14 +145,12 @@ namespace PeerReview.MvcHotel.Models
         [JsonPropertyName("code")]
         public string? Code { get; set; }
 
-        [JsonPropertyName("NameAR")]
-        public string? NameAr { get; set; }
+     
 
         [JsonPropertyName("NameEn")]
         public string? NameEn { get; set; }
 
-        [JsonPropertyName("TypeAr")]
-        public string? TypeAr { get; set; }
+       
 
         [JsonPropertyName("TypeEn")]
         public string? TypeEn { get; set; }
@@ -164,7 +164,6 @@ namespace PeerReview.MvcHotel.Models
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        public string? NameAr { get; set; }
         public string? NameEn { get; set; }
     }
 
@@ -177,10 +176,8 @@ namespace PeerReview.MvcHotel.Models
         public string? Code { get; set; }
 
         public string? NameEn { get; set; }
-        public string? NameAr { get; set; }
 
         public string? TypeEn { get; set; }
-        public string? TypeAr { get; set; }
     }
 
     // PUT /api/Lookups/{code}  ← الـ code يُمرر في المسار، لذا لا نعيده في البودي
@@ -189,10 +186,8 @@ namespace PeerReview.MvcHotel.Models
         public string? Code { get; set; }
 
         public string? NameEn { get; set; }
-        public string? NameAr { get; set; }
 
         public string? TypeEn { get; set; }
-        public string? TypeAr { get; set; }
     }
 
     // ===================== SUB LOOKUPS DTOs (Requests) =====================
@@ -202,7 +197,6 @@ namespace PeerReview.MvcHotel.Models
     // إن كان الـ API عندك يتطلب أيضًا lookupId، يمكنك إبقاء الخاصية Nullable.
     public class SubLookupCreateDto
     {
-        public string? NameAr { get; set; }
         public string? NameEn { get; set; }
 
     }
@@ -211,7 +205,6 @@ namespace PeerReview.MvcHotel.Models
     // غالبًا يكفي التحديث بالاسم، ووجود lookupId اختياري (حسب منطقك).
     public class SubLookupUpdateDto
     {
-        public string? NameAr { get; set; }
         public string? NameEn { get; set; }
     }
 
@@ -242,17 +235,20 @@ namespace PeerReview.MvcHotel.Models
         public int QuestionId { get; set; }
         public int? QuestionItemId { get; set; }
 
-        public string? ItemTextAr { get; set; }
         public string? ItemTextEn { get; set; }
 
-        public string? Value { get; set; }           // نص/قيمة الإجابة (قد تكون Base64 للملفات)
+        public string? Value { get; set; }
         public DateTime? SubmittedAt { get; set; }
         public QuestionItemDto? questionItem { get; set; }
         public QuestionDto? question { get; set; }
 
+        public decimal? Score { get; set; }
+        public string? Notes { get; set; }
 
-
+        [JsonPropertyName("files")]
+        public List<AnswerFileDto> Files { get; set; } = new();
     }
+
     public class ScoreDto
     {
         public int AnswerId { get; set; }
@@ -289,6 +285,8 @@ namespace PeerReview.MvcHotel.Models
         public bool HasScored { get; set; }
         public bool HasUnscored { get; set; }
         public DateTime? LastScoredAt { get; set; }
+        public decimal TotalScore { get; set; }
+
     }
 
     public class DashboardMetricsDto
@@ -306,6 +304,14 @@ namespace PeerReview.MvcHotel.Models
         public int TotalAssignments { get; set; }
         public int TotalAnswers { get; set; }
     }
+    public class AnswerFileDto
+    {
+        public int Id { get; set; }
+        public int AnswerId { get; set; }
+        public int FileId { get; set; }
 
+        [JsonPropertyName("file")]
+        public FileEntryDto? File { get; set; }
+    }
 
 }

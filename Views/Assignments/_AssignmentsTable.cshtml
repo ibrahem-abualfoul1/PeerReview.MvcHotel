@@ -3,7 +3,7 @@
 @model List<AssignmentDto>
 @inject IViewLocalizer L
 
-<table id="assignTable" class="pr-table align-middle">
+<table id="assignTable" class="pr-table table table-hover table-striped align-middle w-100">
     <thead>
         <tr>
             <th>#</th>
@@ -11,7 +11,7 @@
             <th>@L["Column_User"]</th>
             <th>@L["Column_Date"]</th>
             <th>@L["Column_Status"]</th>
-            @* <th class="text-center">@L["Column_Actions"]</th> *@
+            <th class="text-center">@L["Column_Actions"]</th>
         </tr>
     </thead>
     <tbody>
@@ -26,7 +26,7 @@
                     <td title="@title">
                         @(title?.Length > 60 ? title.Substring(0, 60) + "..." : title)
                     </td>
-                    <td>@a.userId</td>
+                    <td>@a.user?.fullName</td>
                     <td>@a.assignedAt</td>
                     <td>
                         @if (a.isActive)
@@ -38,7 +38,7 @@
                             <span class="badge-inactive">@L["Status_Inactive"]</span>
                         }
                     </td>
-                    @* <td class="text-center">
+                    <td class="text-center">
                         @if (a.isActive)
                         {
                             <button class="btn-pr btn-pr-sm btn-pr-outline js-deactivate" data-id="@a.id">
@@ -51,7 +51,7 @@
                                 @L["Btn_Activate"]
                             </button>
                         }
-                    </td> *@
+                    </td>
                 </tr>
                 i++;
             }

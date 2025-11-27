@@ -54,9 +54,7 @@ namespace PeerReview.MvcHotel.Controllers
             {
                 Code = lookup.Code,
                 NameEn = lookup.NameEn,
-                NameAr = lookup.NameAr,
-                TypeEn = lookup.TypeEn,
-                TypeAr = lookup.TypeAr
+                TypeEn = lookup.TypeEn
             };
             return View(dto);
         }

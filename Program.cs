@@ -60,13 +60,13 @@ builder.Services.AddAuthorization();
 // إعدادات اللغات المدعومة والـ RequestLocalizationOptions
 var supportedCultures = new[]
 {
-    new CultureInfo("ar"),
+    //new CultureInfo("ar"),
     new CultureInfo("en")
 };
 
 var localizationOptions = new RequestLocalizationOptions
 {
-    DefaultRequestCulture = new RequestCulture("ar"),
+    DefaultRequestCulture = new RequestCulture("en"),
     SupportedCultures = supportedCultures,
     SupportedUICultures = supportedCultures
 };
@@ -79,6 +79,15 @@ localizationOptions.RequestCultureProviders = new IRequestCultureProvider[]
     new AcceptLanguageHeaderRequestCultureProvider()  // من الهيدر
 };
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    // 100 MB مثلاً
+    options.Limits.MaxRequestBodySize = 157_286_400;
+});
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = 157_286_400; // 150 MB
+});
 // -------------------- Build --------------------
 var app = builder.Build();
 

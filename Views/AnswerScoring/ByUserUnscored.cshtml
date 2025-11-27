@@ -63,7 +63,7 @@ else
         @Html.AntiForgeryToken()
 
         <div class="table-responsive mt-1">
-                <table class="pr-table align-middle mb-0">
+                <table class="pr-table table table-hover table-striped align-middle w-100 mb-0">
                     <thead>
                         <tr>
                             <th style="width:50px;">#</th>
@@ -87,18 +87,11 @@ else
                                     @{
                                         var q = a.question;
                                         string qText;
-                                        if (isRtl)
-                                        {
-                                            qText = q?.TitleAr
-                                            ?? q?.DescriptionAr
-                                            ?? $"Q#{a.QuestionId}";
-                                        }
-                                        else
-                                        {
+                                      
                                             qText = q?.TitleEn
                                             ?? q?.DescriptionEn
                                             ?? $"Q#{a.QuestionId}";
-                                        }
+                                        
                                     }
                                 @qText
                             </div>
@@ -112,8 +105,8 @@ else
                             <div>
                                 @(
                                                             isRtl
-                                                            ? (a.ItemTextAr ?? a.ItemTextEn)
-                                                            : (a.ItemTextEn ?? a.ItemTextAr)
+                                                            ? ( a.ItemTextEn)
+                                                            : (a.ItemTextEn )
                                                             )
                             </div>
                             <div class="score-meta text-muted">
@@ -156,7 +149,7 @@ else
                                        name="Items[@i].Score"
                                        step="0.5"
                                        min="0"
-                                       max="100"
+                                       max="1"
                                        required />
                             </td>
 
